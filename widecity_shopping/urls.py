@@ -10,11 +10,12 @@ from widecity_shopping.views import main_view
 urlpatterns = [
     # use side url patterns
     path('', views.root),
-    path('/*', views.root),
     path('user_home', views.user_home),
     path('user_product_detail/<str:product_id>', views.user_product_detail),
     path('user_category_view/<str:name>', views.user_category_view),
     path('user_sign_in', views.user_sign_in),
+    path('user_reset_password', views.user_reset_password),
+    path('user_reset_pass_successs', views.user_reset_pass_successs),
     path('user_checkout', views.user_checkout),
     path('user_add_to_cart', views.user_add_to_cart),
     path('user_update_cart', views.user_update_cart),

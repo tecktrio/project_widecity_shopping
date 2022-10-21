@@ -25,7 +25,7 @@ from django.shortcuts import redirect, render
 from requests import session
 from twilio.rest import Client
 from widecity_shopping.forms import add_category, add_product_form, edit_banner
-from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Orders, Products, Return_request, Users, Address
+from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Orders, Products, References, Return_request, Users, Address
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
@@ -703,17 +703,44 @@ def user_sign_out(request):
     request.session.flush()
     return redirect('/user_home')
 
-
-def user_account(request):
+def user_reset_password(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
+
+    this_user = Users.objects.get(email=user)
+
+    if request.method == 'POST':
+        password = request.POST.get('new_pass')
+        this_user.password = password
+        this_user.save()
+        
+    return redirect(user_account)
+
+def user_reset_pass_successs(request):
+    return render(request,'user_reset_pass_successs.html')
+def user_account(request):
+    refered_people = ''
+    if 'user' in request.session:
+        user = request.session['user']
+    else:
+        return redirect('/user_sign_in')
+
     this_user = Users.objects.get(email=user)
     orders = Orders.objects.filter(user_id=this_user.id)
     address = Address.objects.filter(email=this_user.email)
+    refered_people_details = References.objects.filter(user_id = this_user.id)
 
-    return render(request, 'user_account.html', {'user': this_user, 'orders': orders, 'address': address})
+    print(refered_people_details)
+    peoples = []
+    for people in refered_people_details:
+        print(people.refered_user_id)
+        user = Users.objects.get(id=(people.refered_user_id))
+        peoples.append(user.full_name)
+
+    return render(
+        request, 'user_account.html', {'user': this_user, 'orders': orders, 'address': address,'refered_people_details':peoples})
 
 
 def user_otp_sign_in(request):

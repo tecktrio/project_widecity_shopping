@@ -119,9 +119,9 @@
 											aria-controls="tab-orders" aria-selected="false" class="color">Orders</a>
 									</li>
 									<li class="nav-item">
-										<a id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab"
+										<a id="tab-downloads-link" data-toggle="tab" href="#tab-reset_password" role="tab"
 											aria-controls="tab-downloads" aria-selected="false"
-											class="color">Downloads</a>
+											class="color">Reset Password</a>
 									</li>
 									<li class="nav-item">
 										<a id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab"
@@ -180,8 +180,68 @@
 									
 											</div>
 										</div>
+										<div style="display:flex;align-items:center;">
+											<label>People who have signed up using your referal link</label>
+											{% for people in refered_people_details %}
+												<label>{{people.refered_user_id}}</label>
+											{% endfor %}
+										</div>
 
 									</div><!-- .End .tab-pane -->
+									<div class="tab-pane fade show " id="tab-reset_password" role="tabpanel"
+									aria-labelledby="tab-dashboard-link">
+
+								
+									<div >
+									
+										<div style="margin: 10px;justify-content: space-between;">
+										<label>Old Password</label>
+										<input type="text" id="old_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgba(0,0,0,0.5);color:white" autocomplete="off">
+										</div>
+										<div style="margin: 10px;justify-content: space-between;">										
+										<label>New Password</label>
+										<input type="password" id="new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgba(0,0,0,0.5);color:white" >
+										</div>
+										<div style="margin: 10px;justify-content: space-between;">										
+										<label>Re-Enter Password</label>
+										<input type="password" id="re_new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgba(0,0,0,0.5);color:white">
+										</div>
+										<button onclick="confirm_reset()" style="border-radius: 5px;" id="reset_password"
+													 onmouseover="document.getElementById('reset_password').style.backgroundColor = 'grey'"
+													 onmouseout="document.getElementById('reset_password').style.backgroundColor = 'white'"
+													 >Reset</button>
+										
+									</div>
+								</div><!-- .End .tab-pane -->
+
+								<script>
+									function confirm_reset(){
+
+										new_pass = document.getElementById('new_pass').value
+										re_new_pass = document.getElementById('re_new_pass').value
+
+										console.log(new_pass)
+
+										if(new_pass == re_new_pass){
+												// window.location.href = '/user_reset_password'
+										if (confirm('Are you sure to cancel this product?')) {
+											$.ajaxSetup({
+												data: { csrfmiddlewaretoken: '{{ csrf_token }}' }
+											})
+
+											$.ajax({
+												url: '/user_reset_password',
+												data: { 'new_pass': new_pass},
+												method: 'post',
+												success: function (response) {
+													window.location.href='/user_reset_pass_successs';
+												}
+											});
+										}
+										}
+
+									}
+								</script>
 
 									<!--###   my orders   ##############################################################################################################################-->
 
