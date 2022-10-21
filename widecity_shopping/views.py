@@ -1,3 +1,8 @@
+import csv
+from django.http import JsonResponse
+from .forms import ImageForm
+from django.shortcuts import render
+from django.http import HttpResponse
 from asyncio.windows_events import NULL
 import email
 from itertools import product
@@ -10,7 +15,7 @@ from this import d
 from unicodedata import category, name
 from urllib import response
 from django.forms import model_to_dict
-from django.http import HttpResponse, JsonResponse,FileResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 import io
 from pandas import isnull
 from reportlab.pdfgen import canvas
@@ -20,12 +25,12 @@ from django.shortcuts import redirect, render
 from requests import session
 from twilio.rest import Client
 from widecity_shopping.forms import add_category, add_product_form, edit_banner
-from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Orders, Products, Return_request, Users,Address
+from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Orders, Products, Return_request, Users, Address
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 import pdfkit
-import datetime 
+import datetime
 from datetime import timedelta
 
 current_date = datetime.date.today()
@@ -35,52 +40,64 @@ duration = 'Today'
 otp = '0'
 delivery_charge = 10
 # handling user side
+
+
 def root(request):
     if 'user' in request.session:
-        return redirect('/user_home')    
+        return redirect('/user_home')
     else:
         return redirect('/user_sign_in')
+
 
 def user_home(request):
     user = ''
 
     # gathering neccessary data from the server
 
-    try:banner = Banners.objects.get(id=1) # getting the banner data 
-    except:banner = '' # assigning null to the banners if there is an issue in getting the banner
-    try:products = Products.objects.all()
-    except:products = ''    
-    try:categories = Category.objects.all()
-    except:categories = ''
+    try:
+        banner = Banners.objects.get(id=1)  # getting the banner data
+    except:
+        banner = ''  # assigning null to the banners if there is an issue in getting the banner
+    try:
+        products = Products.objects.all()
+    except:
+        products = ''
+    try:
+        categories = Category.objects.all()
+    except:
+        categories = ''
     print(products)
     try:
         if 'user' in request.session:
             user_email = request.session['user']
-            user = Users.objects.get(email = user_email) 
+            user = Users.objects.get(email=user_email)
         else:
             user = 'guest'
     except:
         pass
 
-    return render(request,'user_home.html',{'user':user,'banner':banner,'products':products,'categories':categories})
+    return render(request, 'user_home.html', {'user': user, 'banner': banner, 'products': products, 'categories': categories})
 
-def user_product_detail(request,product_id):
+
+def user_product_detail(request, product_id):
     product = Products.objects.get(id=product_id)
-    category = Products.objects.filter(category = product.category)
-    return render(request,'user_product_detail.html',{'product':product,'category':category})
+    category = Products.objects.filter(category=product.category)
+    return render(request, 'user_product_detail.html', {'product': product, 'category': category})
+
 
 def user_invoice(request):
     if 'user' in request.session:
-        user = request.session['user']  
+        user = request.session['user']
     else:
         return redirect('/user_sign_in')
-    buf  = io.BytesIO()
-    c  =canvas.Canvas(buf,pagesize = letter,bottomup = 0)
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
     textob = c.beginText()
-    textob.setTextOrigin(inch,inch)
-    textob.setFont("Helvetica",10)
-    this_user = Users.objects.get(email = user) 
-    order_details = Orders.objects.filter(user = this_user.id,status ='Delivered' )
+    textob.setTextOrigin(inch, inch)
+    textob.setFont("Helvetica", 10)
+    this_user = Users.objects.get(email=user)
+    order_details = Orders.objects.filter(
+        user=this_user.id, status='Delivered')
 
     lines = [
         'Sales Report of WideCity Shopping ',
@@ -91,19 +108,19 @@ def user_invoice(request):
     ]
     for orders in order_details:
 
-        lines.append(str(orders.Order_day)+
-        str('/'+str(orders.Order_month))+
-        str('/'+str(orders.Order_year))+
-        str('         '+str(orders.product.category))+
-        str('        '+str(orders.product.name))+
-        str('       '+str(orders.product.total_sold))+
-        str('            '+str(orders.product.stock_available))+
-        str('                 '+str(orders.product.price))
-        
-        )
+        lines.append(str(orders.Order_day) +
+                     str('/'+str(orders.Order_month)) +
+                     str('/'+str(orders.Order_year)) +
+                     str('         '+str(orders.product.category)) +
+                     str('        '+str(orders.product.name)) +
+                     str('       '+str(orders.product.total_sold)) +
+                     str('            '+str(orders.product.stock_available)) +
+                     str('                 '+str(orders.product.price))
 
-        lines.append("-----------------------------------------------------------------------------------------------------------------------------------")
-    
+                     )
+
+        lines.append(
+            "-----------------------------------------------------------------------------------------------------------------------------------")
 
     lines.append('')
     lines.append('This report is of the duration of last 7 days')
@@ -115,77 +132,76 @@ def user_invoice(request):
     c.showPage()
     c.save()
     buf.seek(0)
-    
-    return FileResponse(buf, as_attachment=True,filename='widecity_invoice.pdf ')
 
-def user_category_view(request,name):
+    return FileResponse(buf, as_attachment=True, filename='widecity_invoice.pdf ')
 
-    category = Category.objects.get(name = name)
-    category_products = Products.objects.filter(category =category.name)
-    categories =  Category.objects.all()
+
+def user_category_view(request, name):
+
+    category = Category.objects.get(name=name)
+    category_products = Products.objects.filter(category=category.name)
+    categories = Category.objects.all()
     product_count = category_products.count()
     p = Paginator(category_products, 2)
-   
+
     page_obj = p.get_page(1)
 
     if 'page' in request.session:
-        page_number =  request.session['page']
+        page_number = request.session['page']
         page_obj = p.get_page(page_number)
 
     if request.method == 'POST':
         print('its post')
         page_number = request.POST.get('page')
-        
+
         try:
-            page_obj = p.get_page(page_number) 
-            request.session['page']  =page_number
-            print('page changed') # returns the desired page object
+            page_obj = p.get_page(page_number)
+            request.session['page'] = page_number
+            print('page changed')  # returns the desired page object
         except:
             page_obj = p.get_page(1)
             for i in page_obj:
                 print(i)
-            JsonResponse({'category_products':page_obj})
+            JsonResponse({'category_products': page_obj})
 
-    return render(request,'user_category_view.html',
-    {
-        'category':category,
-        'category_products':page_obj,
-        'categories':categories,
-        })
+    return render(request, 'user_category_view.html',
+                  {
+                      'category': category,
+                      'category_products': page_obj,
+                      'categories': categories,
+                  })
 
-    
+
 def user_add_to_cart(request):
     response = 'failed'
     if 'user' in request.session:
         user = request.session['user']
     else:
         response = 'user_not_found'
-        return JsonResponse({'response':response})
-      
+        return JsonResponse({'response': response})
 
     if request.method == 'POST':
         product_id = int(request.POST.get('product_id'))
-        user = Users.objects.get(email = user)
+        user = Users.objects.get(email=user)
         user_id = int(user.id)
-        product = Products.objects.get(id= product_id)
-        product_offer= product.offer_percentage
-        discount= int(product.price) * ( int(product_offer) / 100)
-        total_price  = product.price - discount
-        print('offer applied ',total_price)
+        product = Products.objects.get(id=product_id)
+        product_offer = product.offer_percentage
+        discount = int(product.price) * (int(product_offer) / 100)
+        total_price = product.price - discount
+        print('offer applied ', total_price)
 
         new_cart_product = Cart.objects.create(
-            product_id = product_id,
-            user_id = user_id,
-            quantity = 1,
-            total_price = int(total_price),
-            )
+            product_id=product_id,
+            user_id=user_id,
+            quantity=1,
+            total_price=int(total_price),
+        )
 
         new_cart_product.save()
         response = 'product_added'
         print(response)
 
-    return JsonResponse({'response':response})
-
+    return JsonResponse({'response': response})
 
 
 def user_view_cart(request):
@@ -196,24 +212,27 @@ def user_view_cart(request):
     else:
         return redirect('/user_sign_in')
 
-    try:user = Users.objects.get(email = user)
-    except: user = ''    
-    try:products = Cart.objects.filter(user = user.id)
-    except: products = ''
+    try:
+        user = Users.objects.get(email=user)
+    except:
+        user = ''
+    try:
+        products = Cart.objects.filter(user=user.id)
+    except:
+        products = ''
 
     if len(products) == 0:
-        return render(request,'user_cart_empty.html')
+        return render(request, 'user_cart_empty.html')
 
     product_offer = 0
     for price in products:
         # price.total_price = Products.objects.get(id = price.product.id).price
-        print('product with discount',price.total_price)
+        print('product with discount', price.total_price)
         sub_total = int(sub_total) + int(price.total_price)
 
     # total = sub_total+delivery_charge
-    
-    special_offer = product_offer
 
+    special_offer = product_offer
 
     request.session['sub_total'] = sub_total
     # for data in products:
@@ -223,52 +242,55 @@ def user_view_cart(request):
     #     print(temp_data)
     #     total = int(data.product.price) * (int(data.product.offer_percentage)/100)
     #     # data.insert(total)
-        
+
     #     data['total']=total
-   
 
-    return render(request,'user_cart_view.html',{'user':user,'products':products,'sub_total':sub_total,'special_offer':special_offer,'delivery_charge':delivery_charge})
+    return render(request, 'user_cart_view.html', {'user': user, 'products': products, 'sub_total': sub_total, 'special_offer': special_offer, 'delivery_charge': delivery_charge})
 
-def user_invoice_per_item(request,id):
+
+def user_invoice_per_item(request, id):
     if 'user' in request.session:
-        user = request.session['user']  
+        user = request.session['user']
     else:
         return redirect('/user_sign_in')
 
-    buf  = io.BytesIO()
-    c  =canvas.Canvas(buf,pagesize = letter,bottomup = 0)
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
     textob = c.beginText()
-    textob.setTextOrigin(inch,inch)
-    textob.setFont("Helvetica",10)
-    this_user = Users.objects.get(email = user) 
-    order_details = Orders.objects.get(id = id)
+    textob.setTextOrigin(inch, inch)
+    textob.setFont("Helvetica", 10)
+    this_user = Users.objects.get(email=user)
+    order_details = Orders.objects.get(id=id)
 
     lines = [
         'INVOICE ',
         '',
         '',
         '',
-        'Customer Name : {username}'.format(username = this_user.full_name),
+        'Customer Name : {username}'.format(username=this_user.full_name),
         '',
-        'Contact : {contact}'.format(contact  = this_user.contact_number),
-         '',
-         '----------------------------------------------------------------------------------------------------------------------------------------------',
-         '',
-        'Product Name: {product_name}'.format(product_name = order_details.product.name),
+        'Contact : {contact}'.format(contact=this_user.contact_number),
         '',
-        'Order Status : {order_status}'.format(order_status  = order_details.status),
+        '----------------------------------------------------------------------------------------------------------------------------------------------',
+        '',
+        'Product Name: {product_name}'.format(
+            product_name=order_details.product.name),
+        '',
+        'Order Status : {order_status}'.format(
+            order_status=order_details.status),
         '',
         '',
         '',
-        'Provided Discount : {discount} %'.format(discount = int(order_details.product.offer_percentage)),
+        'Provided Discount : {discount} %'.format(
+            discount=int(order_details.product.offer_percentage)),
         '',
-        'Total Price : Rs {product_price}'.format(product_price  = order_details.total_price),
+        'Total Price : Rs {product_price}'.format(
+            product_price=order_details.total_price),
         '',
-       
+
 
 
     ]
-
 
     lines.append('')
     lines.append('Thank you for visiting widecity shopping.')
@@ -280,13 +302,11 @@ def user_invoice_per_item(request,id):
     c.showPage()
     c.save()
     buf.seek(0)
-    
-    print(buf)
-    return FileResponse(buf, as_attachment=True,filename='widecity_invoice.pdf ')
-#########################################################3
 
-import csv
-from django.http import HttpResponse
+    print(buf)
+    return FileResponse(buf, as_attachment=True, filename='widecity_invoice.pdf ')
+# 3
+
 
 def user_export_myorders_in_csv(request):
 
@@ -296,54 +316,56 @@ def user_export_myorders_in_csv(request):
     else:
         return redirect('/user_sign_in')
 
-    this_user = Users.objects.get(email = user)
+    this_user = Users.objects.get(email=user)
     # output filename handling
     filename = str(this_user.full_name)
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(filename)
+    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(
+        filename)
     writer = csv.writer(response)
 
-    ordered_products = Orders.objects.filter(user = this_user.id)
+    ordered_products = Orders.objects.filter(user=this_user.id)
     for product in ordered_products:
-        
-            print(product.product.name)
-            print(product.Order_day,product.Order_month,product.Order_year)
-            print(product.quantity)
-            print(product.total_price)
 
-            row = [product.product.name,product.Order_day,product.Order_month,product.Order_year,product.quantity,product.total_price]
+        print(product.product.name)
+        print(product.Order_day, product.Order_month, product.Order_year)
+        print(product.quantity)
+        print(product.total_price)
 
-            writer.writerow(row)
+        row = [product.product.name, product.Order_day, product.Order_month,
+               product.Order_year, product.quantity, product.total_price]
 
+        writer.writerow(row)
 
     return response
 
 #####################################################
+
+
 def user_update_cart(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-    
 
     if request.method == 'POST':
         quantity = request.POST.get('quantity')
         cart_id = request.POST.get('cart_id')
-        task  = request.POST.get('task')
+        task = request.POST.get('task')
         print(task)
-        user = Users.objects.get(email = user)
-        product = Cart.objects.get(id = cart_id)
-        stock = Products.objects.get(id = product.product.id)
+        user = Users.objects.get(email=user)
+        product = Cart.objects.get(id=cart_id)
+        stock = Products.objects.get(id=product.product.id)
         discount = int(stock.price) * (int(stock.offer_percentage)/100)
         orginal_price_with_discount = stock.price - discount
         stock_balance = stock.stock_available
-        print('got quantity',quantity)
+        print('got quantity', quantity)
 
         if task == 'plus':
             updated_quantity = int(quantity) + 1
             if stock_balance > 1:
                 product.quantity = updated_quantity
-                print('updated quantity',updated_quantity)
+                print('updated quantity', updated_quantity)
                 # stock manage
                 stock.stock_available = stock.stock_available - 1
             else:
@@ -353,46 +375,50 @@ def user_update_cart(request):
             updated_quantity = int(quantity) - 1
             if updated_quantity >= 1:
                 product.quantity = updated_quantity
-                print('updated quantity',updated_quantity)
+                print('updated quantity', updated_quantity)
                 # stock manage
                 stock.stock_available = stock.stock_available + 1
             else:
                 updated_quantity = quantity
 
-        print('orginal_price_with_discount' , orginal_price_with_discount)
-        total_prize = int(int(orginal_price_with_discount) * int(updated_quantity))
+        print('orginal_price_with_discount', orginal_price_with_discount)
+        total_prize = int(int(orginal_price_with_discount)
+                          * int(updated_quantity))
         product.total_price = int(total_prize)
         stock.save()
-        print('stock balance ',stock.stock_available)
+        print('stock balance ', stock.stock_available)
         product.save()
 
-        all_cart_products = Cart.objects.filter(user = user.id)
+        all_cart_products = Cart.objects.filter(user=user.id)
         sub_total = 0
         for product in all_cart_products:
             sub_total = int(sub_total) + int(product.total_price)
 
         # print(sub_total)
-        request.session['sub_total']= sub_total
+        request.session['sub_total'] = sub_total
         print('saved the changes in database')
         return JsonResponse({
-            'updated_quantity':updated_quantity,
-            'stock_available':stock.stock_available,
-            'total_price':product.total_price,
-            'sub_total':int(sub_total),
-            'delivery_charge':delivery_charge,
+            'updated_quantity': updated_quantity,
+            'stock_available': stock.stock_available,
+            'total_price': product.total_price,
+            'sub_total': int(sub_total),
+            'delivery_charge': delivery_charge,
         })
 
-    return JsonResponse({'user':'user_info'})
+    return JsonResponse({'user': 'user_info'})
+
 
 def user_delete_cart_item(request):
     if request.method == 'POST':
         cart_id = request.POST.get('id')
-        delete_product  = Cart.objects.get(id=cart_id).delete()
+        delete_product = Cart.objects.get(id=cart_id).delete()
         print('one item from the cart is deleted')
-        return JsonResponse({'deleted':'deleted'})
+        return JsonResponse({'deleted': 'deleted'})
+
 
 def user_check_cart_or_shop(request):
-    return render(request,'user_check_cart_or_shop.html')    
+    return render(request, 'user_check_cart_or_shop.html')
+
 
 def user_checkout(request):
     if 'user' in request.session:
@@ -400,43 +426,46 @@ def user_checkout(request):
     else:
         return redirect('/user_sign_in')
 
-    sub_total = request.session['sub_total']    
-    address = Address.objects.filter(email = user)
-    user = Users.objects.get(email = user)
+    sub_total = request.session['sub_total']
+    address = Address.objects.filter(email=user)
+    user = Users.objects.get(email=user)
 
-    return render(request,'user_checkout.html',
-    {
-        'sub_total':sub_total,
-        'address':address,
-        'user':user,
-        'default_address_id':1,
-    })
+    return render(request, 'user_checkout.html',
+                  {
+                      'sub_total': sub_total,
+                      'address': address,
+                      'user': user,
+                      'default_address_id': 1,
+                  })
 
-def user_return_order(request,order_id):
+
+def user_return_order(request, order_id):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
 
-    this_user  = Users.objects.get(email = user)
+    this_user = Users.objects.get(email=user)
     product = Orders.objects.get(id=order_id)
 
     if request.method == 'POST':
         user = this_user.id
         reason = request.POST.get('reason')
-        return_request = Return_request.objects.create(user=this_user,reason = reason)
+        return_request = Return_request.objects.create(
+            user=this_user, reason=reason)
         return_request.save()
         product.status = 'return requested'
         product.save()
         print('return request applied ')
         return redirect('/user_account')
 
-    return render(request,'user_return_order_form.html',{'product':product})
+    return render(request, 'user_return_order_form.html', {'product': product})
+
 
 @csrf_exempt
 def user_razorpay_place_order(request):
 
-    status =''
+    status = ''
     # sub_total = request.session['sub_total']
     sub_total = 234
     print(sub_total)
@@ -444,15 +473,17 @@ def user_razorpay_place_order(request):
         user = request.POST.get('user')
         payment_method = request.POST.get('payment_method')
         this_user = Users.objects.get(email=user)
-        cart_products = Cart.objects.filter(user = this_user.id)
+        cart_products = Cart.objects.filter(user=this_user.id)
         for product in cart_products:
-            this_product = Products.objects.get(id = product.product_id)
-            new_order = Orders.objects.create(product = this_product,user = this_user,quantity = product.quantity,Address=1,total_price =product.total_price,payment_method = payment_method)
-            print('adding : ' , this_product.name)
+            this_product = Products.objects.get(id=product.product_id)
+            new_order = Orders.objects.create(product=this_product, user=this_user, quantity=product.quantity,
+                                              Address=1, total_price=product.total_price, payment_method=payment_method)
+            print('adding : ', this_product.name)
             new_order.save()
-            cart_products = Cart.objects.filter(user = this_user.id).delete()
+            cart_products = Cart.objects.filter(user=this_user.id).delete()
             status = 'success'
     return redirect('/user_thankyou_for_order')
+
 
 def user_validate_coupon(request):
     discount = 0
@@ -462,10 +493,10 @@ def user_validate_coupon(request):
     else:
         return redirect('/user_sign_in')
 
-    this_user  = Users.objects.get(email = user)
+    this_user = Users.objects.get(email=user)
 
     if request.method == 'POST':
-        entered_coupon  = request.POST.get('coupon')
+        entered_coupon = request.POST.get('coupon')
         discount_percentage = 0
         available_coupons = Coupon.objects.all()
         status = 'failed'
@@ -476,23 +507,26 @@ def user_validate_coupon(request):
                     if int(this_user.id) == int(coupon_detail.user_id):
                         if entered_coupon == coupon_detail.coupon_code:
                             status = 'used'
-                            return JsonResponse({'status':status})
-                       
-                used_coupon = Coupon_history.objects.create(user_id = this_user.id , coupon_code = entered_coupon)
+                            return JsonResponse({'status': status})
+
+                used_coupon = Coupon_history.objects.create(
+                    user_id=this_user.id, coupon_code=entered_coupon)
                 used_coupon.save()
-                discount_percentage =coupon.discount_percentage
+                discount_percentage = coupon.discount_percentage
                 status = 'success'
 
-        prize =  int(request.session['sub_total']) 
+        prize = int(request.session['sub_total'])
         print(prize)
         discount = int(prize)*(discount_percentage / 100)
-        request.session['sub_total'] = int(request.session['sub_total'] - discount)
+        request.session['sub_total'] = int(
+            request.session['sub_total'] - discount)
         print(coupon)
-    return JsonResponse({'discount':discount,'status':status})
-    
+    return JsonResponse({'discount': discount, 'status': status})
+
+
 @csrf_exempt
 def user_paypal_place_order(request):
-    status =''
+    status = ''
 
     if 'user' in request.session:
         user = request.session['user']
@@ -501,20 +535,23 @@ def user_paypal_place_order(request):
 
     if request.method == 'POST':
         payment_method = request.POST.get('payment_method')
-        address_id  = request.POST.get('address_id')
+        address_id = request.POST.get('address_id')
         this_user = Users.objects.get(email=user)
-        cart_products = Cart.objects.filter(user = this_user.id)
+        cart_products = Cart.objects.filter(user=this_user.id)
         for product in cart_products:
-            this_product = Products.objects.get(id = product.product_id)
-            new_order = Orders.objects.create(product = this_product ,user = this_user,quantity = product.quantity,Address=address_id,total_price =product.total_price,payment_method=payment_method)
-            print('adding : ' , this_product.name)
+            this_product = Products.objects.get(id=product.product_id)
+            new_order = Orders.objects.create(product=this_product, user=this_user, quantity=product.quantity,
+                                              Address=address_id, total_price=product.total_price, payment_method=payment_method)
+            print('adding : ', this_product.name)
             new_order.save()
-            cart_products = Cart.objects.filter(user = this_user.id).delete()
+            cart_products = Cart.objects.filter(user=this_user.id).delete()
         status = 'success'
-        return JsonResponse({'status':status})
+        return JsonResponse({'status': status})
+
 
 def user_thankyou_for_order(request):
-    return render(request,'user_thankyou_for_order.html')
+    return render(request, 'user_thankyou_for_order.html')
+
 
 def admin_change_order_status(request):
 
@@ -524,7 +561,8 @@ def admin_change_order_status(request):
     change_order_status = Orders.objects.get(id=order_id)
     change_order_status.status = order_status
     change_order_status.save()
-    return JsonResponse({'status':'success'})
+    return JsonResponse({'status': 'success'})
+
 
 def user_add_address(request):
     if 'user' in request.session:
@@ -533,59 +571,61 @@ def user_add_address(request):
         return redirect('/user_sign_in')
 
     if request.method == 'POST':
-        this_user = Users.objects.get(email = user)
+        this_user = Users.objects.get(email=user)
 
         first_name = request.POST.get('first_name')
-        last_name  = request.POST.get('last_name')
-        building_name  = request.POST.get('building_name')
-        street  = request.POST.get('street')
-        city  = request.POST.get('city')
-        state  = request.POST.get('state')
-        pincode  = request.POST.get('pincode')
-        contact   = request.POST.get('contact')
-        alt_contact   = request.POST.get('alt_contact')
+        last_name = request.POST.get('last_name')
+        building_name = request.POST.get('building_name')
+        street = request.POST.get('street')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        pincode = request.POST.get('pincode')
+        contact = request.POST.get('contact')
+        alt_contact = request.POST.get('alt_contact')
 
         user_new_address = Address.objects.create(
-            email  = user,
-            first_name = first_name,
-            last_name  = last_name,
-            building_name  = building_name,
-            street  = street,
-            city  = city,
-            state  = state,
-            pincode  = pincode,
-            contact   = contact,
-            alt_contact   =alt_contact,
-            )
+            email=user,
+            first_name=first_name,
+            last_name=last_name,
+            building_name=building_name,
+            street=street,
+            city=city,
+            state=state,
+            pincode=pincode,
+            contact=contact,
+            alt_contact=alt_contact,
+        )
 
         user_new_address.save()
         print('new address of the user  is saved')
         return redirect('/user_checkout')
-    return render(request,'user_add_address.html')
+    return render(request, 'user_add_address.html')
+
 
 def user_delete_address(request):
-    address_id  = request.POST.get('address_id')
+    address_id = request.POST.get('address_id')
     print(address_id)
     delete_address = Address.objects.get(id=address_id).delete()
-    return JsonResponse({'status':'done'})
+    return JsonResponse({'status': 'done'})
 
-def user_edit_address(request,address_id):
+
+def user_edit_address(request, address_id):
     address_prefill = Address.objects.get(id=address_id)
     if request.method == 'POST':
         address_prefill.first_name = request.POST.get('first_name')
-        address_prefill.last_name  = request.POST.get('last_name')
-        address_prefill.building_name  = request.POST.get('building_name')
-        address_prefill.street  = request.POST.get('street')
-        address_prefill.city  = request.POST.get('city')
-        address_prefill.state  = request.POST.get('state')
-        address_prefill.pincode   = request.POST.get('pincode')
-        address_prefill.contact  = request.POST.get('contact')
-        address_prefill.alt_contact   = request.POST.get('alt_contact')
+        address_prefill.last_name = request.POST.get('last_name')
+        address_prefill.building_name = request.POST.get('building_name')
+        address_prefill.street = request.POST.get('street')
+        address_prefill.city = request.POST.get('city')
+        address_prefill.state = request.POST.get('state')
+        address_prefill.pincode = request.POST.get('pincode')
+        address_prefill.contact = request.POST.get('contact')
+        address_prefill.alt_contact = request.POST.get('alt_contact')
         address_prefill.save()
         print('address has been updated')
         return redirect('/user_account')
-    
-    return render(request,'user_edit_address.html',{'address_prefill':address_prefill})
+
+    return render(request, 'user_edit_address.html', {'address_prefill': address_prefill})
 
 
 def user_sign_in(request):
@@ -596,7 +636,7 @@ def user_sign_in(request):
 
         # getting all the available users
         users = Users.objects.all()
-        
+
         if len(users) > 0:
             for user in users:
                 if user_email == user.email:
@@ -610,31 +650,32 @@ def user_sign_in(request):
                     user_authentication_status = 'wrong_password'
                     break
                 user_authentication_status = 'user_not_found'
-            return JsonResponse({'user_authentication_status':user_authentication_status})
+            return JsonResponse({'user_authentication_status': user_authentication_status})
         else:
-            return JsonResponse({'user_authentication_status':'user_not_found'})
-    return render(request,'user_sign_in.html')
+            return JsonResponse({'user_authentication_status': 'user_not_found'})
+    return render(request, 'user_sign_in.html')
+
 
 def user_update_order_status(request):
     if request.method == 'POST':
         order_id = request.POST.get('order_id')
         order_status = request.POST.get('order_status')
 
-        product = Orders.objects.get(id = order_id)
+        product = Orders.objects.get(id=order_id)
         print(product.status)
         product.status = 'canceled'
         product.save()
-    return JsonResponse({'status':'canceled'})
+    return JsonResponse({'status': 'canceled'})
+
 
 def user_sign_up(request):
 
     if request.method == 'POST':
-    # collecting the data from the ajax request in user_sign_in.html
+        # collecting the data from the ajax request in user_sign_in.html
         user_full_name = request.POST.get('user_full_name')
         user_email = request.POST.get('user_email')
         user_password = request.POST.get('user_password')
         user_contact_number = request.POST.get('user_contact_number')
-        
 
         # getting all the available users
         try:
@@ -643,33 +684,37 @@ def user_sign_up(request):
                 email=user_email,
                 password=user_password,
                 contact_number=user_contact_number
-                )
+            )
             new_user.save()
             user_sign_up_status = 'user_created'
         except:
             user_sign_up_status = 'failed'
 
-        return JsonResponse({'user_sign_up_status':user_sign_up_status})
+        return JsonResponse({'user_sign_up_status': user_sign_up_status})
 
-    return render(request,'user_sign_up.html')
+    return render(request, 'user_sign_up.html')
+
 
 def welcome_new_user(request):
-    return render(request,'welcome_new_user.html')
+    return render(request, 'welcome_new_user.html')
+
 
 def user_sign_out(request):
     request.session.flush()
     return redirect('/user_home')
+
 
 def user_account(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-    this_user = Users.objects.get(email = user)
-    orders = Orders.objects.filter(user_id = this_user.id)
-    address = Address.objects.filter(email = this_user.email)
-   
-    return render(request,'user_account.html',{'user':this_user,'orders':orders,'address':address})
+    this_user = Users.objects.get(email=user)
+    orders = Orders.objects.filter(user_id=this_user.id)
+    address = Address.objects.filter(email=this_user.email)
+
+    return render(request, 'user_account.html', {'user': this_user, 'orders': orders, 'address': address})
+
 
 def user_otp_sign_in(request):
     if request.method == 'POST':
@@ -678,7 +723,7 @@ def user_otp_sign_in(request):
             user = Users.objects.get(contact_number=user_contact_number)
             if user is not None:
                 # generate otp and send otp
-               
+
                 # setting up the variables with the data that we get from the message api ( twilio )
                 account_sid = 'ACd9fe7f948f2b0de94a1502c2998c884e'
                 auth_token = '59a1424f9a3f2f933da5811c92d52fdd'
@@ -696,22 +741,21 @@ def user_otp_sign_in(request):
                     client.api.account.messages.create(
                         to="+919946658045",
                         from_="+18304980732",
-                        body="welcome to widecity shopping, enjoy shopping with us. This is your otp : {}".format(otp)
-                        )
+                        body="welcome to widecity shopping, enjoy shopping with us. This is your otp : {}".format(
+                            otp)
+                    )
                     print(f'otp has been send to +91  successfully')
                     otp_sign_in_user_status = 'success'
                     request.session['user'] = user.email
                 except:
                     print('sry, failed to send the otp')
                     otp_sign_in_user_status = 'failed_to_send_otp'
-                    
 
-                # end 
+                # end
         except:
             otp_sign_in_user_status = 'user_not_found'
-        return JsonResponse({'otp_sign_in_user_status':otp_sign_in_user_status})
-    return render(request,'user_otp_sign_in.html')
-
+        return JsonResponse({'otp_sign_in_user_status': otp_sign_in_user_status})
+    return render(request, 'user_otp_sign_in.html')
 
 
 def user_otp_sign_in_validation(request):
@@ -726,15 +770,16 @@ def user_otp_sign_in_validation(request):
         user_authentication_status = 'wrong_otp'
         if str(user_otp) == str(otp):
             user_authentication_status = 'otp_verified'
-        return JsonResponse({'user_authentication_status':user_authentication_status})
+        return JsonResponse({'user_authentication_status': user_authentication_status})
 
-    return render(request,'user_otp_sign_in_validation.html')
+    return render(request, 'user_otp_sign_in_validation.html')
 
 
 def forget_password(request):
-    return render(request,'forget_password.html')
+    return render(request, 'forget_password.html')
 
-    ###################################################################################################   admin side
+    # admin side
+
 
 def admin_sign_in(request):
 
@@ -745,12 +790,12 @@ def admin_sign_in(request):
 
         # getting all the available users
         users = Users.objects.all()
-        
+
         if len(users) > 0:
             for user in users:
                 if user_email == user.email:
                     if user_password == user.password:
-                        user = Users.objects.get(email = user_email)
+                        user = Users.objects.get(email=user_email)
                         if user.active_status == 'active':
                             if user.is_admin == 'true':
                                 request.session['admin'] = user_email
@@ -763,10 +808,11 @@ def admin_sign_in(request):
                     user_authentication_status = 'wrong_password'
                     break
                 user_authentication_status = 'admin_not_found'
-            return JsonResponse({'user_authentication_status':user_authentication_status})
+            return JsonResponse({'user_authentication_status': user_authentication_status})
         else:
-            return JsonResponse({'user_authentication_status':'admin_not_found'})
-    return render(request,'admin_sign_in.html')
+            return JsonResponse({'user_authentication_status': 'admin_not_found'})
+    return render(request, 'admin_sign_in.html')
+
 
 def admin_category_delete(request):
     admin = ''
@@ -774,13 +820,17 @@ def admin_category_delete(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
-    delete_category = Category.objects.get(id = request.POST.get('category_id')).delete()
+    delete_category = Category.objects.get(
+        id=request.POST.get('category_id')).delete()
 
-    return JsonResponse({'status':'done'}) 
+    return JsonResponse({'status': 'done'})
+
+
 def admin_sign_out(request):
-    return render(request,'admin_sign_out.html')
+    return render(request, 'admin_sign_out.html')
+
 
 def admin_panel(request):
     admin = ''
@@ -788,16 +838,17 @@ def admin_panel(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
     user_count = Users.objects.all().count()
-    sales = Orders.objects.filter(status = 'Delivered')
-    
+    sales = Orders.objects.filter(status='Delivered')
+
     revenue = 0
     for sale in sales:
         revenue = revenue + sale.total_price
 
-    return render(request,'admin_panel.html',{'admin':this_admin,'duration':'','sales':sales.count,'customer_count':user_count,'revenue':revenue})
+    return render(request, 'admin_panel.html', {'admin': this_admin, 'duration': '', 'sales': sales.count, 'customer_count': user_count, 'revenue': revenue})
+
 
 def admin_list_customer(request):
     admin = ''
@@ -805,7 +856,7 @@ def admin_list_customer(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
     try:
         users = Users.objects.all()
@@ -813,19 +864,21 @@ def admin_list_customer(request):
     except:
         pass
 
-    return render(request,'admin_list_customer.html',{'users':users,'admin':this_admin})
+    return render(request, 'admin_list_customer.html', {'users': users, 'admin': this_admin})
+
 
 def admin_thankyou_for_adding_product(request):
-    return render(request,'admin_thankyou_for_adding_product.html')
+    return render(request, 'admin_thankyou_for_adding_product.html')
+
 
 def admin_add_product(request):
-    
+
     admin = ''
     if 'admin' in request.session:
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
     if request.method == 'POST':
         category = request.POST.get('category')
@@ -850,8 +903,7 @@ def admin_add_product(request):
     form = add_product_form()
     form_categories = Category.objects.all()
 
-    return render(request,'admin_add_product.html',{'form':form,'form_categories':form_categories,'admin':this_admin})
-
+    return render(request, 'admin_add_product.html', {'form': form, 'form_categories': form_categories, 'admin': this_admin})
 
     # admin = ''
     # if 'admin' in request.session:
@@ -859,6 +911,8 @@ def admin_add_product(request):
     # else:
     #     return redirect('/admin_sign_in')
     # return render(request,'admin_add_product.html',{'admin':admin})
+
+
 def admin_update_user_status(request):
 
     admin = ''
@@ -866,14 +920,14 @@ def admin_update_user_status(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
     if request.method == 'POST':
         status = request.POST.get('status')
         email = request.POST.get('email')
         # print(status)
-        if status =='true':
-            status  = 'block'
+        if status == 'true':
+            status = 'block'
         else:
             status = 'active'
         # print(email)
@@ -885,8 +939,7 @@ def admin_update_user_status(request):
         print(customer.active_status)
         return JsonResponse({'status': status})
     customers = Users.objects.all()
-    return render(request, 'edit_customer.html', {'users': customers,'admin':this_admin})
-
+    return render(request, 'edit_customer.html', {'users': customers, 'admin': this_admin})
 
 
 def admin_list_product(request):
@@ -895,21 +948,23 @@ def admin_list_product(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
     products = Products.objects.all()
-    return render(request,'admin_list_product.html',{'admin':admin,'products':products,'admin':this_admin})
+    return render(request, 'admin_list_product.html', {'admin': admin, 'products': products, 'admin': this_admin})
 
-def admin_list_category(request):    
+
+def admin_list_category(request):
     admin = ''
     if 'admin' in request.session:
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
-    
+    this_admin = Users.objects.get(email=admin)
+
     categories = Category.objects.all()
-    return render(request,'admin_list_category.html',{'admin':admin,'categories':categories,'admin':this_admin})
+    return render(request, 'admin_list_category.html', {'admin': admin, 'categories': categories, 'admin': this_admin})
+
 
 def admin_add_category(request):
     admin = ''
@@ -917,7 +972,7 @@ def admin_add_category(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
     if request.method == 'POST':
         # getting datas from the specific fields from the frontend
         form = add_category(request.POST, request.FILES)
@@ -925,23 +980,24 @@ def admin_add_category(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             try:
-                category_id = Category.objects.get(name = str(name))
+                category_id = Category.objects.get(name=str(name))
                 if category_id is not None:
                     print('category already exist')
-                    return render(request,'admin_add_category.html',{'form':form,'message':'category already exist','admin':admin})
-                
+                    return render(request, 'admin_add_category.html', {'form': form, 'message': 'category already exist', 'admin': admin})
+
             except:
                 # adding new details to the company_info table/model
                 # form.cleaned_data['name'] = category_id
                 form.save()
-                return render(request,'admin_add_category_success.html')
+                return render(request, 'admin_add_category_success.html')
 
         return HttpResponse('failed')
         # handling get request
 
         # trying to creating new product
     form = add_category()
-    return render(request,'admin_add_category.html',{'form':form})
+    return render(request, 'admin_add_category.html', {'form': form})
+
 
 @never_cache
 def admin_list_orders(request):
@@ -950,23 +1006,23 @@ def admin_list_orders(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
     orders = Orders.objects.all()
-    return render(request,'admin_list_orders.html',{'admin':this_admin,'orders':orders})
+    return render(request, 'admin_list_orders.html', {'admin': this_admin, 'orders': orders})
 
-def admin_order_details(request,order_id):
+
+def admin_order_details(request, order_id):
 
     admin = ''
     if 'admin' in request.session:
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
 
-    order = Orders.objects.get(id = order_id)
+    order = Orders.objects.get(id=order_id)
     address = Address.objects.get(id=order.Address)
-
 
     if order.status == 'ordered':
         next_status = 'shipped'
@@ -978,8 +1034,9 @@ def admin_order_details(request,order_id):
         next_status = 'Refunded'
     else:
         next_status = ''
-    
-    return render(request,'admin_order_details.html',{'order':order,'address':address,'next_status':next_status,'admin':this_admin})    
+
+    return render(request, 'admin_order_details.html', {'order': order, 'address': address, 'next_status': next_status, 'admin': this_admin})
+
 
 def admin_get_graph_data(request):
 
@@ -988,16 +1045,16 @@ def admin_get_graph_data(request):
     user_graph_data = []
     user_graph_category = []
 
-    if request.method =='POST':
+    if request.method == 'POST':
 
         duration = request.POST.get('duration')
-        print('Getting Graph details of ',duration)
+        print('Getting Graph details of ', duration)
         orders = Orders.objects.all()
         users = Users.objects.all()
 
         # today
-        # x axis - ordered products 
-        # y axis - delivered products 
+        # x axis - ordered products
+        # y axis - delivered products
         if duration == 'today':
 
             sales_graph_data = []
@@ -1009,7 +1066,7 @@ def admin_get_graph_data(request):
             # finding the number of sales on today based on orders
             cycle = 0
             for sale in orders:
-                cycle = cycle +1
+                cycle = cycle + 1
                 # filtering sales based on year
                 if str(sale.Order_year) == str(current_date.year):
                     # filtering sales based on month
@@ -1019,11 +1076,11 @@ def admin_get_graph_data(request):
                             # filterin sales which has the status as delivered based on orders
                             print(sale.status)
                             if str(sale.status == 'delivered'):
-                                 count=count+1
+                                count = count+1
                             sales_graph_data.append(count)
                             sales_graph_category.append(cycle)
             # printing the number of sales on today
-            print('Number of sales In Today Is ',count)
+            print('Number of sales In Today Is ', count)
 
             for user in users:
                 # filtering sales based on year
@@ -1032,15 +1089,12 @@ def admin_get_graph_data(request):
                     if str(user.signup_month) == str(current_date.month):
                         # filtering sales based on day
                         if str(user.signup_day) == str(current_date.day):
-                            count=count+1
+                            count = count+1
                             user_graph_data.append(4)
                             user_graph_category.append(1)
 
-
-
-
         # last 7 days
-        # x axis - last 7 days 
+        # x axis - last 7 days
         # y axis - sales
         elif duration == 'last_7_days':
 
@@ -1052,21 +1106,22 @@ def admin_get_graph_data(request):
             count = 0
             # getting the sales of last  days
             # value of day is from 1 to 7
-            for day in range(0,7):
+            for day in range(0, 7):
                 count = 0
                 for sale in orders:
                     if str(sale.Order_year) == str(current_date.year):
                         # print(sale.Order_day,current_date.day-timedelta(days=day).days)
                         if str(sale.Order_day) == str(current_date.day - (timedelta(days=day).days)):
                             # print('count+',count)
-                            count=count+1
-                sales_graph_data.append(count) 
-                sales_graph_category.append(current_date.day - (timedelta(days=day).days))
+                            count = count+1
+                sales_graph_data.append(count)
+                sales_graph_category.append(
+                    current_date.day - (timedelta(days=day).days))
 
-            print('Number of sales in the last 7 days is ',sales_graph_data)
+            print('Number of sales in the last 7 days is ', sales_graph_data)
 
             # getting the new users
-            for day in range(0,7):
+            for day in range(0, 7):
                 count = 0
                 for user in users:
                     if str(user.signup_year) == str(current_date.year):
@@ -1074,11 +1129,12 @@ def admin_get_graph_data(request):
                             # print(sale.Order_day,current_date.day-timedelta(days=day).days)
                             if str(user.signup_day) == str(current_date.day - (timedelta(days=day).days)):
                                 # print('count+',count)
-                                count=count+1
-                user_graph_data.append(count) 
-                user_graph_category.append(current_date.day - (timedelta(days=day).days))
+                                count = count+1
+                user_graph_data.append(count)
+                user_graph_category.append(
+                    current_date.day - (timedelta(days=day).days))
 
-            print('Number of revenue in the last 7 days is ',user_graph_data)
+            print('Number of revenue in the last 7 days is ', user_graph_data)
 
         # this month
         elif duration == 'last_month':
@@ -1088,7 +1144,7 @@ def admin_get_graph_data(request):
             user_graph_category = []
             count = 0
 
-            for day in range(1,32):
+            for day in range(1, 32):
                 count = 0
                 for sale in orders:
                     if str(sale.Order_year) == str(current_date.year):
@@ -1098,9 +1154,7 @@ def admin_get_graph_data(request):
                 sales_graph_data.append(count)
                 sales_graph_category.append(day)
 
-               
-                    
-            for day in range(1,32):
+            for day in range(1, 32):
                 count = 0
                 for user in users:
                     if str(user.signup_year) == str(current_date.year):
@@ -1109,9 +1163,6 @@ def admin_get_graph_data(request):
                                 count = count+1
                 user_graph_data.append(count)
                 user_graph_category.append(day)
-
-                         
-        
 
         # this year
         else:
@@ -1122,7 +1173,7 @@ def admin_get_graph_data(request):
             user_graph_category = []
             count = 0
 
-            for month in range(1,13):
+            for month in range(1, 13):
                 count = 0
                 for sale in orders:
                     if str(sale.Order_year) == str(current_date.year):
@@ -1131,7 +1182,7 @@ def admin_get_graph_data(request):
                 sales_graph_data.append(count)
                 sales_graph_category.append(month)
 
-            for month in range(1,13):
+            for month in range(1, 13):
                 count = 0
                 for user in users:
                     if str(user.signup_year) == str(current_date.year):
@@ -1140,12 +1191,11 @@ def admin_get_graph_data(request):
                 user_graph_data.append(count)
                 user_graph_category.append(month)
 
-
     user_count = Users.objects.all().count()
-    sales = Orders.objects.filter(status = 'Delivered')
-    cod = Orders.objects.filter(payment_method = 'cod').count()
-    paypal = Orders.objects.filter(payment_method = 'paypal').count()
-    razorpay = Orders.objects.filter(payment_method = 'razorpay').count()
+    sales = Orders.objects.filter(status='Delivered')
+    cod = Orders.objects.filter(payment_method='cod').count()
+    paypal = Orders.objects.filter(payment_method='paypal').count()
+    razorpay = Orders.objects.filter(payment_method='razorpay').count()
     paypal_payment_method_graph_data = paypal
     razorpay_payment_method_graph_data = razorpay
     cod_payment_method_graph_data = cod
@@ -1154,23 +1204,22 @@ def admin_get_graph_data(request):
     for sale in sales:
         revenue = revenue + sale.total_price
 
-    return render(request,'admin_panel.html',{
-        'duration':duration,
-        'customer_count':user_count,
-        'sales':sales.count(),
-        'revenue':revenue,
+    return render(request, 'admin_panel.html', {
+        'duration': duration,
+        'customer_count': user_count,
+        'sales': sales.count(),
+        'revenue': revenue,
 
-        'sales_graph_data':sales_graph_data,
-        'sales_graph_category':sales_graph_category,
+        'sales_graph_data': sales_graph_data,
+        'sales_graph_category': sales_graph_category,
 
-        'user_graph_data':user_graph_data,
-        'user_graph_category':[user_graph_category],
+        'user_graph_data': user_graph_data,
+        'user_graph_category': [user_graph_category],
 
-        'paypal_payment_method_graph_data':paypal_payment_method_graph_data,
-        'razorpay_payment_method_graph_data':razorpay_payment_method_graph_data,
-        'cod_payment_method_graph_data':cod_payment_method_graph_data,
-        })
-
+        'paypal_payment_method_graph_data': paypal_payment_method_graph_data,
+        'razorpay_payment_method_graph_data': razorpay_payment_method_graph_data,
+        'cod_payment_method_graph_data': cod_payment_method_graph_data,
+    })
 
 
 # @never_cache
@@ -1180,46 +1229,46 @@ def admin_edit_Product(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
+    this_admin = Users.objects.get(email=admin)
     products = Products.objects.all()
 
     if request.method == 'POST':
         global current_product
-        id=request.POST.get('id')
+        id = request.POST.get('id')
         product = Products.objects.get(id=id)
-        product.name=request.POST.get('product_name')
-        product.price=request.POST.get('product_price')
-        product.category=request.POST.get('product_category')
-        product.description=request.POST.get('product_description')
-        product.specification=request.POST.get('product_specification')
-        product.stock_available=request.POST.get('product_stock_available')
-        product.rating=request.POST.get('product_rating')
-        product.available_status=request.POST.get('product_status')
+        product.name = request.POST.get('product_name')
+        product.price = request.POST.get('product_price')
+        product.category = request.POST.get('product_category')
+        product.description = request.POST.get('product_description')
+        product.specification = request.POST.get('product_specification')
+        product.stock_available = request.POST.get('product_stock_available')
+        product.rating = request.POST.get('product_rating')
+        product.available_status = request.POST.get('product_status')
 
         if request.FILES.get('image_1') == None:
-            product.image_1=product.image_1
+            product.image_1 = product.image_1
             print('product image 1 not found')
         else:
-            product.image_1=request.FILES.get('image_1')
+            product.image_1 = request.FILES.get('image_1')
 
         if request.FILES.get('image_2') == None:
-            product.image_2=product.image_2
+            product.image_2 = product.image_2
             print('product image 2 not found')
         else:
-            product.image_2=request.FILES.get('image_2')
+            product.image_2 = request.FILES.get('image_2')
         if request.FILES.get('image_3') == None:
-            product.image_3=product.image_3
+            product.image_3 = product.image_3
             print('product image 3 not found')
         else:
-            product.image_3=request.FILES.get('image_3')
+            product.image_3 = request.FILES.get('image_3')
         if request.FILES.get('image_4') == None:
-            product.image_4=product.image_4
+            product.image_4 = product.image_4
             print('product image 4 not found')
         else:
-            product.image_4=request.FILES.get('image_4')
-        product.offer_percentage=request.POST.get('offer_percentage')
+            product.image_4 = request.FILES.get('image_4')
+        product.offer_percentage = request.POST.get('offer_percentage')
         product.save()
-        return render(request,'admin_edit_product_success.html')
+        return render(request, 'admin_edit_product_success.html')
 
     action = request.GET['action']
     product_id = request.GET['product_id']
@@ -1227,19 +1276,20 @@ def admin_edit_Product(request):
     product = Products.objects.get(id=product_id)
 
     if action == 'edit':
-        return render(request, 'admin_edit_product.html', {'product': product,'admin':this_admin})
+        return render(request, 'admin_edit_product.html', {'product': product, 'admin': this_admin})
     elif action == 'delete':
         product.delete()
         return redirect(admin_list_product)
 
     return redirect('/admin_panel')
 
-def admin_edit_category(request,cat_id):
+
+def admin_edit_category(request, cat_id):
     category = Category.objects.get(id=cat_id)
     if request.method == 'POST':
-        name  = request.POST.get('name')
-        image  = request.FILES.get('image')
-        offer_percentage=request.POST.get('offer_percentage')
+        name = request.POST.get('name')
+        image = request.FILES.get('image')
+        offer_percentage = request.POST.get('offer_percentage')
 
         if image is None:
             category.image = Category.objects.get(id=cat_id).image
@@ -1249,15 +1299,17 @@ def admin_edit_category(request,cat_id):
         category.offer_percentage = offer_percentage
         category.name = name
         category.save()
-        
 
-    return render(request,'admin_edit_category.html',{'category':category})
+    return render(request, 'admin_edit_category.html', {'category': category})
+
 
 def admin_edit_banner(request):
     admin = ''
-    try:banner = Banners.objects.get(id=1)
-    except:banner = ''
-    
+    try:
+        banner = Banners.objects.get(id=1)
+    except:
+        banner = ''
+
     if 'admin' in request.session:
         admin = request.session['admin']
     else:
@@ -1265,17 +1317,18 @@ def admin_edit_banner(request):
 
     if request.method == 'POST':
 
-        form = edit_banner(request.POST,request.FILES) 
+        form = edit_banner(request.POST, request.FILES)
         print('got values')
 
         if form.is_valid():
-            form = edit_banner(request.POST,request.FILES,instance=banner)
+            form = edit_banner(request.POST, request.FILES, instance=banner)
             form.save()
             return HttpResponse('banner saved')
-        return HttpResponse('form not valid')    
+        return HttpResponse('form not valid')
 
-    form =  edit_banner()  
-    return render(request,'admin_edit_banner.html',{'form':form,'banner':banner})
+    form = edit_banner()
+    return render(request, 'admin_edit_banner.html', {'form': form, 'banner': banner})
+
 
 def admin_edit_company_info(request):
     admin = ''
@@ -1283,8 +1336,9 @@ def admin_edit_company_info(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email = admin)
-    return render(request,'admin_edit_company_info.html',{'admin':this_admin})
+    this_admin = Users.objects.get(email=admin)
+    return render(request, 'admin_edit_company_info.html', {'admin': this_admin})
+
 
 def admin_sales_report(request):
     admin = ''
@@ -1294,23 +1348,26 @@ def admin_sales_report(request):
     else:
         return redirect('/admin_sign_in')
 
-    if request.method =='POST':
+    if request.method == 'POST':
 
         if 'export' in request.POST.keys():
             filetype = request.POST.get('filetype')
             if filetype == 'pdf':
-                buf  = io.BytesIO()
-                c  =canvas.Canvas(buf,pagesize = letter,bottomup = 0)
+                buf = io.BytesIO()
+                c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
                 textob = c.beginText()
-                textob.setTextOrigin(inch,inch)
-                textob.setFont("Helvetica",10)
+                textob.setTextOrigin(inch, inch)
+                textob.setFont("Helvetica", 10)
 
-                if duration == 'Today':      
-                    ordered_products = Orders.objects.filter(Order_day = current_date.day)                
-                if duration == 'Month':      
-                    ordered_products = Orders.objects.filter(Order_month = current_date.month)                
-                if duration == 'Year':      
-                    ordered_products = Orders.objects.filter(Order_year = current_date.year)
+                if duration == 'Today':
+                    ordered_products = Orders.objects.filter(
+                        Order_day=current_date.day)
+                if duration == 'Month':
+                    ordered_products = Orders.objects.filter(
+                        Order_month=current_date.month)
+                if duration == 'Year':
+                    ordered_products = Orders.objects.filter(
+                        Order_year=current_date.year)
 
                 lines = [
                     'Sales Report of WideCity Shopping ',
@@ -1321,127 +1378,141 @@ def admin_sales_report(request):
                 ]
                 for orders in ordered_products:
 
-                    lines.append(str(orders.Order_day)+
-                    str('/'+str(orders.Order_month))+
-                    str('/'+str(orders.Order_year))+
-                    str('         '+str(orders.product.category))+
-                    str('        '+str(orders.product.name))+
-                    str('       '+str(orders.product.total_sold))+
-                    str('            '+str(orders.product.stock_available))+
-                    str('                 '+str(orders.product.price))
-                    
-                    )
+                    lines.append(str(orders.Order_day) +
+                                 str('/'+str(orders.Order_month)) +
+                                 str('/'+str(orders.Order_year)) +
+                                 str('         '+str(orders.product.category)) +
+                                 str('        '+str(orders.product.name)) +
+                                 str('       '+str(orders.product.total_sold)) +
+                                 str('            '+str(orders.product.stock_available)) +
+                                 str('                 ' +
+                                     str(orders.product.price))
 
-                    lines.append("-----------------------------------------------------------------------------------------------------------------------------------")
-                
+                                 )
+
+                    lines.append(
+                        "-----------------------------------------------------------------------------------------------------------------------------------")
 
                 lines.append('')
                 lines.append('This report is of the duration of last 7 days')
 
                 for line in lines:
                     textob.textLine(line)
-                    
+
                 c.drawText(textob)
                 c.showPage()
                 c.save()
                 buf.seek(0)
-                
-                return FileResponse(buf, as_attachment=True,filename='output.pdf ')
+
+                return FileResponse(buf, as_attachment=True, filename='output.pdf ')
 
             elif filetype == 'csv':
 
                 # output filename handling
-                filename = 'Widecity Report' 
+                filename = 'Widecity Report'
                 response = HttpResponse(content_type='text/csv')
-                response['Content-Disposition'] = 'attachment; filename={}.csv'.format(filename)
+                response['Content-Disposition'] = 'attachment; filename={}.csv'.format(
+                    filename)
                 writer = csv.writer(response)
-                writer.writerow(['Product Name','Ordered Day','Ordered Month','Ordered Year','Quantity','Total Price'])
-                if duration == 'Today':      
-                    ordered_products = Orders.objects.filter(Order_day = current_date.day)                
-                if duration == 'Month':      
-                    ordered_products = Orders.objects.filter(Order_month = current_date.month)                
-                if duration == 'Year':      
-                    ordered_products = Orders.objects.filter(Order_year = current_date.year)
-                
+                writer.writerow(['Product Name', 'Ordered Day', 'Ordered Month',
+                                'Ordered Year', 'Quantity', 'Total Price'])
+                if duration == 'Today':
+                    ordered_products = Orders.objects.filter(
+                        Order_day=current_date.day)
+                if duration == 'Month':
+                    ordered_products = Orders.objects.filter(
+                        Order_month=current_date.month)
+                if duration == 'Year':
+                    ordered_products = Orders.objects.filter(
+                        Order_year=current_date.year)
+
                 for product in ordered_products:
-                
-                        print(product.product.name)
-                        print(product.Order_day,product.Order_month,product.Order_year)
-                        print(product.quantity)
-                        print(product.total_price)
 
-                        row = [product.product.name,product.Order_day,product.Order_month,product.Order_year,product.quantity,product.total_price]
+                    print(product.product.name)
+                    print(product.Order_day, product.Order_month,
+                          product.Order_year)
+                    print(product.quantity)
+                    print(product.total_price)
 
-                        writer.writerow(row)
+                    row = [product.product.name, product.Order_day, product.Order_month,
+                           product.Order_year, product.quantity, product.total_price]
+
+                    writer.writerow(row)
 
                 return response
 
         elif 'duration' in request.POST.keys():
-  
-            duration  = request.POST.get('duration')
+
+            duration = request.POST.get('duration')
             print(duration)
-            orders = Orders.objects.all()  
-            if duration == 'Today' :
-                print(duration) 
-                orders = Orders.objects.filter(Order_day = current_date.day)
+            orders = Orders.objects.all()
+            if duration == 'Today':
+                print(duration)
+                orders = Orders.objects.filter(Order_day=current_date.day)
             elif duration == 'Month':
                 print(duration)
-                orders = Orders.objects.filter(Order_month = current_date.month)
+                orders = Orders.objects.filter(Order_month=current_date.month)
             elif duration == 'Year':
                 print(duration)
-                orders = Orders.objects.filter(Order_year = current_date.year)
+                orders = Orders.objects.filter(Order_year=current_date.year)
 
-        return render(request,'admin_sales_report.html',{'admin':admin,'orders':orders,'duration':duration})
+        return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': orders, 'duration': duration})
+
+    orders = Orders.objects.all()
+    return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': orders, 'current_date': current_date, 'duration': duration})
 
 
-    orders = Orders.objects.all()    
-    return render(request,'admin_sales_report.html',{'admin':admin,'orders':orders,'current_date':current_date,'duration':duration})
-    
 def admin_remove_coupon(request):
     if request.method == 'POST':
-        
-            print('trying to remove')
-            coupon_id = request.POST.get('coupon_id')
-            coupon = Coupon.objects.get(id=coupon_id).delete()
-            print('coupon deleted')
-            return JsonResponse({'status':'done'})
+
+        print('trying to remove')
+        coupon_id = request.POST.get('coupon_id')
+        coupon = Coupon.objects.get(id=coupon_id).delete()
+        print('coupon deleted')
+        return JsonResponse({'status': 'done'})
 
     coupons = Coupon.objects.all()
-    return render(request,'admin_manage_coupons.html',{'coupons':coupons})
+    return render(request, 'admin_manage_coupons.html', {'coupons': coupons})
+
 
 def admin_add_coupon(request):
     if request.method == 'POST':
         coupon_code = request.POST.get('new_coupon')
         coupon_discount = request.POST.get('new_coupon_discount')
         print('trying to add a new coupon')
-        new_coupon = Coupon.objects.create(coupon = coupon_code,discount_percentage = coupon_discount)
+        new_coupon = Coupon.objects.create(
+            coupon=coupon_code, discount_percentage=coupon_discount)
         new_coupon.save()
         print(' coupon added ')
-        return JsonResponse({'status':'success'})
+        return JsonResponse({'status': 'success'})
 
     #  payments
+
+
 def pay_with_paypal(request):
     admin = ''
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-    
+
     # user = Users.objects.get(email = user)
-    return render(request,'payment_paypal.html',{'user':'user'})
+    return render(request, 'payment_paypal.html', {'user': 'user'})
+
 
 def pay_with_razorpay(request):
     import razorpay
-    client = razorpay.Client(auth=("rzp_test_oRDO7oXd5GwL0O", "rrdO67DEimkHGWBihfZvO6iW"))
+    client = razorpay.Client(
+        auth=("rzp_test_oRDO7oXd5GwL0O", "rrdO67DEimkHGWBihfZvO6iW"))
 
     DATA = {
-    "amount": 100,
-    "currency": "INR",
-    "receipt": "receipt#1",
-    "notes": {
-    "key1": "value3",
-    "key2": "value2"
-    }
+        "amount": 100,
+        "currency": "INR",
+        "receipt": "receipt#1",
+        "notes": {
+            "key1": "value3",
+            "key2": "value2"
+        }
     }
     client.order.create(data=DATA)
     admin = ''
@@ -1450,19 +1521,16 @@ def pay_with_razorpay(request):
     else:
         return redirect('/user_sign_in')
 
-    return render(request,'payment_razorpay.html',{'user':user})
+    return render(request, 'payment_razorpay.html', {'user': user})
+
 
 @csrf_exempt
 def razorpay_success(request):
-    return render(request,'success.html')
-    
+    return render(request, 'success.html')
 
 
 # hhjhb
 
-from django.shortcuts import render
-from .forms import ImageForm
-from django.http import JsonResponse
 
 def main_view(request):
     form = ImageForm(request.POST or None, request.FILES or None)
@@ -1473,10 +1541,7 @@ def main_view(request):
     return render(request, 'admin_image_upload.html', context)
 
 
-
-
-
-###########################################################################################33   test #################################3
+# 33   test #################################3
 
 def test(request):
-    return render(request,'tesing.html')
+    return render(request, 'tesing.html')
