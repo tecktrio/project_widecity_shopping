@@ -49,6 +49,7 @@
 			border-radius: 10px;
 			cursor: pointer;
 		}
+
 		.return {
 			background-color: rgb(202, 220, 6);
 			padding: 4px 12px;
@@ -65,13 +66,15 @@
 			border-radius: 10px;
 			cursor: pointer;
 		}
-		.dowload_button{
-			background-color:rgb(5, 217, 157);
-			padding:1px 10px;
-			color:rgb(255, 255, 255);
+
+		.dowload_button {
+			background-color: rgb(5, 217, 157);
+			padding: 1px 10px;
+			color: rgb(255, 255, 255);
 			cursor: pointer;
-			border-radius:10px;
-			border:1px solid gray;height: 40px;
+			border-radius: 10px;
+			border: 1px solid gray;
+			height: 40px;
 		}
 	</style>
 
@@ -193,26 +196,29 @@
 												{% if order.status == 'ordered' %}
 												<div onclick="cancel_order('{{order.id}}')">
 													<p class="cancel" id="order_status">cancel</p>
-												</div>	
+												</div>
 
 												{% elif order.status == 'shipped' %}
 												<div onclick="cancel_order('{{order.id}}')">
 													<p class="cancel" id="order_status">cancel</p>
-												</div>												
-												
+												</div>
+
 												{% elif order.status == 'delivered' %}
 												<div onclick="return_order('{{order.id}}')">
 													<p class="return" id="order_status">Return</p>
 												</div>
-								
+
 
 												{% else %}
-												<div style="background-color:rgb(235,235,228);padding:1px 10px;color:rgb(9, 9, 9);cursor: not-allowed;border-radius:10px;border:1px solid gray;height: 40px;">
+												<div
+													style="background-color:rgb(235,235,228);padding:1px 10px;color:rgb(9, 9, 9);cursor: not-allowed;border-radius:10px;border:1px solid gray;height: 40px;">
 													cancel</div>
-												
+
 
 												{% endif %}
-												<a href="user_invoice_per_item/{{order.id}}"><div class="dowload_button">Download</div></a>
+												<a href="user_invoice_per_item/{{order.id}}">
+													<div class="dowload_button">Download</div>
+												</a>
 											</div>
 											<hr style="color: black;margin: 2px;">
 											{% endfor %}
@@ -220,8 +226,9 @@
 										<a href="/" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
 												class="icon-long-arrow-right"></i></a>
 										<a href="/user_invoice" class="btn btn-outline-primary-2"><span>Download as PDF
-											Copy</span><i class="icon-long-arrow-right"></i></a>				
-										<a href="/user_export_myorders_in_csv" class="btn btn-outline-primary-2"><span>Download as CSV
+												Copy</span><i class="icon-long-arrow-right"></i></a>
+										<a href="/user_export_myorders_in_csv"
+											class="btn btn-outline-primary-2"><span>Download as CSV
 												Copy</span><i class="icon-long-arrow-right"></i></a>
 									</div><!-- .End .tab-pane -->
 
@@ -343,28 +350,28 @@
 			function cancel_order(order_id) {
 				console.log(order_id);
 
-				if(confirm('Are you sure to cancel this product?'))
-				{
-				$.ajaxSetup({
-					data: { csrfmiddlewaretoken: '{{ csrf_token }}' }
-				})
+				if (confirm('Are you sure to cancel this product?')) {
+					$.ajaxSetup({
+						data: { csrfmiddlewaretoken: '{{ csrf_token }}' }
+					})
 
-				$.ajax({
-					url: '/user_update_order_status',
-					data: { 'order_id': order_id, 'order_status': 'canceled' },
-					method: 'post',
-					success: function (response) {
-						if (response['status'] == 'canceled') {
-							window.location.reload();
+					$.ajax({
+						url: '/user_update_order_status',
+						data: { 'order_id': order_id, 'order_status': 'canceled' },
+						method: 'post',
+						success: function (response) {
+							if (response['status'] == 'canceled') {
+								window.location.reload();
 
+							}
 						}
-					}
-				});
-			}}
+					});
+				}
+			}
 
-			function return_order(order_id){
+			function return_order(order_id) {
 				console.log(order_id)
-				window.location.href = '/user_return_order/'+order_id
+				window.location.href = '/user_return_order/' + order_id
 			}
 		</script>
 		{% endblock %}
