@@ -1,0 +1,158 @@
+<!--this page is the frontend of sales report-->
+<!--author details-->
+<!--developed by wide city developers on 2022-->
+<!--################################################################################################################-->
+
+{% extends 'admin_base.html' %}
+{% block content %}
+<head>
+  <style>
+    .select_date{
+      margin:0px;
+      border-radius: 5px;
+      background-color: rgb(0, 0, 0);
+      color: white;
+      font-size: 14px;
+      padding:5px 15px;
+    }
+  </style>
+</head>
+
+<main id="main" class="main">
+<!--    page title-->
+    <div class="pagetitle">
+      <h1>Sales Report</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Tables</li>
+          <li class="breadcrumb-item active">General</li>
+        </ol>
+      </nav>
+    </div>
+<!-- End Page Title -->
+
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Sales Report</h5>
+<!--              <p>Add <code>.table-bordered</code> for borders on all sides of the table and cells.</p>-->
+
+<!--Beginning of select duration-->
+                <!-- <form action="/admin_sales_report" method="POST">
+                  {% csrf_token %} -->
+                  <div  id="duration">
+                  <form action="/admin_sales_report" method="post">
+                    {% csrf_token %}
+                    <input  name="duration" style="display:none">
+                    {% if duration == 'Today' %}
+                    <input type="submit" name="duration" style="background-color: rgb(133, 23, 23);"   value="Today" class="select_date">
+                    {% else %}
+                    <input type="submit" name="duration"  value="Today" class="select_date">
+                    {% endif %}
+                    {% if duration == 'Month' %}
+                    <input type="submit" name="duration" value="Month" style="background-color: rgb(113, 38, 38);" class="select_date">
+                    {% else %}
+                    <input type="submit" name="duration" value="Month"  class="select_date">
+                    {% endif %}
+                    {% if duration == 'Year' %}
+                    <input type="submit" name="duration"  value="Year"  style="background-color: rgb(122, 39, 39);"  class="select_date">
+                    {% else %}
+                    <input type="submit" name="duration"  value="Year"  class="select_date">
+                    {% endif %}
+                  </form>
+                  </div>
+                    <!-- <tr>
+                        <td style="color:black;font-weight: bold;margin: 10px;"><input type="radio" name="filter_report" style="margin: 10px;" onchange="custom_date('custom_date')" id="custom_checkbox"><span style="color:black; ">Custom Date |</span></td>
+                        <td style="color:black;font-weight: bold;margin: 10px;"><span style="color:black; "><input type="radio"></span><input type="number" name="filter_report" style="margin: 10px;"onchange="submit()" style="color:black; " value="this_year" placeholder="YYYY" min="1999" max="2022"></td> -->
+
+                    <!-- </tr> -->
+                  <!-- </form> -->
+
+                <table id="customer_filter_report"  style="display:none;margin: 20px;">
+                    <tr>
+                        <td ><div style="color:black;margin: 20px;font-weight: bold;">DATE</div> </td>
+                        <td><input type="date" ></td>
+                    </tr>
+                    <tr>
+                        <td>END DATE</td>
+                        <td><input type="date"></td>
+                    </tr>
+                </table>
+<!--End of select duration-->
+              <table class="table table-bordered" style="margin-top: 30px;">
+
+
+<!--         titles        -->
+                <thead>
+                  <tr>
+                    <th scope="col">DATE</th>
+                    <th scope="col">BRAND</th>
+                    <th scope="col">PRODUCT NAME</th>
+                    <th scope="col">STOCK INVENTORY</th>
+                    <th scope="col">SOLD</th>
+                    <th scope="col">STOCK BALANCE</th>
+                    <th scope="col">REVENUE</th>
+                    <th scope="col">PAYMENT METHOD</th>
+                    <th scope="col">STATUS</th>
+                  </tr>
+                </thead>
+<!--end titles-->
+
+<!--beginning table body-->
+                <tbody>
+                {% for data in orders %}
+                  <tr>
+                    <td>{{data.Order_day}}/{{data.Order_month}}/{{data.Order_year}}</td>
+                    <td>{{data.product.category}}</td>
+                    <td>{{data.product.name}}</td>
+                    <td>{{data.product.stock_available}}</td>
+                    <td>{{data.product.total_sold}}</td>
+                    <td>{{data.product.stock_available}}</td>
+                    <td>{{data.product.stock_available}}</td>
+                    <td>{{data.payment_method}}</td>
+                    <td>{{data.status}}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+
+<!--ENDING THE TABLE BODY-->
+
+              </table>
+        </div>
+        <form action="/admin_sales_report" method="post">
+          {% csrf_token %}
+          <input name="export" style="display: none;">
+          <button type="submit"  name="filetype" value="pdf" style="margin: 20px;border-radius:5px ;background-color: rgb(0, 0, 0);color:white;border:none;padding:10px;border:1px solid grey;">GET PDF</button>
+          <button type="submit" name="filetype" value="csv" style="margin: 20px;border-radius:5px ;background-color: rgb(28, 28, 127);color:white;border:none;padding:10px;border:1px solid grey;">GET CSV</button> 
+        </form>
+      </div>
+    </section>
+
+  </main>
+<!-- End #main -->
+<!-- End Bordered Table -->-->
+
+<!--JS BEGIN-->
+<script>
+
+    function submit(task,filter){
+      $.ajaxSetup({
+            data: { csrfmiddlewaretoken: '{{csrf_token}}' },
+        });
+        $.ajax({
+            url: '/admin_sales_report',
+            method: 'post',
+            data: { 'task': task,'filter':filter},
+            success: function (response) {
+               
+              //  window.location.reload()
+               return response
+            }
+        })
+    }
+
+   
+</script>
+<!---->
+<!--JS END-->
+{%endblock%}

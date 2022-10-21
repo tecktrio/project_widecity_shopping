@@ -1,0 +1,132 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+{% load static %}
+<!-- ======= Header ======= -->
+
+<head>
+  <style>
+    .not-visible {
+      display: none;
+    }
+    #id_name{
+      color:red;
+      border-radius:10px;
+    }
+    #id_description{
+      color:red;
+      border-radius:10px;
+    }
+    #id_specification{
+      color:red;
+      border-radius:10px;
+    }
+    #id_stock_available{
+      color:red;
+      border-radius:10px;
+    }
+    #id_rating{
+      color:red;
+      border-radius:10px;
+    }
+    #id_total_sold{
+      color:red;
+      border-radius:10px;
+    }
+    #id_is_trusted{
+      color:red;
+      border-radius:10px;
+    }
+    #id_available_status{
+      color:red;
+      border-radius:10px;
+    }
+    #id_arrival_date{
+      color:red;
+      border-radius:10px;
+    }
+    #id_end_date{
+      color:red;
+      border-radius:10px;
+    }
+    #id_price{
+      color:red;
+      border-radius:10px;
+    }
+    #id_image_1{
+      color:red;
+      border-radius:10px;
+    }
+    #id_image_2{
+      color:red;
+      border-radius:10px;
+    }
+    #id_image_3{
+      color:red;
+      border-radius:10px;
+    }
+    #id_image_4{
+      color:red;
+      border-radius:10px;
+    }
+    #id_category{
+      color:red;
+      border-radius:10px;
+    }
+
+  </style>
+</head>
+<!-- ======= Sidebar ======= -->
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Form Elements</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item">Forms</li>
+        <li class="breadcrumb-item active">Elements</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-6">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title" style="color: rgb(9, 9, 9);">Add a new Category</h5>
+            <!-- user data  -->
+
+            <form method = "POST" enctype="multipart/form-data">
+                {% csrf_token %}
+        
+                          <div id="message" style="color:red;font-size: 16px;">{{message}}</div>
+                          <div style="display:flex;justify-content:space-between;">
+                            <label style="color:black;">Category Name</label>
+                            <div>
+                              <p>{{form.name}}</p>
+                            </div>
+                          </div>
+        
+                        <div style="display:flex;justify-content:space-between;">
+                          <label style="color:black;">Category Image</label>s
+                          <div>
+                            <p>{{form.image}}</p>
+                          </div>
+                        </div>
+              <br>
+        <div style="display:flex;justify-content:space-between;border:none;border-radius:20px;">
+                <button type="submit" style="border:none;border-radius:20px;background-color:blue;color:white;font-size:15px;padding:5px 15px;">Upload</button>
+        </div>
+            </form>
+
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+</main><!-- End #main -->
+
+{%endblock%}

@@ -1,0 +1,273 @@
+{% extends 'user_base.html' %}
+{% block content %}
+
+<head>
+    <style>
+        .input_box {
+            border-radius: 5px;
+            border: .5px solid rgb(4, 4, 4);
+            padding: 5px 10px;
+        }
+
+        .sign_button {
+            border-radius: 5px;
+            border: 1px solid rgb(107, 100, 209);
+            background-color: rgb(84, 84, 225);
+            color: white;
+            padding: 3px 10px;
+        }
+
+        .sign_button:hover {
+            background-color: white;
+            color: blue;
+            border: 1px solid white;
+        }
+
+        .links {
+            color: rgb(180, 174, 174);
+        }
+
+        .links:hover {
+
+            font-weight: bold;
+            color: rgb(255, 255, 255);
+        }
+        .column{
+            color:white;
+            margin:0px 10px;
+        }
+        .lightfont{
+            font-weight: bold;
+            color: rgb(166, 163, 163);
+        }
+        #next_status{
+            background-color:rgba(0, 0, 0,0);
+            border-radius: 10px;
+            color:white;
+            border:1px solid white;
+            font-size: 12px;padding:10px;
+        }
+        #next_status:hover{
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+
+<body style="background-image:url('/media/gifs/anim1.gif');background-size: cover;">
+    <div style="display: flex;justify-content: center;background-image:url('/media/gifs/anim1.gif')">
+        <div
+            style="border:2px solid rgb(255, 255, 255);margin:20vh;padding:50px;background-color: rgba(24, 13, 35,.7);border-radius: 10px;color: rgb(10, 9, 9);width: 50%;">
+            <h3 style="color: white;margin: 0px;">Manage Coupon</h3>
+            <p>see the details of available coupons</p>
+            <div id="message" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
+
+                <div style="margin-top: 10px;display: flex;justify-content: space-between;">
+                    <p class="column" style="font-weight: bold;">Coupon</p>
+                    <p class="column" style="font-weight: bold;text-align: center;">Discount</p>
+                    <p class="column" style="font-weight: bold;">Controls</p>
+                </div>
+
+                {% for coupon in coupons %}
+                <div style="display: flex;justify-content: space-between;">
+                    <div>
+                        <div id="coupon"  style="color:rgb(205, 201, 201);width: 200px;background-color: rgba(0,0,0,0);border-radius: 5px;border:1px solid white;padding: 5px 10px;margin: 5px; " >{{coupon.coupon}}</div>
+                    </div>
+
+                    <div >
+                        <div id="coupon_discount" style="color:rgb(205, 201, 201);width: 200px;background-color: rgba(0,0,0,0);border-radius: 5px;border:1px solid white;padding: 5px 10px;margin: 5px;" type="number" > {{coupon.discount_percentage}}</div>
+                    </div>
+                    <input  onclick="remove_coupon('{{coupon.id}}')" type="button" style="color:rgb(0, 0, 0);padding: 1px 10px;color:rgb(234, 230, 230);height: fit-content;margin: 5px;padding: 5px 10px;background-color: rgb(143, 34, 34);border: 1px solid white;border-radius: 5px;" value="remove">
+
+                </div>
+                <hr style="margin:10px;">
+                {% endfor %}
+                <input  onclick="add_coupon_control()" type="button" style="color:rgb(0, 0, 0);padding: 1px 10px;color:rgb(234, 230, 230);height: fit-content;margin: 5px;padding: 3px 10px;background-color: rgb(8, 125, 39);border: 1px solid white;border-radius: 5px;" value="Add +">
+                
+                <div style="display: flex;justify-content: space-between;display:none ;" id="add_coupon_tab">
+                    <div>
+                        <input  id="new_coupon" placeholder="coupon code"  style="color:rgb(205, 201, 201);width: 200px;background-color: rgba(0,0,0,0);border-radius: 5px;border:1px solid white;padding: 5px 10px;margin: 5px; " type="text">
+                    </div>
+
+                    <div >
+                        <input id="new_coupon_discount" placeholder="coupon discount" style="color:rgb(205, 201, 201);width: 200px;background-color: rgba(0,0,0,0);border-radius: 5px;border:1px solid white;padding: 5px 10px;margin: 5px;" type="number" min="0" max="100" >
+                    </div>
+                    <input   onclick="add_coupon()" type="button" style="color:rgb(0, 0, 0);padding: 1px 10px;color:rgb(11, 10, 10);height: fit-content;margin: 5px;padding: 5px 10px;background-color: rgb(255, 255, 255);border: 1px solid white;border-radius: 5px;" min="0" max="100"  value="Add">
+
+                </div>
+                <div id="message" style="color: red;font-weight: bold;display: inline-block;"></div>
+
+                
+
+    </div>
+
+    <script>
+        function validate() {
+            var user_email = document.getElementById('user_email').value
+            var user_email_err = document.getElementById('user_email_err')
+            var user_password = document.getElementById('user_password').value
+            var user_password_err = document.getElementById('user_password_err')
+            var message = document.getElementById('message')
+
+            if (user_email == '') {
+                console.log('Email field cannot be empty');
+                user_email_err.innerHTML = 'Email field cannot be empty.'
+            }            
+            else if (user_password == '') {
+                console.log('Password cannot be empty');
+                user_password_err.innerHTML = 'Password Cannot be empty'
+            }
+            else {
+                console.log('trying to log in with user data');
+                try_to_signin(user_email,user_password)
+            }
+        }
+
+        function try_to_signin(user_email,user_password){
+
+            $.ajaxSetup({
+                data:{csrfmiddlewaretoken :'{{ csrf_token }}'}
+            })
+
+            $.ajax({
+                url:'/user_sign_in',
+                method:'post',
+                data:{'user_email':user_email,'user_password':user_password},
+                success:function(response){
+                    resp = response['user_authentication_status']
+                    if(resp == 'user_not_found'){
+                        console.log('user_not_found_error')
+                        message.innerHTML = 'user not found'
+                    }
+                    else if(resp == 'wrong_password'){
+                        console.log('wrong password error')
+                        message.innerHTML='wrong password'
+                    }                    
+                    else if(resp == 'user_not_active'){
+                        console.log('user is not active')
+                        message.innerHTML='user is not active'
+                    }
+                    else if(resp == 'success'){
+                        console.log('user is nice')
+                        window.location.href='/user_home'
+                    }
+                    // window.location.href = '/user_home'
+                },
+            })
+        }
+
+        function status_change(order_id){
+
+            console.log('did anyone called me')
+
+        
+            order_status = document.getElementById('next_status')
+            console.log(order_status.value)
+
+            $.ajaxSetup({
+                data:{csrfmiddlewaretoken :'{{ csrf_token }}'}
+            })
+
+            $.ajax({
+                url:'/admin_change_order_status',
+                method:'post',
+                data:{'status':order_status.value,'order_id':order_id},
+                success:function(response){
+                    resp = response['status']
+                    if(resp == 'success'){
+                        console.log('order_status in server changed succesfully')
+                        window.location.reload()
+                        // message.innerHTML = 'user not found'
+                    }
+                }
+                })
+            
+        }
+
+        function user_confirm(id){
+            swal({
+                title: 'Are you sure to change the status to {{next_status}}?',
+                text: 'Once changed, you will not be able to change the status to previous state!',
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                swal('Status changed to {{next_status}}', {
+                    icon: 'success',
+                });
+                status_change(id)
+                } else {
+                swal('Status not changed');
+                return false;
+                }
+            });
+}
+
+
+    function remove_coupon(coupon_id){
+
+         if (confirm('Are you sure to delete this coupen.')){
+               $.ajaxSetup({
+                data:{csrfmiddlewaretoken :'{{ csrf_token }}'}
+            })
+
+            $.ajax({
+                url:'/admin_remove_coupon',
+                method:'post',
+                data:{'coupon_id':coupon_id},
+                success:function(response){
+                    resp = response['status']
+                        window.location.reload()
+                        // message.innerHTML = 'user not found'
+                    
+                }
+                })
+         }
+
+    }
+
+    function add_coupon_control(){
+        document.getElementById('add_coupon_tab').style.display = 'flex'
+    }
+
+    function add_coupon(){
+
+        new_coupon = document.getElementById('new_coupon').value
+        new_coupon_discount = document.getElementById('new_coupon_discount').value
+
+        if (new_coupon.length > 0 && new_coupon_discount.length >0 && (parseInt(new_coupon_discount) > 0 && parseInt(new_coupon_discount) <100) ){
+
+            document.getElementById('message').innerText = ''
+
+
+        if (confirm('Are you sure to add this coupen.')){
+            $.ajaxSetup({
+            data:{csrfmiddlewaretoken :'{{ csrf_token }}'}
+        })
+
+        $.ajax({
+            url:'/admin_add_coupon',
+            method:'post',
+            data:{'new_coupon':new_coupon,'new_coupon_discount':new_coupon_discount},
+            success:function(response){
+                resp = response['status']
+                if(resp == 'success'){
+                    console.log('coupon added succefully')
+                    window.location.reload()
+                    // message.innerHTML = 'user not found'
+                }
+            }
+            })
+        }
+
+        }
+        else{
+           document.getElementById('message').innerText = '* The coupon field or the discount field cannot be empty.\n* discount must be in between 0 and 100'
+        }
+    }
+
+    </script>
+
+    {% endblock %}

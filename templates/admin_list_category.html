@@ -1,0 +1,112 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+<head>
+<style>
+  .td{
+   
+    font-weight: bold;
+    display: flex;
+    color:black;
+    justify-content:space-evenly;
+  }
+  .delete_category{
+    background-color: rgb(83, 24, 24);
+    color:rgb(255, 254, 254);
+    border-radius:5px;
+    padding: 0px 20px;
+    border: none;
+    height: 35px;
+    font-size: 14px;
+  }  
+  .delete_category:hover{
+    background-color: rgb(208, 25, 25);
+  }
+  .edit_category{
+    background-color: rgb(25, 68, 33);
+    color:rgb(254, 255, 254);
+    border-radius:5px;
+    border: none;
+    height: 35px;
+    padding: 0px 20px;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .edit_category:hover{
+    background-color: rgb(15, 188, 15);
+  }
+</style>
+</head>
+
+  <!-- ======= Sidebar ======= -->
+
+
+  <main id="main" class="main">
+
+
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-8">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" style="margin-bottom: 20px;">Add a new Category</h5>
+<!--/////////////////////////////////////////////////////////////////////////-->
+              <!-- General Form Elements -->
+<table>
+<tr>
+  <th>
+    <th>NAME</th>
+    <th>IMAGE</th>
+  </th>
+</tr>
+
+  {% for category in categories %}
+
+        <div class="td" style="display: flex;justify-content:space-between">
+          <div style="margin:0px 30px;width: 20%">{{category.name}}</div>
+          <img src="media/{{category.image}}" width="30px">
+          <button class="delete_category" onclick="delete_category('{{category.id}}')">Delete </button>
+          <a href="admin_edit_category/{{category.id}}" style="color: white;" onmouseover=this.sty><button class="edit_category">Edit </button></a>
+
+        </div>
+        <hr style="color: black;">
+
+  {% endfor %}
+</table>
+
+
+    <a href="/admin_add_category"><button style="border:none;border-radius:20px;background-color:rgb(103, 103, 226);color:white;font-size:15px;padding:5px 25px;">+ &nbspadd</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+  <script>
+    function delete_category(cat_id){
+
+      if(confirm('Are you sure to delete this category?'))
+      {
+        console.log(cat_id)
+        $.ajaxSetup({
+          data:{csrfmiddlewaretoken:'{{csrf_token}}'},
+        })
+        $.ajax({
+          url:'/admin_category_delete',
+          method:'post',
+          data:{'category_id':cat_id},
+          success:function(response){
+            console.log('product deleted')
+            window.location.reload()
+          }
+        })
+    }
+  }
+
+
+  </script>
+
+{%endblock%}

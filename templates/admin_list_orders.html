@@ -1,0 +1,97 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+
+<head>
+  <style>
+    #view {
+      border-radius: 5px;
+      background-color: rgb(16, 34, 77);
+      color: white;
+      border: none;
+      font-size: 12px;
+      padding: 5px 10px;
+      align-items: center;
+    }
+
+    #view:hover {
+      background-color: rgb(31, 92, 233);
+    }
+
+    .data {
+      text-align: left;
+      color: rgb(99, 96, 96);
+    }
+  </style>
+</head>
+
+
+<main id="main" class="main">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">All Orders</h5>
+      <!--              <p>Add <code>.table-sm</code> to make any <code>.table</code> more compact by cutting all cell padding in half.</p>-->
+      <!-- Small tables -->
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col" style="text-align:left;">USER NAME</th>
+            <th scope="col" style="text-align:left;">PRODUCT NAME</th>
+            <th scope="col" style="text-align:left;">ORDERED DATE</th>
+            <th scope="col" style="text-align:left;">PAYMENT METHOD</th>
+            <th scope="col" style="text-align:left;">ORDER STATUS</th>
+            <th scope="col" style="text-align:center;">VIEW</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!--########################################################################################################################-->
+          {% for order in orders %}
+          <tr>
+            <td scope="row" class="data">{{order.user.full_name}}</td>
+            <td class="data">{{order.product.name}}</td>
+            <td class="data">{{order.Order_day}}/{{order.Order_month}}/{{order.Order_year}}</td>
+            <td class="data">{{order.payment_method}}</td>
+
+            {% if order.status == 'ordered' %}
+            <td style="background-color: rgb(133, 52, 52);color: white;text-align: center;border-radius: 5px;padding: 3px;width: 150px;">Ordered</td>            
+            {% elif order.status == 'delivered' %}
+            <td class="data" style="background-color: rgb(59, 109, 52);color: white;text-align: center;border-radius: 5px;padding: 3px;">Delivered</td>          
+            {% elif order.status == 'Refunded' %}
+            <td class="data" style="background-color: rgb(55, 17, 158);color: white;text-align: center;border-radius: 5px;padding: 3px;">Refunded</td>
+            {% else %}
+            <td class="data" style="background-color: rgb(109, 122, 209);color: white;text-align: center;border-radius: 5px;padding: 3px;">Canceled</td>
+            {% endif %}
+
+            <td class="data" style="text-align: center;"><a href="/admin_order_details/{{order.id}}"><button id="view">View</button></a></td>
+          </tr>
+          {% endfor %}
+
+          <!--########################################################################################################################-->
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</main>
+
+<script>
+
+  function change_status(order_status, order_id) {
+
+    $.ajaxSetup({
+      data: { csrfmiddlewaretoken: '{{csrf_token}}' },
+    })
+    $.ajax({
+      url: '/order_status',
+      data: { 'order_id': order_id, 'order_status': order_status },
+      method: 'post',
+      success: function (response) {
+        console.log('admin changed the status')
+      }
+    })
+  }
+
+</script>
+
+{% endblock %}
+<!-- End small tables -->

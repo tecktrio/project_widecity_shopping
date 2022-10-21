@@ -1,0 +1,370 @@
+{% extends 'user_base.html' %}
+{% block content %}
+
+<head>
+	<style>
+		.color {
+			color: white;
+		}
+
+		.color:hover {
+			color: brown;
+		}
+
+		.ap {
+			font-size: 13px;
+			font-weight: bold;
+			color: rgb(3, 2, 2);
+			width: 100px;
+
+		}
+
+		.at {
+			font-size: 16px;
+			color: rgb(102, 99, 99);
+			margin: 20px;
+			font-weight: bold;
+		}
+
+		.user {
+			border: 2px solid grey;
+			border-radius: 10px;
+			padding: 1px 10px;
+			margin: 10px 50px;
+			font-weight: normal;
+			background-color: black;
+			color: white;
+		}
+
+		.user:hover {
+			background-color: white;
+			color: black;
+			font-weight: normal;
+		}
+
+		.cancel {
+			background-color: rgb(191, 54, 50);
+			padding: 2px 10px;
+			color: rgb(255, 255, 255);
+			border-radius: 10px;
+			cursor: pointer;
+		}
+		.return {
+			background-color: rgb(202, 220, 6);
+			padding: 4px 12px;
+			color: rgb(0, 0, 0);
+			border-radius: 10px;
+			cursor: pointer;
+			border: 1px solid black;
+		}
+
+		.cancel:hover {
+			background-color: rgb(78, 78, 188);
+			padding: 2px 10px;
+			color: rgb(255, 255, 255);
+			border-radius: 10px;
+			cursor: pointer;
+		}
+		.dowload_button{
+			background-color:rgb(5, 217, 157);
+			padding:1px 10px;
+			color:rgb(255, 255, 255);
+			cursor: pointer;
+			border-radius:10px;
+			border:1px solid gray;height: 40px;
+		}
+	</style>
+
+</head>
+
+
+<body style="background-color: rgb(30, 11, 49);">
+
+	<div class="page-wrapper">
+		<main class="main">
+			<div class="page-header text-center"
+				style="background-image: url('https://www.weasyl.com/~fluffkevlar/submission/30165/fluffkevlar-starfield-gif-81774.gif');background-size: cover;">
+				<div class="container">
+					<h1 class="page-title" style="color: white;">My Account<span>Widecity Shopping</span></h1>
+				</div><!-- End .container -->
+			</div><!-- End .page-header -->
+			<nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+				<div class="container">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a href="index.html">Home</a></li>
+						<li class="breadcrumb-item"><a href="#">Shop</a></li>
+						<li class="breadcrumb-item active" aria-current="page">My Account</li>
+					</ol>
+				</div><!-- End .container -->
+			</nav><!-- End .breadcrumb-nav -->
+
+			<div class="page-content">
+				<div class="dashboard">
+					<div class="container">
+						<div class="row">
+
+							<!-- left side -->
+							<aside class="col-md-4 col-lg-3">
+								<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+									<li class="nav-item">
+										<a id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab"
+											aria-controls="tab-dashboard" aria-selected="true"
+											class="color">Dashboard</a>
+									</li>
+									<li class="nav-item">
+										<a id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab"
+											aria-controls="tab-orders" aria-selected="false" class="color">Orders</a>
+									</li>
+									<li class="nav-item">
+										<a id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab"
+											aria-controls="tab-downloads" aria-selected="false"
+											class="color">Downloads</a>
+									</li>
+									<li class="nav-item">
+										<a id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab"
+											aria-controls="tab-address" aria-selected="false" class="color">Adresses</a>
+									</li>
+									<li class="nav-item">
+										<a id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab"
+											aria-controls="tab-account" aria-selected="false" class="color">Account
+											Details</a>
+									</li>
+									<li class="nav-item">
+										<a href="#" class="color">Sign Out</a>
+									</li>
+								</ul>
+							</aside>
+							<!-- End .col-lg-3 -->
+
+							<div class="col-md-8 col-lg-9">
+								<div class="tab-content">
+
+									<!--   user details  and dashboard     -->
+									<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
+										aria-labelledby="tab-dashboard-link">
+
+										<div style="display:flex;align-items:center;">
+											<div>
+												<div class="user">user Full Name</div>
+												<div class="user">user Phone Number</div>
+												<div class="user">user email address</div>
+											</div>
+											<div>
+												<div class="user">{{user.full_name}}</div>
+												<div class="user">{{user.email}}</div>
+												<div class="user">{{user.contact_number}}</div>
+											</div>
+										</div>
+
+									</div><!-- .End .tab-pane -->
+
+									<!--###   my orders   ##############################################################################################################################-->
+
+									<div class="tab-pane fade" id="tab-orders" role="tabpanel"
+										aria-labelledby="tab-orders-link"
+										style="background-color:rgb(255, 255, 255) ;padding:10px;border-radius:10px;">
+										<table>
+
+											<div class="space" style="display: flex;justify-content:space-evenly;">
+												<p style="width: 30px;" class="at">Image</p>
+												<p style="width: 30px;" class="at">Name</p>
+												<p style="width: 30px;" class="at">Price</p>
+												<p style="width: 30px;" class="at">Ordered Date</p>
+												<p style="width: 30px;" class="at">Status</p>
+												<p style="width: 30px;" class="at">control</p>
+												<p style="width: 30px;" class="at">invoice</p>
+
+											</div>
+											<hr style="color: black;">
+											{% for order in orders %}
+											<div class="space" style="display: flex;justify-content:space-evenly">
+
+
+												<p class="ap"><a href="/user_product_detail/{{order.product.id}}"><img
+															src="media/{{order.product.image_1}}" height="50px"
+															width="50px;"></a></p>
+												<p class="ap">{{order.product.name}}</p>
+
+												<p class="ap">{{order.product.price}}</p>
+												<p class="ap">
+													{{order.Order_day}}/{{order.Order_month}}/{{order.Order_year}}</p>
+												<p class="ap">{{order.status}}</p>
+
+												{% if order.status == 'ordered' %}
+												<div onclick="cancel_order('{{order.id}}')">
+													<p class="cancel" id="order_status">cancel</p>
+												</div>	
+
+												{% elif order.status == 'shipped' %}
+												<div onclick="cancel_order('{{order.id}}')">
+													<p class="cancel" id="order_status">cancel</p>
+												</div>												
+												
+												{% elif order.status == 'delivered' %}
+												<div onclick="return_order('{{order.id}}')">
+													<p class="return" id="order_status">Return</p>
+												</div>
+								
+
+												{% else %}
+												<div style="background-color:rgb(235,235,228);padding:1px 10px;color:rgb(9, 9, 9);cursor: not-allowed;border-radius:10px;border:1px solid gray;height: 40px;">
+													cancel</div>
+												
+
+												{% endif %}
+												<a href="user_invoice_per_item/{{order.id}}"><div class="dowload_button">Download</div></a>
+											</div>
+											<hr style="color: black;margin: 2px;">
+											{% endfor %}
+										</table>
+										<a href="/" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+												class="icon-long-arrow-right"></i></a>
+										<a href="/user_invoice" class="btn btn-outline-primary-2"><span>Download as PDF
+											Copy</span><i class="icon-long-arrow-right"></i></a>				
+										<a href="/user_export_myorders_in_csv" class="btn btn-outline-primary-2"><span>Download as CSV
+												Copy</span><i class="icon-long-arrow-right"></i></a>
+									</div><!-- .End .tab-pane -->
+
+
+
+
+									<!--   #########################   handling user addresses    #############################################################3-->
+
+									<div class="tab-pane fade" id="tab-address" role="tabpanel"
+										aria-labelledby="tab-address-link">
+										<p>The following addresses will be used on the checkout page by default.</p>
+
+										<div class="row">
+											{% for each in address %}
+											<div class="col-lg-6">
+												<div class="card card-dashboard">
+													<div class="card-body">
+														<h3 class="card-title">Billing Address</h3>
+														<!-- End .card-title -->
+														<p>
+															{{each.email}}<br>
+															{{each.first_name}}<br>
+															{{each.last_name }}<br>
+															{{each.building_name }}<br>
+															{{each.street }}<br>
+															{{each.city }}<br>
+															{{each.state }}<br>
+															{{each.pincode }}<br>
+															{{each.contact }}<br>
+															{{each.alt_contact }}<br>
+
+														<div style="display: flex;color:white">
+															<a href="user_edit_address/{{each.id}}"
+																style="cursor:pointer; background-color:green;padding:5px;border-radius: 3px;margin: 3px;;">Edit
+																<i class="icon-edit"></i></a>
+															<div onclick="delete_address('{{each.id}}')"
+																style="cursor:pointer;background-color: rgb(168, 77, 12);padding:5px;margin:3px;border-radius: 3px;">
+																Delete <i class="icon-edit"></i></div>
+														</div>
+														</p>
+													</div><!-- End .card-body -->
+												</div><!-- End .card-dashboard -->
+											</div><!-- End .col-lg-6 -->
+											{% endfor %}
+											<script>
+												function delete_address(address_id) {
+
+													if (confirm('Are you sure to delete the selected address')) {
+														$.ajaxSetup({
+															data: { 'csrfmiddlewaretoken': '{{csrf_token}}' },
+														});
+
+
+														$.ajax({
+															url: '/user_delete_address',
+															method: 'post',
+															data: { 'address_id': address_id },
+															success: function (response) {
+																console.log('address updated, reloading the page')
+																window.location.reload()
+															}
+														});
+													}
+												}
+
+
+											</script>
+										</div><!-- End .row -->
+									</div><!-- .End .tab-pane -->
+
+									<!-- account details -->
+									<div class="tab-pane fade" id="tab-account" role="tabpanel"
+										aria-labelledby="tab-account-link">
+										<form action="#">
+											<div class="row">
+												<div class="col-sm-6">
+													<label>First Name *</label>
+													<input type="text" class="form-control" required>
+												</div><!-- End .col-sm-6 -->
+
+												<div class="col-sm-6">
+													<label>Last Name *</label>
+													<input type="text" class="form-control" required>
+												</div><!-- End .col-sm-6 -->
+											</div><!-- End .row -->
+
+											<label>Display Name *</label>
+											<input type="text" class="form-control" required>
+											<small class="form-text">This will be how your name will be displayed in the
+												account section and in reviews</small>
+
+											<label>Email address *</label>
+											<input type="email" class="form-control" required>
+
+											<label>Current password (leave blank to leave unchanged)</label>
+											<input type="password" class="form-control">
+
+											<label>New password (leave blank to leave unchanged)</label>
+											<input type="password" class="form-control">
+
+											<label>Confirm new password</label>
+											<input type="password" class="form-control mb-2">
+
+											<button type="submit" class="btn btn-outline-primary-2">
+												<span>SAVE CHANGES</span>
+												<i class="icon-long-arrow-right"></i>
+											</button>
+										</form>
+									</div><!-- .End .tab-pane -->
+								</div>
+							</div><!-- End .col-lg-9 -->
+						</div><!-- End .row -->
+					</div><!-- End .container -->
+				</div><!-- End .dashboard -->
+			</div><!-- End .page-content -->
+		</main><!-- End .main -->
+
+		<script>
+			function cancel_order(order_id) {
+				console.log(order_id);
+
+				if(confirm('Are you sure to cancel this product?'))
+				{
+				$.ajaxSetup({
+					data: { csrfmiddlewaretoken: '{{ csrf_token }}' }
+				})
+
+				$.ajax({
+					url: '/user_update_order_status',
+					data: { 'order_id': order_id, 'order_status': 'canceled' },
+					method: 'post',
+					success: function (response) {
+						if (response['status'] == 'canceled') {
+							window.location.reload();
+
+						}
+					}
+				});
+			}}
+
+			function return_order(order_id){
+				console.log(order_id)
+				window.location.href = '/user_return_order/'+order_id
+			}
+		</script>
+		{% endblock %}

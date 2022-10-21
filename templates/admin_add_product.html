@@ -1,0 +1,330 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+{% load static %}
+<!-- ======= Header ======= -->
+
+<head>
+  <style>
+    .not-visible {
+      display: none;
+    }
+    #id_name{
+      color:rgb(14, 12, 12);
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_description{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+
+    }
+    #id_specification{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_stock_available{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_rating{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_total_sold{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_is_trusted{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_available_status{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_arrival_date{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_end_date{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_price{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_image_1{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_image_2{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_image_3{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_image_4{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+    #id_category{
+      color:black;
+      border-radius:3px;
+      padding:3px;
+      text-align: center;
+      width: 60%;
+    }
+
+.label{
+  color:rgb(93, 89, 89);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+  </style>
+</head>
+<!-- ======= Sidebar ======= -->
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1 style="color: white;">Add your Products</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item">Forms</li>
+        <li class="breadcrumb-item active">Elements</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-6">
+
+        <div class="card" style="background-color: rgb(40, 40, 74);">
+          <div class="card-body">
+            <h5 class="card-title" style="margin-bottom: 0px;color:white;">Make sure the details are correct</h5>
+            <p style="color: rgb(129, 131, 139);font-weight:normal ;margin-top: 0px;margin-bottom: 50px;color:wheat;">Enter the information of the product exactly as it is</p>
+            <!-- user data  -->
+
+            <form method = "POST" enctype="multipart/form-data" style="color: rgb(83, 83, 83);font-weight:bold ;background-color: rgb(255, 255, 255);padding: 30px;border-radius: 10px;">
+              {% csrf_token %}
+              <div id="message" style="color:red ;font-size: 15px;"></div>
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Name</label>
+                {{form.name}}
+              </div>
+              <hr>
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">description</label>
+                {{form.description}}
+              </div>
+              <hr>
+              <!--start images -->
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Image 1</label>
+                {{form.image_1}}  
+              </div>
+              <hr>
+              <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Image 2</label>
+                {{form.image_2}} 
+              </div>
+              <hr>
+              <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Image 3</label>
+                {{form.image_3}}  
+              </div>
+              <hr>
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Image 4</label>
+                {{form.image_4}}
+              </div>
+              <hr>
+              <!-- end images -->
+              <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Category</label>
+              <select name="category" style="padding: 10px;border-radius: 10px;">
+                {% for category in form_categories %}
+                  <option selected>{{ category.name }}</option>
+                {% endfor %}
+              </select>
+              </div>
+              <hr>
+              <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Specification</label>
+                <textarea name="specification" maxlength="300"></textarea>
+              </div>
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Stock Available</label>
+                {{form.stock_available}}
+              </div>
+              <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Rating</label>
+                {{form.rating}}
+              </div>
+              <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Total Sold</label>
+                {{form.total_sold}}
+              </div>
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Is Trusted</label>
+                {{form.is_trusted}}
+              </div>
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Available Status</label>
+                {{form.available_status}}
+              </div>              
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">Arrival Date</label>
+                {{form.arrival_date}}
+              </div>              
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">End Date</label>
+                {{form.end_date}}
+              </div>              
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+                <label class="form-label label">price</label>
+                {{form.price}}
+              </div>              
+
+              <button type="submit" style="margin-top: 50px;" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+</main><!-- End #main -->
+<script>
+console.log('{{form.name}}')
+  function validate(){
+    
+    console.log('validating input fields...')
+    console.log('gathering data from fields...')
+
+    name = document.getElementById('name').value
+    description = document.getElementById('description').value
+    category = document.getElementById('category').value
+    specification = document.getElementById('specification').value
+    stock_available = document.getElementById('stock_available').value
+    rating = document.getElementById('rating').value
+    total_sold = document.getElementById('total_sold').value
+    is_trusted = document.getElementById('is_trusted').value
+    available_status = document.getElementById('available_status').value
+    arrival_date = document.getElementById('arrival_date').value
+    end_date = document.getElementById('end_date').value
+    image_1 = document.getElementById('image_1')
+    image_2 = document.getElementById('image_2')
+    image_3 = document.getElementById('image_3')
+    image_4 = document.getElementById('image_4')
+
+    console.log('gathering data successful.');
+    console.log('starting validation.');
+
+    if(name == ''){document.getElementById('message').innerHTML = 'name cannot be empty'}
+    else if(description == ''){document.getElementById('message').innerHTML = 'description cannot be empty'}
+    else if(description.length < 5 || description.length > 10){document.getElementById('message').innerHTML = 'description must be between 5 to 10 charecters'}
+    else if(category == ''){document.getElementById('message').innerHTML = 'category cannot be empty'}
+    else if(specification == ''){document.getElementById('message').innerHTML = 'specification cannot be empty'}
+    else if(stock_available == ''){document.getElementById('message').innerHTML = 'stock_available cannot be empty'}
+    else if(rating == ''){document.getElementById('message').innerHTML = 'rating cannot be empty'}
+    else if(total_sold == ''){document.getElementById('message').innerHTML = 'total_sold cannot be empty'}
+    else{
+      document.getElementById('message').innerHTML = ''
+      console.log('everything looks perfect successful.')
+      console.log('Calling upload function...')
+      upload_new_product()
+    }
+  }
+
+  function upload_new_product(){
+    console.log('Trying to upload the new product to the database...')
+    $.ajaxSetup({
+      data:{csrfmiddlewaretoken:'{{csrf_token}}'}
+    })
+    console.log('ajax setup complete...')
+    console.log('ajax trying to send data to admin_add_product in views.py...')
+    $.ajax({
+      url:'/admin_add_product',
+      method:'post',
+      data:{
+        'name':name,
+        'description':description,
+        'category':category,
+        'specification':specification,
+        'stock_available':stock_available,
+        'rating':rating,
+        'total_sold':total_sold,
+        'is_trusted':is_trusted,
+        'available_status':available_status,
+        'end_date':end_date,
+        'image_1':image_1,
+        'image_2':image_2,
+        'image_3':image_3,
+        'image_4':image_4,
+      },
+      success:function(response){
+        if(response['status']){
+          console.log('product_added_successfuly')
+        }
+      }
+    })
+  }
+</script>
+<script src="{% static 'cropper.js' %}"></script>
+
+<script>
+document.getElementById("id_arrival_date").type="date"; 
+document.getElementById("id_end_date").type="date"; 
+
+</script>
+{%endblock%}

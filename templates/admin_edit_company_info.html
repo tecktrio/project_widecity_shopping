@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>admin controls</title>
+    <link rel="icon" href="https://qph.fs.quoracdn.net/main-qimg-8a7e6e795ec367a68ff07d16adcb78fb-c">
+</head>
+<body>
+    <form method = "POST" enctype="multipart/form-data" style="display:flex;justify-content:center;">
+        {% csrf_token %}
+        <div style="border:1px solid black;padding:30px;width:30%;margin-top:50px;border-radius:10px;">
+
+            <div style="display:flex;justify-content:space-between;margin:10px;">
+                <label>COMPANY LOGO</label>
+                <div>{{form.company_logo}}</div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin:10px;">
+                <label>COMPANY NAME</label>
+                <div>{{form.company_name}}</div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;margin:10px;">
+                <label>COMPANY DESCRIPTION</label>
+                <div>{{form.company_description}}</div>
+            </div>
+
+
+            <button type="submit" style="margin:10px;background-color:blue;color:white;border:1px solid grey;border-radius:10px;padding:8px 10px;">Upload</button>
+        </div>
+    </form>
+</body>
+</html>
