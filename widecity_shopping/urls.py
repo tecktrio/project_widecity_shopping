@@ -1,6 +1,7 @@
+from mimetypes import init
 from xml.etree.ElementInclude import include
 
-from django.conf import settings
+from django.conf import settings,urls
 from django.conf.urls.static import static
 from widecity_shopping import views
 from django.contrib import admin
@@ -10,7 +11,6 @@ from widecity_shopping.views import main_view
 urlpatterns = [
     # use side url patterns
     path('', views.root),
-    path('/*', views.root),
     path('user_home', views.user_home),
     path('user_product_detail/<str:product_id>', views.user_product_detail),
     path('user_category_view/<str:name>', views.user_category_view),
@@ -37,6 +37,7 @@ urlpatterns = [
     path('user_export_myorders_in_csv', views.user_export_myorders_in_csv),
     path('user_invoice_per_item/<str:id>', views.user_invoice_per_item),
     path('user_invoice', views.user_invoice),
+    path('user_otp_sign_in', views.user_otp_sign_in),
     path('user_otp_sign_in_validation', views.user_otp_sign_in_validation),
     path('user_forget_password', views.forget_password),# admin and the user have the same page for forget password
 

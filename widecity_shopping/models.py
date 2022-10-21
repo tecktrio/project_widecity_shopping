@@ -35,9 +35,10 @@ class Users(models.Model):
     signup_day = models.CharField(max_length = 50,default=current_date.day)
     signup_month = models.CharField(max_length = 50,default=current_date.month)
     signup_year = models.CharField(max_length = 50,default=current_date.year)
-    active_status = models.CharField(max_length = 50,default='true')
+    active_status = models.CharField(max_length = 50,default='active')
     is_admin = models.CharField(max_length = 50,default='false')
     profile_image = models.ImageField(upload_to = 'profile_image/')
+    reference_id = models.CharField(max_length  =100,default = '0000000000')
 
 class Address(models.Model):
     email = models.CharField(max_length = 50 ,default = 'buddy')
@@ -148,3 +149,6 @@ class Return_request(models.Model):
     user = models.ForeignKey(Users,on_delete = models.CASCADE)
     reason = models.CharField(max_length = 500)
 
+class References(models.Model):
+    user_id = models.CharField(max_length = 100)
+    refered_user_id = models.CharField(max_length = 100)

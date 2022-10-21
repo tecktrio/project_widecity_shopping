@@ -1,3 +1,7 @@
+# this program perform the backend logical operations in widecity shopping 
+# Author: widecity Developers
+
+# starting importing the neccessary modules and packages
 import csv
 from django.http import JsonResponse
 from .forms import ImageForm
@@ -8,7 +12,6 @@ import email
 from itertools import product
 from math import fabs
 import random
-
 import re
 from sre_constants import SUCCESS
 from this import d
@@ -25,57 +28,50 @@ from django.shortcuts import redirect, render
 from requests import session
 from twilio.rest import Client
 from widecity_shopping.forms import add_category, add_product_form, edit_banner
-from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Orders, Products, Return_request, Users, Address
+from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Orders, Products, References, Return_request, Users, Address
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 import pdfkit
 import datetime
 from datetime import timedelta
+# end 
 
+
+# declaring or initializing the global variables
 current_date = datetime.date.today()
-
 duration = 'Today'
-# Create your views here.
 otp = '0'
 delivery_charge = 10
-# handling user side
+# end
+
+# starting the functions to handle our app backend
+def handler404(request,data):
+    return redirect(root)
+def handler500(request):
+    return render(request,'handler500.html')
 
 
 def root(request):
-    if 'user' in request.session:
-        return redirect('/user_home')
-    else:
-        return redirect('/user_sign_in')
-
+    if 'user' in request.session:return redirect('/user_home')
+    else: return redirect('/user_sign_in')
 
 def user_home(request):
     user = ''
-
     # gathering neccessary data from the server
-
-    try:
-        banner = Banners.objects.get(id=1)  # getting the banner data
-    except:
-        banner = ''  # assigning null to the banners if there is an issue in getting the banner
-    try:
-        products = Products.objects.all()
-    except:
-        products = ''
-    try:
-        categories = Category.objects.all()
-    except:
-        categories = ''
+    try:banner = Banners.objects.get(id=1)  # getting the banner data
+    except:banner = ''  # assigning null to the banners if there is an issue in getting the banner
+    try: products = Products.objects.all()
+    except: products = ''
+    try:categories = Category.objects.all()
+    except: categories = ''
     print(products)
     try:
         if 'user' in request.session:
             user_email = request.session['user']
             user = Users.objects.get(email=user_email)
-        else:
-            user = 'guest'
-    except:
-        pass
-
+        else:user = 'guest'
+    except: pass
     return render(request, 'user_home.html', {'user': user, 'banner': banner, 'products': products, 'categories': categories})
 
 
@@ -86,10 +82,8 @@ def user_product_detail(request, product_id):
 
 
 def user_invoice(request):
-    if 'user' in request.session:
-        user = request.session['user']
-    else:
-        return redirect('/user_sign_in')
+    if 'user' in request.session:user = request.session['user']
+    else:return redirect('/user_sign_in')
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
     textob = c.beginText()
@@ -107,7 +101,6 @@ def user_invoice(request):
 
     ]
     for orders in order_details:
-
         lines.append(str(orders.Order_day) +
                      str('/'+str(orders.Order_month)) +
                      str('/'+str(orders.Order_year)) +
@@ -124,36 +117,28 @@ def user_invoice(request):
 
     lines.append('')
     lines.append('This report is of the duration of last 7 days')
-
     for line in lines:
         textob.textLine(line)
-
     c.drawText(textob)
     c.showPage()
     c.save()
     buf.seek(0)
-
     return FileResponse(buf, as_attachment=True, filename='widecity_invoice.pdf ')
 
 
 def user_category_view(request, name):
-
     category = Category.objects.get(name=name)
     category_products = Products.objects.filter(category=category.name)
     categories = Category.objects.all()
     product_count = category_products.count()
     p = Paginator(category_products, 2)
-
     page_obj = p.get_page(1)
-
     if 'page' in request.session:
         page_number = request.session['page']
         page_obj = p.get_page(page_number)
-
     if request.method == 'POST':
         print('its post')
         page_number = request.POST.get('page')
-
         try:
             page_obj = p.get_page(page_number)
             request.session['page'] = page_number
@@ -163,7 +148,6 @@ def user_category_view(request, name):
             for i in page_obj:
                 print(i)
             JsonResponse({'category_products': page_obj})
-
     return render(request, 'user_category_view.html',
                   {
                       'category': category,
@@ -174,12 +158,10 @@ def user_category_view(request, name):
 
 def user_add_to_cart(request):
     response = 'failed'
-    if 'user' in request.session:
-        user = request.session['user']
+    if 'user' in request.session:user = request.session['user']
     else:
         response = 'user_not_found'
         return JsonResponse({'response': response})
-
     if request.method == 'POST':
         product_id = int(request.POST.get('product_id'))
         user = Users.objects.get(email=user)
@@ -189,51 +171,35 @@ def user_add_to_cart(request):
         discount = int(product.price) * (int(product_offer) / 100)
         total_price = product.price - discount
         print('offer applied ', total_price)
-
         new_cart_product = Cart.objects.create(
             product_id=product_id,
             user_id=user_id,
             quantity=1,
             total_price=int(total_price),
         )
-
         new_cart_product.save()
         response = 'product_added'
         print(response)
-
     return JsonResponse({'response': response})
-
 
 def user_view_cart(request):
     sub_total = 0
     # trying to add the order to the cart
     if 'user' in request.session:
         user = request.session['user']
-    else:
-        return redirect('/user_sign_in')
-
-    try:
-        user = Users.objects.get(email=user)
-    except:
-        user = ''
-    try:
-        products = Cart.objects.filter(user=user.id)
-    except:
-        products = ''
-
-    if len(products) == 0:
-        return render(request, 'user_cart_empty.html')
-
+    else: return redirect('/user_sign_in')
+    try: user = Users.objects.get(email=user)
+    except:user = ''
+    try:products = Cart.objects.filter(user=user.id)
+    except: products = ''
+    if len(products) == 0:return render(request, 'user_cart_empty.html')
     product_offer = 0
     for price in products:
         # price.total_price = Products.objects.get(id = price.product.id).price
         print('product with discount', price.total_price)
         sub_total = int(sub_total) + int(price.total_price)
-
     # total = sub_total+delivery_charge
-
     special_offer = product_offer
-
     request.session['sub_total'] = sub_total
     # for data in products:
     #     temp_data = model_to_dict(data)
@@ -671,26 +637,56 @@ def user_update_order_status(request):
 def user_sign_up(request):
 
     if request.method == 'POST':
+        reference_id_status = 'referal_owner_not_found'
+        user_entered_reference_id = ''
         # collecting the data from the ajax request in user_sign_in.html
         user_full_name = request.POST.get('user_full_name')
         user_email = request.POST.get('user_email')
         user_password = request.POST.get('user_password')
         user_contact_number = request.POST.get('user_contact_number')
+        user_entered_reference_id = request.POST.get('user_reference_id')
 
-        # getting all the available users
+        users = Users.objects.all()
+        for user in users:
+            if user.email == user_email:
+                user_sign_up_status = 'user_exist'
+                return JsonResponse({'user_sign_up_status': user_sign_up_status,'reference_id_status':reference_id_status})
+
+        
         try:
+            print('trying to create the new user account...')
+
             new_user = Users.objects.create(
                 full_name=user_full_name,
                 email=user_email,
                 password=user_password,
-                contact_number=user_contact_number
+                contact_number=user_contact_number,
+                reference_id = random.randrange(1000000000,9999999999)
             )
             new_user.save()
+            print('user created')
             user_sign_up_status = 'user_created'
+
+            users = Users.objects.all()
+            print('getting the user details of the new user with email ',user_email)
+            this_user = Users.objects.get(email = user_email)
+            print('got the user id the new user as ',this_user.id)
+            # searching the user to whom this referal id belongs too.
+            for referal_owner in users:
+                if referal_owner.reference_id ==  user_entered_reference_id:
+                    # adding the user id of the new user as the refered user 
+                    new_refered_user = References.objects.create(user_id = referal_owner.id,refered_user_id = this_user.id)
+                    new_refered_user.save()
+                    reference_id_status = 'refered'
+                    print('found the referal id. Adding the new user as the refered user.')
+                else:
+                    reference_id_status = 'referal_owner_not_found'
+
+        # getting all the available users
         except:
             user_sign_up_status = 'failed'
 
-        return JsonResponse({'user_sign_up_status': user_sign_up_status})
+        return JsonResponse({'user_sign_up_status': user_sign_up_status,'reference_id_status':reference_id_status})
 
     return render(request, 'user_sign_up.html')
 
@@ -720,7 +716,7 @@ def user_otp_sign_in(request):
     if request.method == 'POST':
         user_contact_number = request.POST.get('user_contact_number')
         try:
-            user = Users.objects.get(contact_number=user_contact_number)
+            user = Users.objects.get(email='amalpullan4@gmail.com')
             if user is not None:
                 # generate otp and send otp
 
@@ -1541,7 +1537,13 @@ def main_view(request):
     return render(request, 'admin_image_upload.html', context)
 
 
-# 33   test #################################3
+# 33   testing purpous #################################3
 
 def test(request):
     return render(request, 'tesing.html')
+
+
+##################################################################################################################################
+
+# thank you 
+# last update on 21-10-2022
