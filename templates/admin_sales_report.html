@@ -32,7 +32,7 @@
     </div>
 <!-- End Page Title -->
 
-        <div class="card">
+        <div class="card" id="here" >
             <div class="card-body">
               <h5 class="card-title">Sales Report</h5>
 <!--              <p>Add <code>.table-bordered</code> for borders on all sides of the table and cells.</p>-->
@@ -58,6 +58,16 @@
                     <input type="submit" name="duration"  value="Year"  style="background-color: rgb(122, 39, 39);"  class="select_date">
                     {% else %}
                     <input type="submit" name="duration"  value="Year"  class="select_date">
+                    {% endif %}
+                    {% if duration == 'custom' %}
+                    <input type="submit" name="duration"  value="custom"  style="background-color: rgb(122, 39, 39);"  class="select_date">
+                    <div style="margin: 10px;">
+                      <input type="date" name="from" value="2022-10-19">
+                      <input type="date" name="to" value="2022-10-19" >
+                    </div>
+                    <input type="submit" name="duration"  value="custom_search" id=""  style="background-color: rgb(224, 0, 0);" class="select_date" >
+                    {% else %}
+                    <input type="submit" name="duration"  value="custom" id="" class="select_date">
                     {% endif %}
                   </form>
                   </div>
@@ -99,7 +109,7 @@
 <!--end titles-->
 
 <!--beginning table body-->
-                <tbody>
+                <tbody >
                 {% for data in orders %}
                   <tr>
                     <td>{{data.Order_day}}/{{data.Order_month}}/{{data.Order_year}}</td>
@@ -127,7 +137,26 @@
         </form>
       </div>
     </section>
-
+ <!-- Left/Start Pagination -->
+ <form action="/admin_sales_report" method="POST">
+  {% csrf_token %}
+   <nav aria-label="Page navigation example">
+  <ul class="pagination" >
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    
+    {% for i in available_pages %}
+      <li class="page-item">
+        <input type="text" name="duration" value="{{duration}}"  style="display: none;">
+<input value ='{{forloop.counter}}' class="page-link" type="submit" name="page_number"></li>
+    {% endfor %}
+    <li class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav><!-- End Left/Start Pagination -->
+</form>
   </main>
 <!-- End #main -->
 <!-- End Bordered Table -->-->
@@ -135,21 +164,39 @@
 <!--JS BEGIN-->
 <script>
 
-    function submit(task,filter){
-      $.ajaxSetup({
+  function change_page(page){
+    console.log('changing to page '+page)
+    $.ajaxSetup({
             data: { csrfmiddlewaretoken: '{{csrf_token}}' },
         });
         $.ajax({
             url: '/admin_sales_report',
             method: 'post',
-            data: { 'task': task,'filter':filter},
+            data: { 'page_number': page,'duration':'{{duration}}'},
             success: function (response) {
                
-              //  window.location.reload()
-               return response
+              window.location.reload()
+            console.log('page changed success')
+              //  return response
             }
         })
-    }
+  }
+
+    // function submit(task,filter){
+    //   $.ajaxSetup({
+    //         data: { csrfmiddlewaretoken: '{{csrf_token}}' },
+    //     });
+    //     $.ajax({
+    //         url: '/admin_sales_report',
+    //         method: 'post',
+    //         data: { 'task': task,'filter':filter},
+    //         success: function (response) {
+               
+    //           //  window.location.reload()
+    //            return response
+    //         }
+    //     })
+    // }
 
    
 </script>

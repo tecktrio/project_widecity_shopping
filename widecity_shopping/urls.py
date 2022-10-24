@@ -61,6 +61,8 @@ urlpatterns = [
     path('admin_edit_company_info', views.admin_edit_company_info),
     path('admin_sales_report', views.admin_sales_report),
     path('admin_edit_Product', views.admin_edit_Product),
+    path('admin_category_offers', views.admin_category_offers),
+    path('admin_product_offers', views.admin_product_offers),
     path('admin_remove_coupon', views.admin_remove_coupon),
     path('admin_add_coupon', views.admin_add_coupon),
     path('admin_edit_category/<str:cat_id>', views.admin_edit_category),

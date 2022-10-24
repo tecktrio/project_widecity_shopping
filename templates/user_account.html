@@ -1,10 +1,11 @@
 {% extends 'user_base.html' %}
 {% block content %}
+{% load static %}
 
 <head>
 	<style>
 		.color {
-			color: white;
+			color: rgb(0, 0, 0);
 		}
 
 		.color:hover {
@@ -14,16 +15,19 @@
 		.ap {
 			font-size: 13px;
 			font-weight: bold;
-			color: rgb(3, 2, 2);
-			width: 100px;
+			color: rgb(0, 0, 0);
+			width: 120px;
+			text-align: center;
+			
 
 		}
 
 		.at {
 			font-size: 16px;
-			color: rgb(102, 99, 99);
+			color: rgb(0, 0, 0);
 			margin: 20px;
 			font-weight: bold;
+			text-transform: uppercase;
 		}
 
 		.user {
@@ -32,63 +36,76 @@
 			padding: 1px 10px;
 			margin: 10px 50px;
 			font-weight: normal;
-			background-color: black;
-			color: white;
+			background-color: rgb(255, 255, 255);
+			color: rgb(0, 0, 0);
 		}
 
 		.user:hover {
-			background-color: white;
-			color: black;
+			background-color: rgb(3, 184, 255);
+			color: rgb(255, 255, 255);
 			font-weight: normal;
 		}
 
 		.cancel {
-			background-color: rgb(191, 54, 50);
-			padding: 2px 10px;
-			color: rgb(255, 255, 255);
-			border-radius: 10px;
-			cursor: pointer;
-		}
-
-		.return {
-			background-color: rgb(202, 220, 6);
-			padding: 4px 12px;
-			color: rgb(0, 0, 0);
-			border-radius: 10px;
-			cursor: pointer;
-			border: 1px solid black;
-		}
-
-		.cancel:hover {
-			background-color: rgb(78, 78, 188);
-			padding: 2px 10px;
-			color: rgb(255, 255, 255);
-			border-radius: 10px;
-			cursor: pointer;
-		}
-
-		.dowload_button {
-			background-color: rgb(5, 217, 157);
-			padding: 1px 10px;
-			color: rgb(255, 255, 255);
+			background-color: rgb(255, 255, 255);
+			padding: 10px 10px;
 			cursor: pointer;
 			border-radius: 10px;
 			border: 1px solid gray;
 			height: 40px;
+		}
+
+		.return{
+			background-color: rgb(255, 255, 255);
+			padding: 10px 10px;
+			cursor: not-allowed;
+			border-radius: 10px;
+			border: 1px solid gray;
+			height: 40px;
+		}
+
+		.delivered {
+			background-color: rgb(255, 255, 255);
+			padding: 10px 10px;
+			cursor: pointer;
+			border-radius: 10px;
+			border: 1px solid gray;
+			height: 40px;
+		}
+		.delivered:hover{
+			background-color: rgb(120, 221, 120);
+		}
+
+
+		.cancel:hover {
+			background-color: rgb(255, 0, 0);
+
+		}
+
+		.dowload_button {
+			background-color: rgb(255, 255, 255);
+			padding: 10px 10px;
+			cursor: pointer;
+			border-radius: 10px;
+			border: 1px solid gray;
+			height: 40px;
+		}
+		.dowload_button:hover{
+			background-color: #00d9ff;
 		}
 	</style>
 
 </head>
 
 
-<body style="background-color: rgb(30, 11, 49);">
+<body style="background-color: rgb(255, 255, 255);">
 
 	<div class="page-wrapper">
 		<main class="main">
 			<div class="page-header text-center"
 				style="background-image: url('https://www.weasyl.com/~fluffkevlar/submission/30165/fluffkevlar-starfield-gif-81774.gif');background-size: cover;">
 				<div class="container">
-					<h1 class="page-title" style="color: white;">My Account<span>Widecity Shopping</span></h1>
+					<h1 class="page-title" style="color: rgb(0, 0, 0);">My Account<span>Widecity Shopping</span></h1>
 				</div><!-- End .container -->
 			</div><!-- End .page-header -->
 			<nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
@@ -250,11 +267,11 @@
 										style="background-color:rgb(255, 255, 255) ;padding:10px;border-radius:10px;">
 										<table>
 
-											<div class="space" style="display: flex;justify-content:space-evenly;">
+											<div class="space" style="display: flex;justify-content:space-between;">
 												<p style="width: 30px;" class="at">Image</p>
 												<p style="width: 30px;" class="at">Name</p>
 												<p style="width: 30px;" class="at">Price</p>
-												<p style="width: 30px;" class="at">Ordered Date</p>
+												<p style="width: 30px;" class="at">Ordered</p>
 												<p style="width: 30px;" class="at">Status</p>
 												<p style="width: 30px;" class="at">control</p>
 												<p style="width: 30px;" class="at">invoice</p>
@@ -262,7 +279,7 @@
 											</div>
 											<hr style="color: black;">
 											{% for order in orders %}
-											<div class="space" style="display: flex;justify-content:space-evenly">
+											<div class="space" style="display: flex;justify-content:space-between">
 
 
 												<p class="ap"><a href="/user_product_detail/{{order.product.id}}"><img
@@ -273,33 +290,41 @@
 												<p class="ap">{{order.product.price}}</p>
 												<p class="ap">
 													{{order.Order_day}}/{{order.Order_month}}/{{order.Order_year}}</p>
+
+												<div style="padding: 10px 10px;">	
 												<p class="ap">{{order.status}}</p>
+												</div>
 
 												{% if order.status == 'ordered' %}
 												<div onclick="cancel_order('{{order.id}}')">
-													<p class="cancel" id="order_status">cancel</p>
+													<p class="cancel" id="order_status"><img src="/media/icons/cancel.png" width="20px"></p>
 												</div>
 
 												{% elif order.status == 'shipped' %}
 												<div onclick="cancel_order('{{order.id}}')">
-													<p class="cancel" id="order_status">cancel</p>
+													<p class="cancel" id="order_status"><img src="/media/icons/cancel.png" width="20px"></p>
 												</div>
 
 												{% elif order.status == 'delivered' %}
 												<div onclick="return_order('{{order.id}}')">
-													<p class="return" id="order_status">Return</p>
+													<p class="delivered" id="order_status"><img src="/media/icons/delivered.webp" width="20px"></p>
+												</div>
+
+												{% elif order.status == 'return requested' %}
+												<div onclick="return_order('{{order.id}}')">
+													<p class="return" id="order_status"><img src="/media/icons/waiting.jpg" width="20px"></p>
 												</div>
 
 
 												{% else %}
 												<div
-													style="background-color:rgb(235,235,228);padding:1px 10px;color:rgb(9, 9, 9);cursor: not-allowed;border-radius:10px;border:1px solid gray;height: 40px;">
-													cancel</div>
+													style="background-color:rgb(235,235,228);padding:10px 10px;color:rgb(9, 9, 9);cursor: not-allowed;border-radius:10px;border:1px solid gray;height: 40px;">
+													<img src="/media/icons/canceled.jpg" width="20px"></div>
 
 
 												{% endif %}
 												<a href="user_invoice_per_item/{{order.id}}">
-													<div class="dowload_button">Download</div>
+													<div class="dowload_button"><img src="/media/icons/download_icon.png" width="20px"></div>
 												</a>
 											</div>
 											<hr style="color: black;margin: 2px;">

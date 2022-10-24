@@ -10,7 +10,7 @@
 <!--  some necessary things, don't bother  -->
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Forms / Elements - NiceAdmin Bootstrap Template</title>
+  <title>WideCity Admin</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -55,7 +55,7 @@
 
 <!--beginning of the body element-->
 <!-- background-image: url(media/4k_images/space.jpg) -->
-<body style="background-image: url(media/gifs/anim1.gif);background-size: cover;background-repeat: no-repeat;background-attachment: fixed;color:white">
+<body style="background-color: rgb(0, 0, 0);;background-size: cover;background-repeat: no-repeat;background-attachment: fixed;color:white">
   <div style="background-color: rgba(0,0,0,.5);">
  <header id="header" class="header fixed-top d-flex align-items-center" style="background-color: rgba(0,0,0,0);">
     <div class="d-flex align-items-center justify-content-between">
@@ -399,6 +399,29 @@
               <i class="bi bi-circle"></i><span>List Available Coupons</span>
             </a>
           </li>
+        </ul>
+      </li><!-- End Tables Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#manage_offers" data-bs-toggle="collapse" href="#" style="background-color: rgba(37, 37, 100, 0.5);border: 2px solid rgb(134, 132, 132);">
+          <i class="bi bi-layout-text-window-reverse"></i><span>Manage Offers</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="manage_offers" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="/admin_category_offers">
+              <i class="bi bi-circle"></i><span>Category Offers</span>
+            </a>
+          </li>          
+          <li>
+            <a href="/admin_product_offers">
+              <i class="bi bi-circle"></i><span>Product Offers</span>
+            </a>
+          </li>
+          <!-- <li>
+            <a href="/admin_remove_coupon">
+              <i class="bi bi-circle"></i><span>Referal Offers</span>
+            </a>
+          </li> -->
         </ul>
       </li><!-- End Tables Nav -->
 

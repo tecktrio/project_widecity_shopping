@@ -1,0 +1,108 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+
+  <!-- ======= Sidebar ======= -->
+<head>
+    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <style>
+    #table_title{
+      color:rgb(5, 5, 6);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Edit users</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your Customers</h5>
+<!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+              <!-- Default Table -->
+              <table class="table" id="table_title">
+                <thead>
+                  <tr>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">Existing Offer</th>
+                    <th scope="col">Update</th>
+                  </tr>
+                </thead>
+<!--                /////////////////////////////////////////////////////////////////////////////-->
+                <tbody>
+              {% for category in categories %}
+                  <tr>
+                    <td>{{category.name}}</td>
+                    <td><input value = {{category.offer_percentage}}
+                        style="width:40px;text-align: center;"
+                        id="{{category.id}}offer_percentage"
+                        > &nbsp%</td>
+                    <td ><button 
+                        style="border-radius: 5px;
+                               border:1px solid grey;
+                               background-color:rgb(0, 179, 255);
+                               color:white;
+                               font-size: 14px;
+                               padding:5px;
+                               "
+                               onclick = 'offer_update("{{category.id}}")'
+                               >Update</button></td>
+                      </div>
+                    </td>
+                  </tr>
+               {% endfor %}
+                </tbody>
+              </table>
+        </div>
+      </div>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<script>
+
+  $(document).ready(function(){
+    console.log('your document is ready');
+  })
+
+  
+
+
+  function offer_update(category_id)
+  {
+    new_offer = document.getElementById(category_id+'offer_percentage').value
+
+    if(confirm('Are you sure to update the offer?')){
+    $.ajaxSetup({
+      data:{csrfmiddlewaretoken:'{{csrf_token}}'},
+    });
+
+    $.ajax({
+      url:'/admin_category_offers',
+      method:'POST',
+      data:{'new_offer_percentage':new_offer,'category_id':category_id},
+      success:function(response){
+        console.log('updated successfuly')
+        window.location.reload()
+      },
+      error:function(){
+        console.log('ajax is not working')
+      }
+    });
+  }
+
+  };
+
+</script>
+
+{%endblock%}

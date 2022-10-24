@@ -53,9 +53,13 @@
             <td class="data">{{order.payment_method}}</td>
 
             {% if order.status == 'ordered' %}
-            <td style="background-color: rgb(133, 52, 52);color: white;text-align: center;border-radius: 5px;padding: 3px;width: 150px;">Ordered</td>            
+            <td style="background-color: rgb(133, 52, 52);color: white;text-align: center;border-radius: 5px;padding: 3px;width: 150px;">Ordered</td>  
+            {% elif order.status == 'shipped' %}
+            <td style="background-color: rgb(199, 202, 9);color: white;text-align: center;border-radius: 5px;padding: 3px;width: 150px;">Shipped</td>            
             {% elif order.status == 'delivered' %}
             <td class="data" style="background-color: rgb(59, 109, 52);color: white;text-align: center;border-radius: 5px;padding: 3px;">Delivered</td>          
+            {% elif order.status == 'return requested' %}
+            <td class="data" style="background-color: rgb(55, 17, 158);color: white;text-align: center;border-radius: 5px;padding: 3px;">Refund Request</td>            
             {% elif order.status == 'Refunded' %}
             <td class="data" style="background-color: rgb(55, 17, 158);color: white;text-align: center;border-radius: 5px;padding: 3px;">Refunded</td>
             {% else %}

@@ -17,7 +17,7 @@ from urllib import response
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse, FileResponse
 import io
-from pandas import isnull
+from pandas import date_range, isnull
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
@@ -31,7 +31,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 import pdfkit
 import datetime
-from datetime import timedelta
+from datetime import date, timedelta
 
 current_date = datetime.date.today()
 
@@ -142,7 +142,7 @@ def user_category_view(request, name):
     category_products = Products.objects.filter(category=category.name)
     categories = Category.objects.all()
     product_count = category_products.count()
-    p = Paginator(category_products, 2)
+    p = Paginator(category_products, 6)
 
     page_obj = p.get_page(1)
 
@@ -1262,6 +1262,7 @@ def admin_edit_Product(request):
     if request.method == 'POST':
         global current_product
         id = request.POST.get('id')
+        print(id)
         product = Products.objects.get(id=id)
         product.name = request.POST.get('product_name')
         product.price = request.POST.get('product_price')
@@ -1356,6 +1357,45 @@ def admin_edit_banner(request):
     form = edit_banner()
     return render(request, 'admin_edit_banner.html', {'form': form, 'banner': banner})
 
+def admin_category_offers(request):
+    admin = ''
+    if 'admin' in request.session:
+        admin = request.session['admin']
+    else:
+        return redirect('/admin_sign_in')
+    if request.method == 'POST':
+
+        new_offer_percentage = request.POST.get('new_offer_percentage')
+        category_id = request.POST.get('category_id')
+        print(new_offer_percentage,category_id)
+        category = Category.objects.get(id=category_id)
+        category.offer_percentage = new_offer_percentage
+        category.save()
+
+
+    this_admin = Users.objects.get(email=admin)
+    categories = Category.objects.all()
+    return render(request,'admin_category_offers.html',{'categories':categories})
+    
+def admin_product_offers(request):
+    admin = ''
+    if 'admin' in request.session:
+        admin = request.session['admin']
+    else:
+        return redirect('/admin_sign_in')
+    if request.method == 'POST':
+
+        new_offer_percentage = request.POST.get('new_offer_percentage')
+        product_id = request.POST.get('product_id')
+        print(new_offer_percentage,product_id)
+        product = Products.objects.get(id=product_id)
+        product.offer_percentage = new_offer_percentage
+        product.save()
+
+    this_admin = Users.objects.get(email=admin)
+    products = Products.objects.all()
+
+    return render(request,'admin_product_offers.html',{'products':products})
 
 def admin_edit_company_info(request):
     admin = ''
@@ -1363,11 +1403,13 @@ def admin_edit_company_info(request):
         admin = request.session['admin']
     else:
         return redirect('/admin_sign_in')
+
     this_admin = Users.objects.get(email=admin)
     return render(request, 'admin_edit_company_info.html', {'admin': this_admin})
 
 
 def admin_sales_report(request):
+    ppp = 4 # product per page in sales report
     admin = ''
     global duration
     if 'admin' in request.session:
@@ -1375,7 +1417,12 @@ def admin_sales_report(request):
     else:
         return redirect('/admin_sign_in')
 
+    # if request.method == 'GET':
+    #     page = request.GET['page']
+
     if request.method == 'POST':
+
+        
 
         if 'export' in request.POST.keys():
             filetype = request.POST.get('filetype')
@@ -1469,24 +1516,69 @@ def admin_sales_report(request):
                 return response
 
         elif 'duration' in request.POST.keys():
+            orders = Orders.objects.all()
+            current_page = 1
+            if 'page_number' in request.POST.keys():
+                current_page = request.POST.get('page_number')
+                print('got page_number',current_page)
 
             duration = request.POST.get('duration')
             print(duration)
-            orders = Orders.objects.all()
-            if duration == 'Today':
-                print(duration)
-                orders = Orders.objects.filter(Order_day=current_date.day)
-            elif duration == 'Month':
-                print(duration)
-                orders = Orders.objects.filter(Order_month=current_date.month)
-            elif duration == 'Year':
-                print(duration)
-                orders = Orders.objects.filter(Order_year=current_date.year)
+            if duration == 'custom_search':
+                from_date = request.POST.get('from')
+                to_date = request.POST.get('to')
 
-        return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': orders, 'duration': duration})
+                from_date = from_date.split('-')
+                to_date = to_date.split('-')
+
+                from_day = from_date[2]
+                from_month = from_date[1]
+                from_year = from_date[0]
+                to_day = to_date[2]
+                to_month = to_date[1]
+                to_year = to_date[0]
+                for order in orders:
+                    orders  = Orders.objects.filter(
+                        Order_day__gte = from_day,Order_day__lte= to_day,
+                        Order_month__gte = from_month,Order_month__lte = to_month,
+                        Order_year__gte = from_year,Order_year__lte = to_year
+                        )
+
+                p = Paginator(orders, ppp)
+                page_obj = p.get_page(current_page)
+                available_pages = []
+                pages = int(orders.count()/ppp)
+                for i in range(pages):
+                    available_pages.append(i)
+                return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'duration': duration,'available_pages':available_pages})
+
+            else:
+                if duration == 'Today':
+                    print(duration)
+                    orders = Orders.objects.filter(Order_day=current_date.day)
+                elif duration == 'Month':
+                    print(duration)
+                    orders = Orders.objects.filter(Order_month=current_date.month)
+                elif duration == 'Year':
+                    print(duration)
+                    orders = Orders.objects.filter(Order_year=current_date.year)
+                
+                p = Paginator(orders, ppp)
+                page_obj = p.get_page(current_page)  
+                available_pages = []
+                pages = int(orders.count()/ppp)
+                for i in range(pages):
+                    available_pages.append(i)
+                return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'duration': duration,'available_pages':available_pages})
 
     orders = Orders.objects.all()
-    return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': orders, 'current_date': current_date, 'duration': duration})
+    p = Paginator(orders, ppp)
+    page_obj = p.get_page(1)  
+    available_pages = []
+    pages = int(orders.count()/ppp)
+    for i in range(pages):
+        available_pages.append(i)
+    return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'current_date': current_date, 'duration': duration,'available_pages':available_pages})
 
 
 def admin_remove_coupon(request):
