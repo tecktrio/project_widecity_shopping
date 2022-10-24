@@ -1,4 +1,5 @@
 import csv
+from tkinter.tix import STATUS
 from django.http import JsonResponse
 from .forms import ImageForm
 from django.shortcuts import render
@@ -728,9 +729,15 @@ def user_account(request):
         return redirect('/user_sign_in')
 
     this_user = Users.objects.get(email=user)
-    orders = Orders.objects.filter(user_id=this_user.id)
+    orders = Orders.objects.filter(user_id=this_user.id).order_by('-id')
     address = Address.objects.filter(email=this_user.email)
     refered_people_details = References.objects.filter(user_id = this_user.id)
+
+    delivered_orders = Orders.objects.filter(user_id=this_user.id,status='delivered')
+    for order in delivered_orders:
+        if int(current_date.day) >= int(order.Order_day)+7:
+            order.status = 'delivered_no_return'
+            order.save()
 
     print(refered_people_details)
     peoples = []
@@ -1056,8 +1063,8 @@ def admin_order_details(request, order_id):
     elif order.status == 'shipped':
         next_status = 'delivered'
     elif order.status == 'return requested':
-        next_status = 'Accept Return Request'
-    elif order.status == 'Accept Return Request':
+        next_status = 'Returned'
+    elif order.status == 'Returned':
         next_status = 'Refunded'
     else:
         next_status = ''

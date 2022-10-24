@@ -59,9 +59,11 @@
             {% elif order.status == 'delivered' %}
             <td class="data" style="background-color: rgb(59, 109, 52);color: white;text-align: center;border-radius: 5px;padding: 3px;">Delivered</td>          
             {% elif order.status == 'return requested' %}
-            <td class="data" style="background-color: rgb(55, 17, 158);color: white;text-align: center;border-radius: 5px;padding: 3px;">Refund Request</td>            
+            <td class="data" style="background-color: rgb(210, 11, 11);color: white;text-align: center;border-radius: 5px;padding: 3px;">Return Request</td>            
             {% elif order.status == 'Refunded' %}
-            <td class="data" style="background-color: rgb(55, 17, 158);color: white;text-align: center;border-radius: 5px;padding: 3px;">Refunded</td>
+            <td class="data" style="background-color: rgb(207, 205, 202);color: white;text-align: center;border-radius: 5px;padding: 3px;">Refunded</td>           
+            {% elif order.status == 'Returned' %}
+            <td class="data" style="background-color: rgb(213, 134, 7);color: white;text-align: center;border-radius: 5px;padding: 3px;">Returned</td>
             {% else %}
             <td class="data" style="background-color: rgb(109, 122, 209);color: white;text-align: center;border-radius: 5px;padding: 3px;">Canceled</td>
             {% endif %}

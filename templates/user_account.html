@@ -90,6 +90,14 @@
 			border: 1px solid gray;
 			height: 40px;
 		}
+		.delivered_no_return{
+			background-color: rgb(255, 255, 255);
+			padding: 10px 10px;
+			cursor: not-allowed;
+			border-radius: 10px;
+			border: 1px solid gray;
+			height: 40px;
+		}
 		.dowload_button:hover{
 			background-color: #00d9ff;
 		}
@@ -105,7 +113,7 @@
 			<div class="page-header text-center"
 				style="background-image: url('https://www.weasyl.com/~fluffkevlar/submission/30165/fluffkevlar-starfield-gif-81774.gif');background-size: cover;">
 				<div class="container">
-					<h1 class="page-title" style="color: rgb(0, 0, 0);">My Account<span>Widecity Shopping</span></h1>
+					<h1 class="page-title" style="color: rgb(255, 255, 255);">My Account<span>Widecity Shopping</span></h1>
 				</div><!-- End .container -->
 			</div><!-- End .page-header -->
 			<nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
@@ -209,23 +217,26 @@
 									aria-labelledby="tab-dashboard-link">
 
 								
-									<div >
+									<div style="width: 50vw;">
 									
-										<div style="margin: 10px;justify-content: space-between;">
+										<div style="margin: 10px;justify-content: space-between;display: flex;">
 										<label>Old Password</label>
-										<input type="text" id="old_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgba(0,0,0,0.5);color:white" autocomplete="off">
+										<input type="text" id="old_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:white">
 										</div>
-										<div style="margin: 10px;justify-content: space-between;">										
+
+										<div style="margin: 10px;justify-content: space-between;display: flex;">										
 										<label>New Password</label>
-										<input type="password" id="new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgba(0,0,0,0.5);color:white" >
+										<input type="password" id="new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:white" >
 										</div>
-										<div style="margin: 10px;justify-content: space-between;">										
+
+										<div style="margin: 10px;justify-content: space-between;display: flex;">										
 										<label>Re-Enter Password</label>
-										<input type="password" id="re_new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgba(0,0,0,0.5);color:white">
+										<input type="password" id="re_new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:white">
 										</div>
+
 										<button onclick="confirm_reset()" style="border-radius: 5px;" id="reset_password"
-													 onmouseover="document.getElementById('reset_password').style.backgroundColor = 'grey'"
-													 onmouseout="document.getElementById('reset_password').style.backgroundColor = 'white'"
+													 onmouseover="document.getElementById('reset_password').style.backgroundColor = 'rgb(0, 213, 255)';document.getElementById('reset_password').style.color = 'white'"
+													 onmouseout="document.getElementById('reset_password').style.backgroundColor = 'white';document.getElementById('reset_password').style.color = 'black'"
 													 >Reset</button>
 										
 									</div>
@@ -268,13 +279,13 @@
 										<table>
 
 											<div class="space" style="display: flex;justify-content:space-between;">
-												<p style="width: 30px;" class="at">Image</p>
-												<p style="width: 30px;" class="at">Name</p>
-												<p style="width: 30px;" class="at">Price</p>
-												<p style="width: 30px;" class="at">Ordered</p>
-												<p style="width: 30px;" class="at">Status</p>
-												<p style="width: 30px;" class="at">control</p>
-												<p style="width: 30px;" class="at">invoice</p>
+												<p style="width: 20px;" class="at">Image</p>
+												<p style="width: 20px;" class="at">Name</p>
+												<p style="width: 20px;" class="at">Price</p>
+												<p style="width: 20px;" class="at">Ordered</p>
+												<p style="width: 20px;" class="at">Status</p>
+									
+												<p style="width: 20px;" class="at">invoice</p>
 
 											</div>
 											<hr style="color: black;">
@@ -296,28 +307,36 @@
 												</div>
 
 												{% if order.status == 'ordered' %}
-												<div onclick="cancel_order('{{order.id}}')">
+												<div onclick="cancel_order('{{order.id}}')" data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="Cancel the Order">
 													<p class="cancel" id="order_status"><img src="/media/icons/cancel.png" width="20px"></p>
 												</div>
 
 												{% elif order.status == 'shipped' %}
-												<div onclick="cancel_order('{{order.id}}')">
+												<div onclick="cancel_order('{{order.id}}')" data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="Cancel the Order">
 													<p class="cancel" id="order_status"><img src="/media/icons/cancel.png" width="20px"></p>
 												</div>
 
 												{% elif order.status == 'delivered' %}
-												<div onclick="return_order('{{order.id}}')">
-													<p class="delivered" id="order_status"><img src="/media/icons/delivered.webp" width="20px"></p>
+												<div onclick="return_order('{{order.id}}')" data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="Request Return">
+			
+													<p class="delivered" id="order_status"><img src="/media/icons/return.png" width="20px"></p>
+												</div>								
+												
+												{% elif order.status == 'delivered_no_return' %}
+												<div data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="Return not available">
+			
+													<p class="delivered_no_return" id="order_status"><img src="/media/icons/delivered.webp" width="20px"></p>
 												</div>
-
+												
 												{% elif order.status == 'return requested' %}
-												<div onclick="return_order('{{order.id}}')">
+												<div onclick="return_order('{{order.id}}')" data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="Waiting to Accept Return Request">
 													<p class="return" id="order_status"><img src="/media/icons/waiting.jpg" width="20px"></p>
 												</div>
 
 
 												{% else %}
 												<div
+													data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="You have canceled the order"
 													style="background-color:rgb(235,235,228);padding:10px 10px;color:rgb(9, 9, 9);cursor: not-allowed;border-radius:10px;border:1px solid gray;height: 40px;">
 													<img src="/media/icons/canceled.jpg" width="20px"></div>
 
@@ -330,12 +349,12 @@
 											<hr style="color: black;margin: 2px;">
 											{% endfor %}
 										</table>
-										<a href="/" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+										<a href="/" class="btn delivered"  data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="go for shopping"><span>GO SHOP</span><i
 												class="icon-long-arrow-right"></i></a>
-										<a href="/user_invoice" class="btn btn-outline-primary-2"><span>Download as PDF
+										<a href="/user_invoice" class="btn delivered"  data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="CLick to download the ordered product details as pdf"><span>Download as PDF
 												Copy</span><i class="icon-long-arrow-right"></i></a>
 										<a href="/user_export_myorders_in_csv"
-											class="btn btn-outline-primary-2"><span>Download as CSV
+											class="btn delivered" data-bs-toggle="tooltip" data-bs-placement="top"  type="button"  title="CLick to download the ordered product details as csv"><span>Download as CSV
 												Copy</span><i class="icon-long-arrow-right"></i></a>
 									</div><!-- .End .tab-pane -->
 
