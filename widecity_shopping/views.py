@@ -56,9 +56,13 @@ def user_home(request):
     # gathering neccessary data from the server
 
     try:
-        banner = Banners.objects.get(id=1)  # getting the banner data
+        banner1 = Banners.objects.get(id=1)  # getting the banner data
+        banner2 = Banners.objects.get(id=2)  # getting the banner data
+        banner3 = Banners.objects.get(id=3)  # getting the banner data
     except:
-        banner = ''  # assigning null to the banners if there is an issue in getting the banner
+        banner1 = ''  # assigning null to the banners if there is an issue in getting the banner
+        banner2 = ''  # assigning null to the banners if there is an issue in getting the banner
+        banner3 = ''  # assigning null to the banners if there is an issue in getting the banner
     try:
         products = Products.objects.all()
     except:
@@ -77,7 +81,7 @@ def user_home(request):
     except:
         pass
 
-    return render(request, 'user_home.html', {'user': user, 'banner': banner, 'products': products, 'categories': categories})
+    return render(request, 'user_home.html', {'user': user, 'banner1': banner1, 'banner2': banner2, 'banner3': banner3, 'products': products, 'categories': categories})
 
 
 def user_product_detail(request, product_id):
@@ -1341,9 +1345,13 @@ def admin_edit_category(request, cat_id):
 def admin_edit_banner(request):
     admin = ''
     try:
-        banner = Banners.objects.get(id=1)
+        banner1 = Banners.objects.get(id=1)
+        banner2 = Banners.objects.get(id=2)
+        banner3 = Banners.objects.get(id=3)
     except:
-        banner = ''
+        banner1 = ''
+        banner2 = ''
+        banner3 = ''
 
     if 'admin' in request.session:
         admin = request.session['admin']
@@ -1352,17 +1360,52 @@ def admin_edit_banner(request):
 
     if request.method == 'POST':
 
-        form = edit_banner(request.POST, request.FILES)
-        print('got values')
+        if request.POST.get('banner') == '1':
 
-        if form.is_valid():
-            form = edit_banner(request.POST, request.FILES, instance=banner)
-            form.save()
-            return HttpResponse('banner saved')
-        return HttpResponse('form not valid')
+            banner_1_image = request.FILES.get('banner_1_image')
+        # banner_2_image = request.FILES('banner_2_image')
+        # banner_3_image = request.FILES('banner_3_image')
 
-    form = edit_banner()
-    return render(request, 'admin_edit_banner.html', {'form': form, 'banner': banner})
+            banner_1_heading = request.POST.get('banner_1_heading')
+            banner_1_description = request.POST.get('banner_1_description')
+            banner_1 = Banners.objects.get(id=1)
+            banner_1.heading = banner_1_heading
+            banner_1.description = banner_1_description
+            banner_1.image = banner_1_image
+            banner_1.save()
+
+        if request.POST.get('banner') == '2':
+
+        # banner_1_image = request.FILES('banner_1_image')
+            banner_2_image = request.FILES.get('banner_2_image')
+        # banner_3_image = request.FILES('banner_3_image')
+
+            banner_2_heading = request.POST.get('banner_2_heading')
+            banner_2_description = request.POST.get('banner_2_description')
+            banner_2 = Banners.objects.get(id=2)
+            banner_2.heading = banner_2_heading
+            banner_2.description = banner_2_description
+            banner_2.image = banner_2_image
+            banner_2.save()
+
+       
+        if request.POST.get('banner') == '3':
+
+        # banner_1_image = request.FILES('banner_1_image')
+        # banner_2_image = request.FILES('banner_2_image')
+            banner_3_image = request.FILES.get('banner_3_image')
+
+            banner_3_heading = request.POST.get('banner_3_heading')
+            banner_3_description = request.POST.get('banner_3_description')
+            banner_3 = Banners.objects.get(id=3)
+            banner_3.heading = banner_3_heading
+            banner_3.description = banner_3_description
+            banner_3.image = banner_3_image
+            banner_3.save()
+
+       
+
+    return render(request, 'admin_edit_banner.html', {'banner1': banner1, 'banner2': banner2, 'banner3': banner3})
 
 def admin_category_offers(request):
     admin = ''

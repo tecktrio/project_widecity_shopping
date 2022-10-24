@@ -5,40 +5,51 @@
 <head>
     <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <style>
-    #id_heading{
-      color:rgb(255, 254, 254);
-      border-radius: 10px;
-      padding: 5px 10px;
-      margin: 5px;
-      font-weight: bold;
-      text-transform: uppercase;
-      background-color: black;
-      border: 1px solid rgb(136, 134, 134);
+    .image{
+      display: flex;
+      justify-content: space-between;
+      margin: 25px;
     }    
-    #id_description{
-      color:rgb(255, 254, 254);
-      border-radius: 10px;
-      padding: 5px 10px;
-      margin: 5px;
-      font-weight: bold;
-      text-transform: uppercase;
-      background-color: black;
-      border: 1px solid rgb(136, 134, 134);
+    .description{
+      display:flex;
+      justify-content: space-between;
+      margin: 25px;
+
     }
-    #id_image{
-      color:rgb(255, 254, 254);
-      border-radius: 10px;
-      padding: 15px ;
-      margin: 5px;
-      font-weight: bold;
-      text-transform: uppercase;
-      background-color: black;
-      border: 1px solid rgb(136, 134, 134);
+    .heading{
+      display:flex;
+      justify-content: space-between;
+      margin: 25px;
+
+
     }
-    .banner_title{
-        color:rgb(255, 255, 255);
-        font-size: 15px;
-        margin: 10px;
+    
+    .heading input{
+      border-radius: 10px;
+      padding:5px 10px;
+      width: 200px;
+      text-align: center;
+      background-color: rgb(3, 2, 2);
+      border: 1px solid rgb(255, 255, 255);
+      color:white;
+    }
+    .description textarea{
+      border-radius: 10px;
+      width: 200px;
+      text-align: center;
+      background-color: rgb(3, 2, 2);
+      border: 1px solid rgb(255, 255, 255);
+      color:white;
+
+
+    }
+    .submit{
+      border-radius: 10px;
+      padding:5px 10px;
+      width: 200px;
+      color:white;
+      background-color: rgb(11, 135, 251);
+      border: 1px solid grey;
     }
 
     .last_buttons{
@@ -65,29 +76,127 @@
     }
     .cancel_button:hover{
         width: 10%;
-        background-color: rgb(199, 53, 53);
+        background-color: rgb(226, 226, 226);
         color: white;
+    }
+    .control{
+      height: 50%;
+      padding:20px;
+      border-radius: 10px;
+      width: 200px;
+      background-color: rgb(23, 11, 11);
+      color: rgb(255, 255, 255);
+      border: 1px solid white;
+    }
+    .control:hover{
+      background-color: rgb(80, 79, 79);
+      color: rgb(255, 255, 255);
     }
 
   </style>
 </head>
 
-  <main id="main" class="main">
+  <main id="main" class="main" style="background-color: rgb(0, 0, 0);">
 
     <div class="pagetitle">
-      <h1 style="color: white;">Edit customers</h1>
+      <h1 style="color: white;">Edit Banner</h1>
     </div><!-- End Page Title -->
 
     <section class="section">
         <div class="row">
             <div class="col-lg-12" >
-                <div class="card" style="background-color:rgba(0,0,0,.5) ;border: 2px solid rgb(143, 141, 141);border-radius: 10px;">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: white;">Your Real Time Banner</h5>
-                        <div style="display: flex;">
-                            <img src="/media/{{banner.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
+                <div class="card" style="background-color:rgba(255, 255, 255, 0.5) ;border: 2px solid rgb(143, 141, 141);border-radius: 10px;">
+                    <div class="card-body" >
 
-                            <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data" >
+                <!-- banner 1 control -->
+                <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <input type="text" name="banner" value="1">
+                    <div style="display: flex;justify-content: center;padding: 20px;">
+                        <img src="/media/{{banner1.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
+                    </div>  
+                    <div style="background-color: rgb(79, 77, 77);padding:20px;border-radius: 10px;">
+                      <div class="image">
+                        <label>IMAGE</label>
+                        <input type="file" name="banner_1_image">
+                      </div>
+                      <div class="heading">
+                        <label>HEADING</label>
+                        <input type="text" name="banner_1_heading" value="{{banner1.heading}}">
+                      </div>
+                      <div class="description">
+                        <label>DESCRIPTION</label>
+                        <textarea name="banner_1_description" >{{banner1.description}}</textarea>
+                      </div>
+                      <div>
+                        <button type="submit" class="submit">update</button>
+                      </div>
+                    </div>              
+                  </form>
+          <!-- end -->
+
+                <!-- banner 2 control -->
+            <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="text" name="banner" value="2">
+                  <div style="display: flex;justify-content: center;padding: 20px;">
+                  <img src="/media/{{banner2.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
+              </div>  
+              <div style="background-color: rgb(79, 77, 77);padding:20px;border-radius: 10px;">
+                <div class="image">
+                  <label>IMAGE</label>
+                  <input type="file" name="banner_2_image">
+                </div>
+                <div class="heading">
+                  <label>HEADING</label>
+                  <input type="text" name="banner_2_heading" value="{{banner2.heading}}">
+                </div>
+                <div class="description">
+                  <label>DESCRIPTION</label>
+                  <textarea name="banner_2_description">{{banner2.description}}</textarea>
+                </div>
+                <div>
+                  <button  type="submit" class="submit">update</button>
+                </div>
+              </div>              
+           
+            </form>
+          <!-- end -->
+
+                <!-- banner 2 control -->
+            <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data"> 
+              {% csrf_token %}
+              <input type="text" name="banner" value="3">
+                  <div style="display: flex;justify-content: center;padding: 20px;">
+                  <img src="/media/{{banner3.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
+              </div>  
+              <div style="background-color: rgb(79, 77, 77);padding:20px;border-radius: 10px;">
+                <div class="image">
+                  <label>IMAGE</label>
+                  <input type="file" name="banner_3_image">
+                </div>
+                <div class="heading">
+                  <label>HEADING</label>
+                  <input type="text" name="banner_3_heading" value="{{banner3.heading}}">
+                </div>
+                <div class="description">
+                  <label>DESCRIPTION</label>
+                  <textarea name="banner_3_description">{{banner3.description}}</textarea>
+                </div>
+                <div>
+                  <button  type="submit" class="submit">update</button>
+                </div>
+              </div>              
+           
+            </form>
+          <!-- end -->
+
+
+          <!-- end -->
+
+                <!-- </div>
+            </div>
+            <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data" >
                                 {% csrf_token %}
                                     <div style="color:rgb(255, 251, 251) ;display: block;margin: 50px;">
                                 
@@ -129,11 +238,8 @@
 
                                     </section>
                             </form>
-                    </div>
-                </div>
-            </div>
         </div>
-    </section>
+    </section> -->
 
   </main><!-- End #main -->
 <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

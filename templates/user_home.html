@@ -116,13 +116,7 @@
                     </div><!-- End .account-dropdown -->
 
                     <div class="header-right">
-
-                        <div class="dropdown compare-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                                <i class="icon-random" style="color: white;"></i>
-                                <p>compare</p>
-                            </a>
-                        </div><!-- End .compare-dropdown -->
+<!--  -->
 
                         <div class="dropdown cart-dropdown">
                             <a href="/user_view_cart" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-display="static">
@@ -188,44 +182,30 @@
         <div class="intro-slider-container">
             <div class="owl-carousel owl-simple owl-light owl-nav-inside" data-toggle="owl"
                 data-owl-options='{"nav": false}'>
-                <div class="intro-slide" style="background-image: url('/media/{{banner.image}}');">
-                    <div class="container intro-content">
-                        <h3 class="intro-subtitle">{{banner.heading}}</h3><!-- End .h3 intro-subtitle -->
-                        <h1 class="intro-title">{{banner.description}}</h1><!-- End .intro-title -->
 
-                        <a href="category.html" class="btn btn-primary">
-                            <span>Shop Now</span>
-                            <i class="icon-long-arrow-right"></i>
-                        </a>
+                <div class="intro-slide" style="background-image: url('/media/{{banner1.image}}');">
+                    <div class="container intro-content">
+                        <h3 class="intro-subtitle">{{banner1.heading}}</h3><!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title">{{banner1.description}}</h1><!-- End .intro-title -->
+
                     </div><!-- End .container intro-content -->
                 </div><!-- End .intro-slide -->
-                <div class="intro-slide" style="background-image: url('/media/{{banner.image}}');">
+                <div class="intro-slide" style="background-image: url('/media/{{banner2.image}}');">
                     <div class="container intro-content">
-                        <h3 class="intro-subtitle">Deals and Promotions</h3><!-- End .h3 intro-subtitle -->
-                        <h1 class="intro-title">Ypperlig <br>Coffee Table <br><span
-                                class="text-primary"><sup>$</sup>49,99</span></h1><!-- End .intro-title -->
+                        <h3 class="intro-subtitle">{{banner2.heading}}</h3><!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title">{{banner2.description}}
+                               </h1><!-- End .intro-title -->
 
-                        <a href="category.html" class="btn btn-primary">
-                            <span>Shop Now</span>
-                            <i class="icon-long-arrow-right"></i>
-                        </a>
                     </div><!-- End .container intro-content -->
                 </div><!-- End .intro-slide -->
 
-                <div class="intro-slide" style="background-image: url(assets/images/demos/demo-2/slider/slide-3.jpg);">
+                <div class="intro-slide" style="background-image: url('/media/{{banner3.image}}');">
                     <div class="container intro-content">
-                        <h3 class="intro-subtitle">Living Room</h3><!-- End .h3 intro-subtitle -->
-                        <h1 class="intro-title">
-                            Make Your Living Room <br>Work For You.<br>
-                            <span class="text-primary">
-                                <sup class="text-white font-weight-light">from</sup><sup>$</sup>9,99
-                            </span>
+                        <h3 class="intro-subtitle">{{banner3.heading}}</h3><!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title">{{banner3.description}}
                         </h1><!-- End .intro-title -->
 
-                        <a href="category.html" class="btn btn-primary">
-                            <span>Shop Now</span>
-                            <i class="icon-long-arrow-right"></i>
-                        </a>
+                       
                     </div><!-- End .container intro-content -->
                 </div><!-- End .intro-slide -->
             </div><!-- End .owl-carousel owl-simple -->
