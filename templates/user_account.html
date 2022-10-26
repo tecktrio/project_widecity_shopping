@@ -221,17 +221,17 @@
 									
 										<div style="margin: 10px;justify-content: space-between;display: flex;">
 										<label>Old Password</label>
-										<input type="text" id="old_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:white">
+										<input type="text" id="old_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:rgb(0, 0, 0)">
 										</div>
 
 										<div style="margin: 10px;justify-content: space-between;display: flex;">										
 										<label>New Password</label>
-										<input type="password" id="new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:white" >
+										<input type="password" id="new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:rgb(5, 4, 4)" >
 										</div>
 
 										<div style="margin: 10px;justify-content: space-between;display: flex;">										
 										<label>Re-Enter Password</label>
-										<input type="password" id="re_new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:white">
+										<input type="password" id="re_new_pass" style="border-radius: 10px;padding:0px 10px;background-color: rgb(255, 247, 247);color:rgb(0, 0, 0)">
 										</div>
 
 										<button onclick="confirm_reset()" style="border-radius: 5px;" id="reset_password"
@@ -252,7 +252,7 @@
 
 										if(new_pass == re_new_pass){
 												// window.location.href = '/user_reset_password'
-										if (confirm('Are you sure to cancel this product?')) {
+										if (confirm('Are you sure to change the current password?')) {
 											$.ajaxSetup({
 												data: { csrfmiddlewaretoken: '{{ csrf_token }}' }
 											})

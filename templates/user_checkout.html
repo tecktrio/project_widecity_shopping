@@ -22,7 +22,7 @@
         }
 
         .customtext {
-            color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
 
         }
         .payment_tabs{
@@ -32,25 +32,29 @@
         .adata{
             margin:3px;
             font-size: 14px;
-            color: rgb(205, 205, 205);
+            color: rgb(64, 63, 63);
+            font-weight: bold;
         }
         .pt{
-            background-color: rgba(1, 1, 1, 0.5);
-            color: white;
+            background-color: rgb(4, 109, 255);
+            color: rgb(255, 252, 252);
         }
     </style>
 </head>
 
 
-<div class="page-wrapper" style="background-image: url(media/gifs/anim1.gif);background-attachment: fixed;">
+<div class="page-wrapper" style="background-color: white;background-attachment: fixed;">
     <!--  -->
 
-    <main class="main"style ="background-color: rgba(0,0,0,.5);">
-        <div class="page-header text-center" style="background-color: rgba(0, 0, 0,.8)">
-            <div class="container">
-                <h1 class="page-title" style="color: white;">Checkout<span>Shop</span></h1>
+    <main class="main"style ="background-color: white">
+
+        <div style="background-color: rgb(4, 2, 61);padding: 20px;">
+            <div >
+                <h1  style="color: rgb(255, 255, 255);">Checkout</h1>
             </div><!-- End .container -->
         </div><!-- End .page-header -->
+
+
         <nav aria-label="breadcrumb" class="breadcrumb-nav">
             <div class="container">
                 <ol class="breadcrumb">
@@ -60,7 +64,8 @@
                 </ol>
             </div><!-- End .container -->
         </nav><!-- End .breadcrumb-nav -->
-        <div class="page-content" style="display:flex;justify-content:space-between;margin:100px;">
+        
+        <div class="page-content" style="display:flex;justify-content:space-between;margin:30px 100px;">
     
 
                 <section style="width: 50%;overflow: hidden;display: flex;">
@@ -70,34 +75,35 @@
 
                             <div action="#" style="margin: 10px;">
                                 <div id="message" style="color: red;margin: 5px;"></div>
-                                <input type="text" id="coupon" style="background-color: rgba(0,0,0,0);border-radius:3px;border:1px solid rgb(175, 169, 169);padding: 10px;color: white;font-weight: bold;" placeholder="coupon code">
-                                <input onclick="apply_coupon()"  value="Apply Coupon" style="margin: 10px;text-align: center;border-radius: 5px;">
+                                <input type="text" id="coupon" style="background-color: rgb(255, 255, 255);border-radius:5px;border:1px solid rgb(0, 0, 0);padding: 10px;color: rgb(0, 0, 0);font-weight: bold;font-size: 14px;" placeholder="coupon code">
+                                <input onclick="apply_coupon()"  value="Apply Coupon" style="margin: 10px;text-align: center;border-radius: 5px;padding:10px;background-color: rgb(100, 239, 172);">
                             </div>
 
                         </div>
 
-                        <section style="padding: 10px;width: 50%;">
+                        <section style="padding: 10px;width: 80%;">
                             {% for each in address %}
                         
                             <div id="{{each.id}}selected" class="address" style="display: none;width: 100%;" onload="select_one('{{each.id}}')">
-                                    <div style="border:2px solid rgb(241, 238, 238);padding:20px;border-radius:10px;color: white;">
-                                        <div class="adata">{{each.email}}</div>
-                                        <div class="adata">{{each.first_name}}</div>
-                                        <div class="adata">{{each.last_name}}</div>
-                                        <div class="adata">{{each.building_name}}</div>
-                                        <div class="adata">{{each.street}}</div>
-                                        <div class="adata">{{each.divincode}}</div>
-                                        <div class="adata">{{each.contact}}</div>
-                                        <div class="adata">{{each.alt_contact}}</div>
+                  
+                                    <div style="border:2px solid rgb(0, 0, 0);padding:20px;border-radius:10px;color: rgb(4, 138, 66);text-transform: uppercase;">
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">email id  : </span>{{each.email}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">first name     :</span> {{each.first_name}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">last name      :</span> {{each.last_name}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">building name  :</span> {{each.building_name}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">street name    : </span>{{each.street}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">pincode        :</span> {{each.pincode}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">contact        : </span>{{each.contact}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">alternative contact :</span> {{each.alt_contact}}</div>
                                     </div>
                             </div>
                             <div style="width: 100%;">
                                 <input type="button" onclick="choose_address('{{each.id}}')" name="address" value="Pick Address {{each.id}}" 
                                 style="width: 100%;
-                                background-color: rgb(7, 7, 8,.5);
-                                border: 1px solid white;
+                                background-color: rgb(255, 255, 255);
+                                border: 1px solid rgb(0, 0, 0);
                                 border-radius: 5px;
-                                color:white;
+                                color:rgb(0, 0, 0);
                                 margin: 2px;padding: 10px;"> 
                             </div>      
                             {% endfor %}
@@ -140,7 +146,7 @@
                 <section style="width: 40%;height: 40%;" >
            
                     <p>
-                    <div class="summary" style="background-color: rgba(34, 36, 41,.5);border-radius:10px;padding: 30px;">
+                    <div class="summary" style="background-color: rgb(255, 255, 255);border-radius:10px;padding: 30px;color:black;border:1px solid black;">
                         <h3 class="summary-title customtext">Your Order</h3>
 
                         <table class="table table-summary">
@@ -176,16 +182,17 @@
                                     </button>
                                     </h2>
                                     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
+                                    <div class="accordion-body" style="color: rgb(0, 0, 0);">
                                         <strong>cash on delivery is available for all the products. <br>Go for the payment.</strong> 
                                         <button class="btn btn-outline-primary-2 btn-order btn-block" style="margin-top: 20px;"
                                         onclick=cod()>
-                                        <span class="btn-text pt" style="border: 1 px solid white;padding:5px;">Place Order</span>
-                                        <span class="btn-hover-text pt">Proceed to Checkout</span>
+                                        <span class="btn-text pt" style="border: 1 px solid white;padding:10px; color:rgb(0, 0, 0);background-color: rgb(255, 166, 0);border-radius: 5px;">Place Order</span>
+                                        <span class="btn-hover-text pt" style="border: 1 px solid white;padding:10px; color:rgb(0, 0, 0);background-color: rgb(255, 255, 255);">Proceed to Checkout</span>
                                     </button>
                                     </div>
                                     </div>
                                 </div>
+                                
                                 <div class="accordion-item payment_tabs">
                                     <h2 class="accordion-header" id="headingTwo">
                                     <button class="accordion-button collapsed pt" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -193,7 +200,7 @@
                                     </button>
                                     </h2>
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
+                                    <div class="accordion-body" style="color:black">
                                         <strong>complete your payment with Razorpay which is one of the best transaction method used world wide</strong>
 
                                         <form action="/user_razorpay_place_order" method="POST">
@@ -213,7 +220,7 @@
                                                 data-prefill.email="gaurav.kumar@example.com"
                                                 data-theme.color="#F37254"
                                             ></script>
-                                            <input type="hidden" custom="Hidden Element" name="hidden">
+                                            <input type="hidden" custom="Hidden Element" name="hidden" >
                                         </form>
                                     </div>
                                     </div>

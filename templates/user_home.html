@@ -26,9 +26,7 @@
     <header class="header header-2 header-intro-clearance">
         <div class="header-top">
             <div class="container" >
-                <div class="header-left">
-                    <p>shop with widecity</p><a href="#">&nbsp;Read more ...</a>
-                </div><!-- End .header-left -->
+
 
                 <div class="header-right">
 
@@ -76,51 +74,52 @@
             </div><!-- End .container -->
         </div><!-- End .header-top -->
 
-        <div class="header-middle" style="background-color: rgb(7, 9, 45);">
+        <div class="header-middle" style="background-color: rgb(255, 255, 255);">
             <div class="container">
                 <div class="header-left">
                     <button class="mobile-menu-toggler">
-                        <span class="sr-only" style="color: white;">Toggle mobile menu</span>
+                        <span class="sr-only" style="color: rgb(0, 0, 0);">Toggle mobile menu</span>
                         <i class="icon-bars"></i>
                     </button>
-                    <span style="margin-right: 50px;color: white;font-weight: bold;font-size: 20px;">Widecity</span>
+                    <span style="margin: 0px;padding: 0px;color: rgb(0, 0, 0);font-weight: bold;font-size: 30px;">Widecity <p style="margin: 0px;padding: 0px;">Shopping</p></span>
                     <a href="/" class="logo">
-                        <img src="/media/4k_images/AW328916_02.gif" alt="/media/{{banner.image}}" width="200" style="margin: 0px;" >
+                        <img src="https://www.aldenschools.org/cms/lib/NY01813497/Centricity/Domain/201/UnripeAdoredGrayreefshark-max-1mb.gif" alt="/media/{{banner.image}}" width="100" style="margin: 0px;" >
                     </a>
                 </div><!-- End .header-left -->
 
-                <div class="header-center" >
-                    <div
-                        class="header-search header-search-extended header-search-visible header-search-no-radius d-none d-lg-block">
+                <!-- search  -->
+                <div class="header-center">
+                    <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
                         <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                        <form action="#" method="get">
+                        <form action="/search_engine" method="get">
                             <div class="header-search-wrapper search-wrapper-wide">
                                 <label for="q" class="sr-only">Search</label>
-                                <input type="search" class="form-control" name="q" id="q"
-                                    placeholder="Search product ..." required>
+                                <input type="search" class="form-control" name="keyword" id="q" placeholder="Search product ..." required>
                                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
                             </div><!-- End .header-search-wrapper -->
                         </form>
                     </div><!-- End .header-search -->
                 </div>
+                <!-- end search -->
 
                 <div class="header-right">
 
                     <div class="account">
                         <a href="/user_account" title="My account" style="text-align: center;">
-                            <div class="icon" style="font-size: 30px;color: white;">
+                            <div class="icon" style="font-size: 30px;color: rgb(0, 0, 0);">
                                 <i class="icon-user"></i>
                                 <p>My Account</p>
                             </div>
                         </a>
                     </div><!-- End .account-dropdown -->
-
+              
                     <div class="header-right">
-<!--  -->
+
+                
 
                         <div class="dropdown cart-dropdown">
                             <a href="/user_view_cart" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-display="static">
-                                <i class="icon-shopping-cart" style="color: white;"></i>
+                                <i class="icon-shopping-cart" style="color: rgb(0, 0, 0);"></i>
                                 <p>cart</p>
                                 <!-- <span class="cart-count" >2</span> -->
                             </a>
@@ -153,22 +152,7 @@
                     </div><!-- End .category-dropdown -->
                 </div><!-- End .header-left -->
 
-                <div class="header-center">
-                    <nav class="main-nav">
-                        <ul class="menu sf-arrows">
-                            <li class="megamenu-container active">
-                                <a href="index.html" class="sf-with-ul">Home</a>
-                            <li>
-                                <a href="category.html" class="sf-with-ul">Shop</a>
-                            </li>
-                            <li>
-                                <a href="product.html" class="sf-with-ul">Product</a>
-                            <li>
-                                <a href="elements-list.html" class="sf-with-ul">Elements</a>
-                            </li>
-                        </ul><!-- End .menu -->
-                    </nav><!-- End .main-nav -->
-                </div><!-- End .header-center -->
+             
 
                 <div class="header-right">
                     <i class="la la-lightbulb-o"></i>
@@ -369,7 +353,9 @@
 
 
                                 <div class="product-price">
+                                 
                                     <div style="color: red;">-<span class="offer">{{product.offer_percentage}}</span>%</div>
+                                   
                                 </div><!-- End .product-price -->
                                     <div ><span style="color: rgb(93, 87, 87);" ><s>Rs.<span class="orginal_price">{{product.price}}</span></s></span> Rs.<span class="total_price">total_price</span></div>
                             

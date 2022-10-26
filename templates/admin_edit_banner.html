@@ -96,7 +96,7 @@
   </style>
 </head>
 
-  <main id="main" class="main" style="background-color: rgb(0, 0, 0);">
+  <main id="main" class="main" style="background-color: rgb(214, 207, 180);">
 
     <div class="pagetitle">
       <h1 style="color: white;">Edit Banner</h1>
@@ -105,17 +105,17 @@
     <section class="section">
         <div class="row">
             <div class="col-lg-12" >
-                <div class="card" style="background-color:rgba(255, 255, 255, 0.5) ;border: 2px solid rgb(143, 141, 141);border-radius: 10px;">
+                <div class="card" style="background-color:rgba(255, 255, 255) ;border: 2px solid rgb(0, 0, 0);border-radius: 10px;">
                     <div class="card-body" >
 
                 <!-- banner 1 control -->
                 <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data">
                   {% csrf_token %}
-                  <input type="text" name="banner" value="1">
+                  <input type="text" name="banner" value="1" style="display: none;">
                     <div style="display: flex;justify-content: center;padding: 20px;">
                         <img src="/media/{{banner1.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
                     </div>  
-                    <div style="background-color: rgb(79, 77, 77);padding:20px;border-radius: 10px;">
+                    <div style="background-color: rgb(226, 226, 101);padding:20px;border-radius: 10px;color:black;border:1px solid black;">
                       <div class="image">
                         <label>IMAGE</label>
                         <input type="file" name="banner_1_image">
@@ -138,11 +138,11 @@
                 <!-- banner 2 control -->
             <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data">
               {% csrf_token %}
-              <input type="text" name="banner" value="2">
+              <input type="text" name="banner" value="2" style="display: none;">
                   <div style="display: flex;justify-content: center;padding: 20px;">
                   <img src="/media/{{banner2.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
               </div>  
-              <div style="background-color: rgb(79, 77, 77);padding:20px;border-radius: 10px;">
+              <div style="background-color: rgb(229, 231, 115);padding:20px;border-radius: 10px;color:black;border:1px solid black;">
                 <div class="image">
                   <label>IMAGE</label>
                   <input type="file" name="banner_2_image">
@@ -166,11 +166,11 @@
                 <!-- banner 2 control -->
             <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data"> 
               {% csrf_token %}
-              <input type="text" name="banner" value="3">
+              <input type="text" name="banner" value="3" style="display: none;">
                   <div style="display: flex;justify-content: center;padding: 20px;">
                   <img src="/media/{{banner3.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
               </div>  
-              <div style="background-color: rgb(79, 77, 77);padding:20px;border-radius: 10px;">
+              <div style="background-color: rgb(228, 209, 132);padding:20px;border-radius: 10px;color:rgb(0, 0, 0);border:1px solid black;">
                 <div class="image">
                   <label>IMAGE</label>
                   <input type="file" name="banner_3_image">

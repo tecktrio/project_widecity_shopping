@@ -39,21 +39,21 @@
 
     <style>
         .input{
-            color: white;
-            background-color: rgba(26, 23, 23,.5);
+            color: rgb(4, 2, 2);
+            background-color: rgba(255, 252, 252);
             border-radius: 10px;
         }
     </style>
 </head>
 
 <body>
-<div class="page-wrapper" style="background-image: url(media/gifs/anim1.gif); 
-background-attachment: fixed;"">
+<div class="page-wrapper" style="background-color: white;
+background-attachment: fixed;">
  
     <main class="main" >
-        <div class="page-header text-center" style="background-color: rgba(0,0,0,.7);">
-            <div class="container">
-                <h1 class="page-title">Add Delivery Address<span>WideCity</span></h1>
+        <div style="background-color: rgba(0, 176, 246, 0.7);padding:10px;">
+            <div >
+                <h4>Add Delivery Address</h4>
             </div><!-- End .container -->
         </div><!-- End .page-header -->
         <nav aria-label="breadcrumb" class="breadcrumb-nav" >
@@ -69,12 +69,12 @@ background-attachment: fixed;"">
         <div class="page-content">
             <div class="/checkout" style="display: flex;justify-content: center;">
 
-                    <form action="/user_add_address" method="POST" style="padding: 100px;background-color: rgb(0, 0, 0,.5);display: flex;justify-content: center;border:1px solid rgb(255, 255, 255);border-radius: 10px;">
+                    <form action="/user_add_address" method="POST" style="padding: 100px;background-color: rgba(2, 96, 238, 0.5);display: flex;justify-content: center;border:1px solid rgb(255, 255, 255);border-radius: 10px;">
                         {% csrf_token %}
                         <div class="row">
-                            <div class="col-lg-9" id="new_address">
+                            <div class="col-lg-12" id="new_address">
                                 <h2 class="checkout-title" style="color: white;">Add New Address</h2><!-- End .checkout-title -->
-                                <div class="row input" >
+                                <div class="row " >
                                     <div class="col-sm-6">
                                         <label style="color: white;">First Name</label>
                                         <input class="form-control input" name="first_name" required type="text">

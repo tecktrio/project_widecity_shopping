@@ -1,5 +1,9 @@
+# here we write the views file
+# importing the neccessary packages and modules
 import csv
+import time
 from tkinter.tix import STATUS
+from unittest import result
 from django.http import JsonResponse
 from .forms import ImageForm
 from django.shortcuts import render
@@ -33,28 +37,27 @@ from django.views.decorators.cache import never_cache
 import pdfkit
 import datetime
 from datetime import date, timedelta
+# end of importing files
 
+# global variables
 current_date = datetime.date.today()
-
 duration = 'Today'
-# Create your views here.
 otp = '0'
 delivery_charge = 10
+# end of global variables
+
 # handling user side
-
-
 def root(request):
-    if 'user' in request.session:
-        return redirect('/user_home')
-    else:
-        return redirect('/user_sign_in')
+    if 'user' in request.session:return redirect('/user_home')
+    else: return redirect('/user_sign_in')
 
-
+# controls the content in user home
+# start
+@never_cache
 def user_home(request):
     user = ''
 
     # gathering neccessary data from the server
-
     try:
         banner1 = Banners.objects.get(id=1)  # getting the banner data
         banner2 = Banners.objects.get(id=2)  # getting the banner data
@@ -65,8 +68,7 @@ def user_home(request):
         banner3 = ''  # assigning null to the banners if there is an issue in getting the banner
     try:
         products = Products.objects.all()
-    except:
-        products = ''
+    except:products = ''
     try:
         categories = Category.objects.all()
     except:
@@ -80,16 +82,22 @@ def user_home(request):
             user = 'guest'
     except:
         pass
-
+    
     return render(request, 'user_home.html', {'user': user, 'banner1': banner1, 'banner2': banner2, 'banner3': banner3, 'products': products, 'categories': categories})
+# end
+#############################################################################################################################
 
-
+# generating content of user_product_detials
+# start
 def user_product_detail(request, product_id):
     product = Products.objects.get(id=product_id)
     category = Products.objects.filter(category=product.category)
     return render(request, 'user_product_detail.html', {'product': product, 'category': category})
+# end
+#############################################################################################################################
 
-
+# generating content of user invoice downloads
+# start
 def user_invoice(request):
     if 'user' in request.session:
         user = request.session['user']
@@ -103,7 +111,6 @@ def user_invoice(request):
     this_user = Users.objects.get(email=user)
     order_details = Orders.objects.filter(
         user=this_user.id, status='Delivered')
-
     lines = [
         'Sales Report of WideCity Shopping ',
         '',
@@ -112,7 +119,6 @@ def user_invoice(request):
 
     ]
     for orders in order_details:
-
         lines.append(str(orders.Order_day) +
                      str('/'+str(orders.Order_month)) +
                      str('/'+str(orders.Order_year)) +
@@ -126,39 +132,33 @@ def user_invoice(request):
 
         lines.append(
             "-----------------------------------------------------------------------------------------------------------------------------------")
-
     lines.append('')
     lines.append('This report is of the duration of last 7 days')
-
     for line in lines:
         textob.textLine(line)
-
     c.drawText(textob)
     c.showPage()
     c.save()
     buf.seek(0)
-
     return FileResponse(buf, as_attachment=True, filename='widecity_invoice.pdf ')
+# end
+#############################################################################################################################
 
-
+# generation contents of user category view
+# start
 def user_category_view(request, name):
-
     category = Category.objects.get(name=name)
     category_products = Products.objects.filter(category=category.name)
     categories = Category.objects.all()
     product_count = category_products.count()
-    p = Paginator(category_products, 6)
-
+    p = Paginator(category_products, 4)
     page_obj = p.get_page(1)
-
     if 'page' in request.session:
         page_number = request.session['page']
         page_obj = p.get_page(page_number)
-
     if request.method == 'POST':
         print('its post')
         page_number = request.POST.get('page')
-
         try:
             page_obj = p.get_page(page_number)
             request.session['page'] = page_number
@@ -168,15 +168,17 @@ def user_category_view(request, name):
             for i in page_obj:
                 print(i)
             JsonResponse({'category_products': page_obj})
-
     return render(request, 'user_category_view.html',
                   {
                       'category': category,
                       'category_products': page_obj,
                       'categories': categories,
                   })
+# end
+#############################################################################################################################
 
-
+# generating content in the user add to cart
+# start
 def user_add_to_cart(request):
     response = 'failed'
     if 'user' in request.session:
@@ -184,7 +186,6 @@ def user_add_to_cart(request):
     else:
         response = 'user_not_found'
         return JsonResponse({'response': response})
-
     if request.method == 'POST':
         product_id = int(request.POST.get('product_id'))
         user = Users.objects.get(email=user)
@@ -194,21 +195,21 @@ def user_add_to_cart(request):
         discount = int(product.price) * (int(product_offer) / 100)
         total_price = product.price - discount
         print('offer applied ', total_price)
-
         new_cart_product = Cart.objects.create(
             product_id=product_id,
             user_id=user_id,
             quantity=1,
             total_price=int(total_price),
         )
-
         new_cart_product.save()
         response = 'product_added'
         print(response)
-
     return JsonResponse({'response': response})
+# end
+#############################################################################################################################
 
-
+# genereating content of user view cart
+# start
 def user_view_cart(request):
     sub_total = 0
     # trying to add the order to the cart
@@ -216,7 +217,6 @@ def user_view_cart(request):
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     try:
         user = Users.objects.get(email=user)
     except:
@@ -225,21 +225,17 @@ def user_view_cart(request):
         products = Cart.objects.filter(user=user.id)
     except:
         products = ''
-
     if len(products) == 0:
         return render(request, 'user_cart_empty.html')
-
     product_offer = 0
     for price in products:
         # price.total_price = Products.objects.get(id = price.product.id).price
         print('product with discount', price.total_price)
         sub_total = int(sub_total) + int(price.total_price)
-
     # total = sub_total+delivery_charge
-
     special_offer = product_offer
-
     request.session['sub_total'] = sub_total
+    request.session['checkout_status'] = 'True'
     # for data in products:
     #     temp_data = model_to_dict(data)
     #     discount = int(data.product.price) * (int(data.product.offer_percentage)/100)
@@ -247,18 +243,18 @@ def user_view_cart(request):
     #     print(temp_data)
     #     total = int(data.product.price) * (int(data.product.offer_percentage)/100)
     #     # data.insert(total)
-
     #     data['total']=total
-
     return render(request, 'user_cart_view.html', {'user': user, 'products': products, 'sub_total': sub_total, 'special_offer': special_offer, 'delivery_charge': delivery_charge})
+# end
+#############################################################################################################################
 
-
+# generating content of user invoice per item
+# start
 def user_invoice_per_item(request, id):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
     textob = c.beginText()
@@ -266,7 +262,6 @@ def user_invoice_per_item(request, id):
     textob.setFont("Helvetica", 10)
     this_user = Users.objects.get(email=user)
     order_details = Orders.objects.get(id=id)
-
     lines = [
         'INVOICE ',
         '',
@@ -292,35 +287,45 @@ def user_invoice_per_item(request, id):
         'Total Price : Rs {product_price}'.format(
             product_price=order_details.total_price),
         '',
-
-
-
     ]
-
     lines.append('')
     lines.append('Thank you for visiting widecity shopping.')
-
     for line in lines:
         textob.textLine(line)
-
     c.drawText(textob)
     c.showPage()
     c.save()
     buf.seek(0)
-
     print(buf)
     return FileResponse(buf, as_attachment=True, filename='widecity_invoice.pdf ')
-# 3
+# end
+#############################################################################################################################
+def search_engine(request):
+    keyword = request.GET.get('keyword')
 
+    available_product = Products.objects.all()
+    result = []
+    for product in available_product:
+        keyword=str(str(keyword).upper())
+        all_products = str(str(product.name).upper())
+        if keyword in all_products:
+            print('found in product')
+            search_result = Products.objects.get(id=product.id)
+            result.append(search_result)
+        
 
+    return render(request, 'user_search_results.html',
+                {  
+                    'category_products': result
+                })
+# generation content of user export my orders in csv
+# start
 def user_export_myorders_in_csv(request):
-
     # Create the HttpResponse object with the appropriate CSV header.
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     this_user = Users.objects.get(email=user)
     # output filename handling
     filename = str(this_user.full_name)
@@ -328,31 +333,26 @@ def user_export_myorders_in_csv(request):
     response['Content-Disposition'] = 'attachment; filename={}.csv'.format(
         filename)
     writer = csv.writer(response)
-
     ordered_products = Orders.objects.filter(user=this_user.id)
     for product in ordered_products:
-
         print(product.product.name)
         print(product.Order_day, product.Order_month, product.Order_year)
         print(product.quantity)
         print(product.total_price)
-
         row = [product.product.name, product.Order_day, product.Order_month,
                product.Order_year, product.quantity, product.total_price]
-
         writer.writerow(row)
-
     return response
+# end
+#############################################################################################################################
 
-#####################################################
-
-
+# generation the contents of the user update cart
+# start
 def user_update_cart(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     if request.method == 'POST':
         quantity = request.POST.get('quantity')
         cart_id = request.POST.get('cart_id')
@@ -365,7 +365,6 @@ def user_update_cart(request):
         orginal_price_with_discount = stock.price - discount
         stock_balance = stock.stock_available
         print('got quantity', quantity)
-
         if task == 'plus':
             updated_quantity = int(quantity) + 1
             if stock_balance > 1:
@@ -375,7 +374,6 @@ def user_update_cart(request):
                 stock.stock_available = stock.stock_available - 1
             else:
                 updated_quantity = quantity
-
         else:
             updated_quantity = int(quantity) - 1
             if updated_quantity >= 1:
@@ -385,7 +383,6 @@ def user_update_cart(request):
                 stock.stock_available = stock.stock_available + 1
             else:
                 updated_quantity = quantity
-
         print('orginal_price_with_discount', orginal_price_with_discount)
         total_prize = int(int(orginal_price_with_discount)
                           * int(updated_quantity))
@@ -393,12 +390,10 @@ def user_update_cart(request):
         stock.save()
         print('stock balance ', stock.stock_available)
         product.save()
-
         all_cart_products = Cart.objects.filter(user=user.id)
         sub_total = 0
         for product in all_cart_products:
             sub_total = int(sub_total) + int(product.total_price)
-
         # print(sub_total)
         request.session['sub_total'] = sub_total
         print('saved the changes in database')
@@ -409,32 +404,45 @@ def user_update_cart(request):
             'sub_total': int(sub_total),
             'delivery_charge': delivery_charge,
         })
-
     return JsonResponse({'user': 'user_info'})
+# end
+#############################################################################################################################
 
-
+# ganerating the contents of the user delete cart item
+# start
 def user_delete_cart_item(request):
     if request.method == 'POST':
         cart_id = request.POST.get('id')
         delete_product = Cart.objects.get(id=cart_id).delete()
         print('one item from the cart is deleted')
         return JsonResponse({'deleted': 'deleted'})
+# end
+#############################################################################################################################
 
-
+# generating the contents of the user check cart or shop
+# start
 def user_check_cart_or_shop(request):
     return render(request, 'user_check_cart_or_shop.html')
+# end
+#############################################################################################################################
 
-
+# generating the contents of the user checkout 
+# start
 def user_checkout(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
+    
+    if 'checkout_status' in request.session:
+        print('checkout status while loading the checkout page',request.session['checkout_status'])
+        if request.session['checkout_status'] == 'False':
+            return redirect(user_home)
+        
 
     sub_total = request.session['sub_total']
     address = Address.objects.filter(email=user)
     user = Users.objects.get(email=user)
-
     return render(request, 'user_checkout.html',
                   {
                       'sub_total': sub_total,
@@ -442,17 +450,18 @@ def user_checkout(request):
                       'user': user,
                       'default_address_id': 1,
                   })
+# end
+#############################################################################################################################
 
-
+# generating the contents of the user return order
+# start
 def user_return_order(request, order_id):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     this_user = Users.objects.get(email=user)
     product = Orders.objects.get(id=order_id)
-
     if request.method == 'POST':
         user = this_user.id
         reason = request.POST.get('reason')
@@ -463,13 +472,15 @@ def user_return_order(request, order_id):
         product.save()
         print('return request applied ')
         return redirect('/user_account')
-
     return render(request, 'user_return_order_form.html', {'product': product})
+# end
+#############################################################################################################################
 
-
+# generating the contents of the user razorpay place order
+# start
 @csrf_exempt
 def user_razorpay_place_order(request):
-
+    request.session['checkout_status'] = 'False'
     status = ''
     # sub_total = request.session['sub_total']
     sub_total = 234
@@ -488,18 +499,19 @@ def user_razorpay_place_order(request):
             cart_products = Cart.objects.filter(user=this_user.id).delete()
             status = 'success'
     return redirect('/user_thankyou_for_order')
+# end
+#############################################################################################################################
 
-
+# generating the contents of the uesr validate coupon
+# start
 def user_validate_coupon(request):
+    request.session['checkout_status'] = 'False'
     discount = 0
-
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     this_user = Users.objects.get(email=user)
-
     if request.method == 'POST':
         entered_coupon = request.POST.get('coupon')
         discount_percentage = 0
@@ -513,13 +525,11 @@ def user_validate_coupon(request):
                         if entered_coupon == coupon_detail.coupon_code:
                             status = 'used'
                             return JsonResponse({'status': status})
-
                 used_coupon = Coupon_history.objects.create(
                     user_id=this_user.id, coupon_code=entered_coupon)
                 used_coupon.save()
                 discount_percentage = coupon.discount_percentage
                 status = 'success'
-
         prize = int(request.session['sub_total'])
         print(prize)
         discount = int(prize)*(discount_percentage / 100)
@@ -527,17 +537,19 @@ def user_validate_coupon(request):
             request.session['sub_total'] - discount)
         print(coupon)
     return JsonResponse({'discount': discount, 'status': status})
+# end
+#############################################################################################################################
 
-
+# generating the contents of the user paypal place order
+# start
 @csrf_exempt
 def user_paypal_place_order(request):
+    request.session['checkout_status'] = 'False'
     status = ''
-
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     if request.method == 'POST':
         payment_method = request.POST.get('payment_method')
         address_id = request.POST.get('address_id')
@@ -552,32 +564,36 @@ def user_paypal_place_order(request):
             cart_products = Cart.objects.filter(user=this_user.id).delete()
         status = 'success'
         return JsonResponse({'status': status})
+# end
+#############################################################################################################################
 
-
+# generaing the contents of the user thankyou for order
+# start
+@never_cache
 def user_thankyou_for_order(request):
-    return render(request, 'user_thankyou_for_order.html')
+    # thankyou(request)
+    request.session['checkout_status'] = 'False'
+    print(request.session['checkout_status'])
+    return render(request, 'user_thankyou_for_order.html')    
 
 
-def admin_change_order_status(request):
+    
+   
+    # time.sleep(1000)
+    # home(request)
+   
+# end
+#############################################################################################################################
 
-    order_status = request.POST.get('status')
-    order_id = request.POST.get('order_id')
-    print(order_id)
-    change_order_status = Orders.objects.get(id=order_id)
-    change_order_status.status = order_status
-    change_order_status.save()
-    return JsonResponse({'status': 'success'})
-
-
+# generatinng the content for the user add address
+# start
 def user_add_address(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     if request.method == 'POST':
         this_user = Users.objects.get(email=user)
-
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         building_name = request.POST.get('building_name')
@@ -587,7 +603,6 @@ def user_add_address(request):
         pincode = request.POST.get('pincode')
         contact = request.POST.get('contact')
         alt_contact = request.POST.get('alt_contact')
-
         user_new_address = Address.objects.create(
             email=user,
             first_name=first_name,
@@ -600,20 +615,23 @@ def user_add_address(request):
             contact=contact,
             alt_contact=alt_contact,
         )
-
         user_new_address.save()
         print('new address of the user  is saved')
         return redirect('/user_checkout')
     return render(request, 'user_add_address.html')
+# end
+###############################################################################################
 
-
+# generating the contents for the user delete address
 def user_delete_address(request):
     address_id = request.POST.get('address_id')
     print(address_id)
     delete_address = Address.objects.get(id=address_id).delete()
     return JsonResponse({'status': 'done'})
+# end
+###############################################################################################
 
-
+# generating the contents for the user edit address
 def user_edit_address(request, address_id):
     address_prefill = Address.objects.get(id=address_id)
     if request.method == 'POST':
@@ -629,19 +647,21 @@ def user_edit_address(request, address_id):
         address_prefill.save()
         print('address has been updated')
         return redirect('/user_account')
-
     return render(request, 'user_edit_address.html', {'address_prefill': address_prefill})
+# end
+###############################################################################################
 
-
+# generating the content for the user sign in 
+@never_cache
 def user_sign_in(request):
+    if 'user' in request.session:
+        return redirect(user_home)
     if request.method == 'POST':
         # collecting the data from the ajax request in user_sign_in.html
         user_email = request.POST.get('user_email')
         user_password = request.POST.get('user_password')
-
         # getting all the available users
         users = Users.objects.all()
-
         if len(users) > 0:
             for user in users:
                 if user_email == user.email:
@@ -659,29 +679,30 @@ def user_sign_in(request):
         else:
             return JsonResponse({'user_authentication_status': 'user_not_found'})
     return render(request, 'user_sign_in.html')
+# end
+###############################################################################################
 
-
+# generating the content for the user update oder status
 def user_update_order_status(request):
     if request.method == 'POST':
         order_id = request.POST.get('order_id')
         order_status = request.POST.get('order_status')
-
         product = Orders.objects.get(id=order_id)
         print(product.status)
         product.status = 'canceled'
         product.save()
     return JsonResponse({'status': 'canceled'})
+# end
+###############################################################################################
 
-
+# generating the user sign up
 def user_sign_up(request):
-
     if request.method == 'POST':
         # collecting the data from the ajax request in user_sign_in.html
         user_full_name = request.POST.get('user_full_name')
         user_email = request.POST.get('user_email')
         user_password = request.POST.get('user_password')
         user_contact_number = request.POST.get('user_contact_number')
-
         # getting all the available users
         try:
             new_user = Users.objects.create(
@@ -694,74 +715,82 @@ def user_sign_up(request):
             user_sign_up_status = 'user_created'
         except:
             user_sign_up_status = 'failed'
-
         return JsonResponse({'user_sign_up_status': user_sign_up_status})
-
     return render(request, 'user_sign_up.html')
+# end
+###############################################################################################
 
-
+# generating the contents in the welcome new user
 def welcome_new_user(request):
     return render(request, 'welcome_new_user.html')
+# end
+###############################################################################################
 
-
+# generating the user sign out
 def user_sign_out(request):
-    request.session.flush()
+    del request.session['user']
     return redirect('/user_home')
+# end
+###############################################################################################
 
+# generating the contents of user reset password
 def user_reset_password(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     this_user = Users.objects.get(email=user)
-
     if request.method == 'POST':
         password = request.POST.get('new_pass')
         this_user.password = password
         this_user.save()
-        
     return redirect(user_account)
+# end
+###############################################################################################
 
+# generating the contents of the user reset pass success 
 def user_reset_pass_successs(request):
     return render(request,'user_reset_pass_successs.html')
+# end
+###############################################################################################
+
+# generating the contents of the user account
 def user_account(request):
     refered_people = ''
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-
     this_user = Users.objects.get(email=user)
     orders = Orders.objects.filter(user_id=this_user.id).order_by('-id')
     address = Address.objects.filter(email=this_user.email)
     refered_people_details = References.objects.filter(user_id = this_user.id)
-
     delivered_orders = Orders.objects.filter(user_id=this_user.id,status='delivered')
     for order in delivered_orders:
         if int(current_date.day) >= int(order.Order_day)+7:
             order.status = 'delivered_no_return'
             order.save()
-
     print(refered_people_details)
     peoples = []
     for people in refered_people_details:
         print(people.refered_user_id)
         user = Users.objects.get(id=(people.refered_user_id))
         peoples.append(user.full_name)
-
     return render(
         request, 'user_account.html', {'user': this_user, 'orders': orders, 'address': address,'refered_people_details':peoples})
+# end
 
-
+# generating the contents of the user otp sign in
 def user_otp_sign_in(request):
     if request.method == 'POST':
         user_contact_number = request.POST.get('user_contact_number')
         try:
-            user = Users.objects.get(contact_number=user_contact_number)
+            print(user_contact_number)
+            user = Users.objects.get(contact_number=123456789)
+            print(user.contact_number)
             if user is not None:
+                print('found the user')
                 # generate otp and send otp
-
                 # setting up the variables with the data that we get from the message api ( twilio )
                 account_sid = 'ACd9fe7f948f2b0de94a1502c2998c884e'
                 auth_token = '59a1424f9a3f2f933da5811c92d52fdd'
@@ -788,14 +817,15 @@ def user_otp_sign_in(request):
                 except:
                     print('sry, failed to send the otp')
                     otp_sign_in_user_status = 'failed_to_send_otp'
-
                 # end
         except:
             otp_sign_in_user_status = 'user_not_found'
         return JsonResponse({'otp_sign_in_user_status': otp_sign_in_user_status})
     return render(request, 'user_otp_sign_in.html')
+# end
+###############################################################################################
 
-
+# 
 def user_otp_sign_in_validation(request):
     if request.method == 'POST':
         otp_1 = request.POST.get('otp_1')
@@ -908,6 +938,17 @@ def admin_list_customer(request):
 def admin_thankyou_for_adding_product(request):
     return render(request, 'admin_thankyou_for_adding_product.html')
 
+# generating the contents for the admin change order status
+# start
+def admin_change_order_status(request):
+
+    order_status = request.POST.get('status')
+    order_id = request.POST.get('order_id')
+    print(order_id)
+    change_order_status = Orders.objects.get(id=order_id)
+    change_order_status.status = order_status
+    change_order_status.save()
+    return JsonResponse({'status': 'success'})
 
 def admin_add_product(request):
 

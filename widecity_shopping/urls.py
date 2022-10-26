@@ -35,9 +35,11 @@ urlpatterns = [
     path('user_sign_out', views.user_sign_out),
     path('user_account', views.user_account),
     path('user_return_order/<str:order_id>', views.user_return_order),
+    path('search_engine', views.search_engine),
     path('user_export_myorders_in_csv', views.user_export_myorders_in_csv),
     path('user_invoice_per_item/<str:id>', views.user_invoice_per_item),
     path('user_invoice', views.user_invoice),
+    path('user_otp_sign_in', views.user_otp_sign_in),
     path('user_otp_sign_in_validation', views.user_otp_sign_in_validation),
     path('user_forget_password', views.forget_password),# admin and the user have the same page for forget password
 

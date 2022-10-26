@@ -13,39 +13,11 @@
             <div class="header-middle sticky-header">
                 <div class="container">
                     <div class="header-left">
+
                         <button class="mobile-menu-toggler">
                             <span class="sr-only">Toggle mobile menu</span>
                             <i class="icon-bars"></i>
                         </button>
-
-                        <a href="index.html" class="logo">
-                            <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
-                        </a>
-
-                        <nav class="main-nav">
-                            <ul class="menu sf-arrows">
-                                <li class="megamenu-container active">
-                                    <a href="index.html" class="sf-with-ul">Home</a>
-                                </li>
-                                <li>
-                                    <a href="category.html" class="sf-with-ul">Shop</a>
-                                </li>
-                                <li>
-                                    <a href="product.html" class="sf-with-ul">Product</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="sf-with-ul">Pages</a>
-                                </li>
-                                <li>
-                                    <a href="blog.html" class="sf-with-ul">Blog</a>
-                                </li>
-                                <li>
-                                    <a href="elements-list.html" class="sf-with-ul">Elements</a>
-                                </li>
-                            </ul><!-- End .menu -->
-                        </nav><!-- End .main-nav -->
-                    </div><!-- End .header-left -->
-
 
                     <div class="header-right">
 
@@ -76,9 +48,9 @@
         </header><!-- End .header -->
 
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('/media/4k_images/space.jpg')">
+        	<div class="page-header text-center" style="background-color: rgb(13, 7, 53);">
         		<div class="container">
-        			<h1 class="page-title">{{category.name}}<span>widecity shopping</span></h1>
+        			<h1 class="page-title" style="color: white;">{{category.name}}<span>widecity shopping</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
@@ -189,7 +161,8 @@
                                                 </div><!-- End .product-cat -->
                                                 <h3 class="product-title"><a href="product.html">{{product.name}}</a></h3><!-- End .product-title -->
                                                 <div class="product-price">
-                                                    Rs {{product.price}}
+                                                    <span style="color:red;">{{category.offer_percentage}}% &nbsp</span>
+                                                    <span> Rs {{product.price}}</span>
                                                 </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div class="ratings">
