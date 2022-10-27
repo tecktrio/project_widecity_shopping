@@ -21,6 +21,12 @@ class add_product_form(forms.ModelForm):
                     'end_date',
                     'price',
                     'category', 
+                ]
+
+class add_product_images_form(forms.ModelForm):
+    class Meta:
+        model = Products
+        fields = [ 
                     'image_1', 
                     'image_2',
                     'image_3',

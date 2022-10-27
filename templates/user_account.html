@@ -31,19 +31,22 @@
 		}
 
 		.user {
-			border: 2px solid grey;
-			border-radius: 10px;
-			padding: 1px 10px;
-			margin: 10px 50px;
-			font-weight: normal;
+			font-weight: bold;
 			background-color: rgb(255, 255, 255);
 			color: rgb(0, 0, 0);
-		}
-
-		.user:hover {
+			margin: 0px;
+			padding: 0px 10px;
+			cursor: pointer;
 			background-color: rgb(3, 184, 255);
 			color: rgb(255, 255, 255);
 			font-weight: normal;
+			border-radius: 10px;
+			text-decoration: none;
+		}
+
+		.user:hover {
+			background-color: rgb(27, 87, 111);
+	
 		}
 
 		.cancel {
@@ -101,6 +104,9 @@
 		.dowload_button:hover{
 			background-color: #00d9ff;
 		}
+		.heading{
+			background-color: rgb(7, 2, 13);
+		}
 	</style>
 
 </head>
@@ -110,10 +116,9 @@
 
 	<div class="page-wrapper">
 		<main class="main">
-			<div class="page-header text-center"
-				style="background-image: url('https://www.weasyl.com/~fluffkevlar/submission/30165/fluffkevlar-starfield-gif-81774.gif');background-size: cover;">
+			<div class="heading">
 				<div class="container">
-					<h1 class="page-title" style="color: rgb(255, 255, 255);">My Account<span>Widecity Shopping</span></h1>
+					<h1 style="color: rgb(255, 255, 255);font-size: 22px;padding:10px">My Account</h1>
 				</div><!-- End .container -->
 			</div><!-- End .page-header -->
 			<nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
@@ -163,7 +168,7 @@
 											Get my Referal link</a>
 									</li>
 									<li class="nav-item">
-										<a href="#" class="color">Sign Out</a>
+										<a href="/user_sign_out" class="color">Sign Out</a>
 									</li>
 								</ul>
 							</aside>
@@ -175,20 +180,67 @@
 									<!--   user details  and dashboard     -->
 									<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
 										aria-labelledby="tab-dashboard-link">
-
-										<div style="display:flex;align-items:center;">
-											<div>
-												<div class="user">user Full Name</div>
-												<div class="user">user Phone Number</div>
-												<div class="user">user email address</div>
-											</div>
-											<div>
-												<div class="user">{{user.full_name}}</div>
-												<div class="user">{{user.email}}</div>
-												<div class="user">{{user.contact_number}}</div>
+										<div style="display: flex;justify-content: center;margin: 50px;" id="profile_image">
+											<div  style="border-radius: 50%;background-color: rgb(240, 240, 240);padding:20px;width: 100px;height: 100px;align-items: center;display: flex;">
+											<img src="/media/{{user.profile_image}}">
 											</div>
 										</div>
+										
 
+										<div style="display:flex;align-items:center;justify-content: center;">
+									
+											<div style=" width: 100%;">
+												<div id="view_user">
+													<div style="text-align: center;"  id="button_edit"><a href="#" class="user" style="color: white;padding: 5px 10px;" >Update</a></div>
+													<div  style="text-align: center;font-size: 25px;" id="full_name_view">{{user.full_name}}</div>
+													<div style="text-align: center;">{{user.email}}</div>
+													<div style="text-align: center;" id="contact_number_view">Contact : {{user.contact_number}}</div>
+												</div>
+
+												<form id="edit_user" style="display: none; width: 100%;" method="post" action="/user_update_user/{{user.id}}" enctype="multipart/form-data">
+													{% csrf_token %}
+													<div style="text-align: center;"  class="user"  id="button_update"><input type="submit" style="background-color: rgb(3, 184, 255); border: none;" value="Change"></div>
+													<input type="file" id="profile_image_edit" style="margin: 10px;" name="profile_image">
+
+													<div style="display: flex;justify-content: space-between;margin: 10px;">
+														<label>FULL NAME</label>
+														<input type="text" value="{{user.full_name}}" id="full_name_edit" style="padding: 2px 10px;border-radius: 10px;" name="user_full_name">
+													</div>
+													<div style="display: flex;justify-content: space-between;margin: 10px;">
+														<label>CONTACT NUMBER</label>		
+														<input type="text" value="{{user.contact_number}}" id="contact_number_edit" style="padding: 2px 10px;border-radius: 10px;" name="user_contact_number">
+	
+													</div>
+
+												</form>
+											</div>
+										</div>
+										<script>
+											full_name_view = document.getElementById('full_name_view')
+											full_name_edit = document.getElementById('full_name_edit')
+											contact_number_view = document.getElementById('contact_number_view')
+											contact_number_edit = document.getElementById('contact_number_edit')
+											button_edit = document.getElementById('button_edit')
+											button_update = document.getElementById('button_update')
+											edit_user = document.getElementById('edit_user')
+											profile_image = document.getElementById('profile_image')
+
+											console.log(full_name_edit.value)
+											console.log(contact_number_edit.value)
+
+											button_edit.addEventListener('click',function(){
+												console.log('clicked edit')
+												view_user.style.display = 'none';
+												edit_user.style.display = 'block';
+											
+											})
+											button_update.addEventListener('click',function(){
+								
+												view_user.style.display = 'block';
+												edit_user.style.display = 'none';											
+											})
+										</script>
+										
 									</div><!-- .End .tab-pane -->
 
 										<!--   user details  and dashboard     -->

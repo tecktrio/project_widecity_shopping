@@ -1,12 +1,18 @@
-{% extends 'user_base.html' %}
-{% block content %}
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
     <style>
         .input_box {
             border-radius: 5px;
             border: .5px solid rgb(4, 4, 4);
-            padding: 5px 10px;
+            padding: 10px 10px;
+            width: 100%;
         }
 
         .sign_button {
@@ -32,27 +38,35 @@
             font-weight: bold;
             color: rgb(255, 255, 255);
         }
+        .heading{
+            color:rgb(255, 255, 255);
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
     </style>
 </head>
+<body>
+    
 
-<body style="background-image:url('https://media.tenor.com/i0nzuUl-6wQAAAAC/background.gif');background-size: cover;">
+
+
+<body style="background-color: white;">
     <div style="display: flex;justify-content: center;">
         <div
-            style="border:2px solid rgb(255, 255, 255);margin:20vh;padding:50px;background-color: rgba(24, 13, 35,.7);border-radius: 10px;color: rgb(10, 9, 9);">
-            <h3 style="color: white;margin: 0px;">Admin sign in</h3>
-            <p>sign in with your widecity Adminaccount</p>
+            style="border:2px solid rgb(36, 32, 32);margin:20vh;padding:50px;background-color: rgb(22, 0, 43);border-radius: 10px;box-shadow: 0px 20px 20px;">
+            <h3 class="heading" style="margin: 0px;">Admin sign in</h3>
+            <p class="heading" style="font-size: 12px;margin:0px;color:grey">sign in with your widecity Adminaccount</p>
             <div id="message" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
             <div style="margin-top: 10px;">
-                <p style="color: white;">Email Id</p>
+                <p class="heading" style="font-size: 15px;">Email Id</p>
                 <input type="text" id="user_email" placeholder="eg.widecity@gmail.com" class="input_box">
                 <div id="user_email_err" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
-                <p style="color: rgb(255, 255, 255);">Password</p>
+                <p class="heading" style="font-size: 15px;">Password</p>
                 <input type="password" id="user_password" placeholder="eg.Password@123" class="input_box">
                 <div id="user_password_err" style="color: rgb(255, 0, 0);font-size: 12px;"></div>
                 <p style="display: flex; justify-content: center;margin:10px;border-radius: 10px;">
                     <input type="button" value="sign in" onclick="validate()" class="sign_button">
                 <div style="display: flex;flex-direction: column;font-size: 14px;">
-                    <a href="/user_forget_password" class="links">Forget the password</a>
+                    <a href="/user_forget_password" class="links" class="heading">Forget the password</a>
                 </div>
                 </p>
             </div>
@@ -76,6 +90,7 @@
                 user_password_err.innerHTML = 'Password Cannot be empty'
             }
             else {
+                user_password_err.innerHTML = ''
                 console.log('trying to log in with user data');
                 try_to_signin(user_email,user_password)
             }
@@ -119,4 +134,5 @@
         }
     </script>
 
-    {% endblock %}
+</body>
+</html>

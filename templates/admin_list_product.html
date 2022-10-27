@@ -7,7 +7,7 @@
     .edit{
       background-color:rgb(15, 15, 198);
       text-align:center;
-      color:white;
+      color:rgb(255, 255, 255);
       border-radius:5px;
       padding:3px 10px;
       font-size:13px;
@@ -35,7 +35,7 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1 style="color: white;">Edit Product</h1>
+      <h1 style="color: rgb(0, 0, 0);">Manage Product</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Home</a></li>
@@ -47,20 +47,20 @@
     <section class="section">
           <div>
             <div >
-              <h5 class="card-title" style="color: white;">Your Products</h5>
+              <h5 class="card-title" style="color: rgb(0, 0, 0);">Your Products</h5>
 <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
               <!-- Default Table -->
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="font-size:13px;color: white;" scope="col">ID</th>
-                    <th style="font-size:13px;color: white;" scope="col">NAME</th>
-                    <th style="font-size:13px;color: white;" scope="col">PRICE</th>
-                    <th style="font-size:13px;color: white;" scope="col">CATEGORY</th>
-                    <th style="font-size:13px;color: white;" scope="col">DESCRIPTION</th>
-                    <th style="font-size:13px;color: white;" scope="col">RATING</th>
-                    <th style="font-size:13px;color: white;" scope="col">SOLD</th>
-                    <th style="font-size:13px;color: white;" scope="col">STATUS</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">ID</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">NAME</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">PRICE</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">CATEGORY</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">DESCRIPTION</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">RATING</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">SOLD</th>
+                    <th style="font-size:13px;color: rgb(0, 0, 0);" scope="col">STATUS</th>
                   </tr>
                 </thead>
 <!--                /////////////////////////////////////////////////////////////////////////////-->
@@ -68,13 +68,13 @@
               {% for product in products %}
                   <tr>
                     <td style="font-size:13px"><img src="media/{{product.image_1}}" width="50px"></td>
-                    <td style="font-size:13px;color: white;">{{product.name}}</td>
-                    <td style="font-size:13px;color: white;">{{product.price}}</td>
-                    <td style="font-size:13px;color: white;">{{product.category}}</td>
-                    <td style="font-size:13px;color: white;">{{product.description}}</td>
-                    <td style="font-size:13px;color: white;">{{product.rating}}</td>
-                    <td style="font-size:13px;color: white;">{{product.total_sold}}</td>
-                    <td style="font-size:13px;color: white;">{{product.available_status}}</td>
+                    <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.name}}</td>
+                    <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.price}}</td>
+                    <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.category}}</td>
+                    <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.description}}</td>
+                    <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.rating}}</td>
+                    <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.total_sold}}</td>
+                    <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.available_status}}</td>
                     <td style="display:flex;">
 
                       <form action="/admin_edit_Product" >

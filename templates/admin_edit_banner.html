@@ -8,18 +8,17 @@
     .image{
       display: flex;
       justify-content: space-between;
-      margin: 25px;
     }    
     .description{
       display:flex;
       justify-content: space-between;
-      margin: 25px;
+
 
     }
     .heading{
       display:flex;
       justify-content: space-between;
-      margin: 25px;
+
 
 
     }
@@ -29,27 +28,29 @@
       padding:5px 10px;
       width: 200px;
       text-align: center;
-      background-color: rgb(3, 2, 2);
-      border: 1px solid rgb(255, 255, 255);
-      color:white;
+      background-color: rgb(255, 255, 255);
+      border: 1px solid rgb(11, 9, 9);
+      color:rgb(0, 0, 0);
+      margin-top: 5px;
     }
     .description textarea{
       border-radius: 10px;
       width: 200px;
       text-align: center;
-      background-color: rgb(3, 2, 2);
-      border: 1px solid rgb(255, 255, 255);
-      color:white;
-
+      background-color: rgb(255, 255, 255);
+      border: 1px solid rgb(0, 0, 0);
+      color:rgb(0, 0, 0);
+      margin-top:5px ;
 
     }
     .submit{
       border-radius: 10px;
       padding:5px 10px;
-      width: 200px;
+      width: 100px;
       color:white;
       background-color: rgb(11, 135, 251);
       border: 1px solid grey;
+      font-size: 14px;
     }
 
     .last_buttons{
@@ -84,19 +85,21 @@
       padding:20px;
       border-radius: 10px;
       width: 200px;
-      background-color: rgb(23, 11, 11);
+      background-color: rgb(255, 255, 255);
       color: rgb(255, 255, 255);
-      border: 1px solid white;
+      border: 1px solid rgb(0, 0, 0);
     }
     .control:hover{
       background-color: rgb(80, 79, 79);
       color: rgb(255, 255, 255);
     }
-
+    hr{
+      background-color: black;
+    }
   </style>
 </head>
 
-  <main id="main" class="main" style="background-color: rgb(214, 207, 180);">
+  <main id="main" class="main" style="background-color: rgb(255, 255, 255);">
 
     <div class="pagetitle">
       <h1 style="color: white;">Edit Banner</h1>
@@ -108,88 +111,97 @@
                 <div class="card" style="background-color:rgba(255, 255, 255) ;border: 2px solid rgb(0, 0, 0);border-radius: 10px;">
                     <div class="card-body" >
 
-                <!-- banner 1 control -->
-                <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  <input type="text" name="banner" value="1" style="display: none;">
-                    <div style="display: flex;justify-content: center;padding: 20px;">
-                        <img src="/media/{{banner1.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
-                    </div>  
-                    <div style="background-color: rgb(226, 226, 101);padding:20px;border-radius: 10px;color:black;border:1px solid black;">
-                      <div class="image">
-                        <label>IMAGE</label>
-                        <input type="file" name="banner_1_image">
-                      </div>
-                      <div class="heading">
-                        <label>HEADING</label>
-                        <input type="text" name="banner_1_heading" value="{{banner1.heading}}">
-                      </div>
-                      <div class="description">
-                        <label>DESCRIPTION</label>
-                        <textarea name="banner_1_description" >{{banner1.description}}</textarea>
-                      </div>
-                      <div>
-                        <button type="submit" class="submit">update</button>
-                      </div>
-                    </div>              
-                  </form>
+                      <!-- banner 1 control -->
+                      <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data" style="display: flex;justify-content: space-between;">
+                        {% csrf_token %}
+                          <input type="text" name="banner" value="1" style="display: none;">
+                          <div style="display: flex;justify-content: center;padding: 20px;">
+                              <img src="/media/{{banner1.image}}"  width="350px;" height="150px"  style="border-radius: 30px;border: 1px solid rgb(0, 0, 0);">
+                          </div>  
+                          <div style="background-color: rgb(255, 255, 255);color: black;font-size: 12px;width: 100%;padding: 10px;margin:0px 100px;">
+      
+                            <div class="image">
+                              <p>IMAGE</p>
+                              <input type="file" name="banner_1_image">
+                            </div>
+                            <div class="heading">
+                              <p>HEADING</p>
+                              <input type="text" name="banner_1_heading" value="{{banner1.heading}}">
+                            </div>
+                            <div class="description">
+                              <p>DESCRIPTION</p>
+                              <textarea name="banner_1_description" >{{banner1.description}}</textarea>
+                            </div>
+                            <div>
+                              <button type="submit" class="submit">update</button>
+                            </div>
+                            
+                          </div> 
+      
+                        </form>
+                        <hr>
+
+                        <!-- banner 1 control -->
+                        <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data" style="display: flex;justify-content: space-between;">
+                          {% csrf_token %}
+                            <input type="text" name="banner" value="2" style="display: none;">
+                            <div style="display: flex;justify-content: center;padding: 20px;">
+                                <img src="/media/{{banner2.image}}"  width="350px;" height="150px"  style="border-radius: 30px;border: 1px solid rgb(0, 0, 0);">
+                            </div>  
+                            <div style="background-color: rgb(255, 255, 255);color: black;font-size: 12px;width: 100%;padding: 10px;margin:0px 100px;">
+        
+                              <div class="image">
+                                <p>IMAGE</p>
+                                <input type="file" name="banner_2_image">
+                              </div>
+                              <div class="heading">
+                                <p>HEADING</p>
+                                <input type="text" name="banner_2_heading" value="{{banner2.heading}}">
+                              </div>
+                              <div class="description">
+                                <p>DESCRIPTION</p>
+                                <textarea name="banner_2_description" >{{banner2.description}}</textarea>
+                              </div>
+                              <div>
+                                <button type="submit" class="submit">update</button>
+                              </div>
+                              
+                            </div> 
+        
+                          </form>
+                          <hr>
+
+                          <!-- banner 1 control -->
+                          <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data" style="display: flex;justify-content: space-between;">
+                            {% csrf_token %}
+                              <input type="text" name="banner" value="3" style="display: none;">
+                              <div style="display: flex;justify-content: center;padding: 20px;">
+                                  <img src="/media/{{banner3.image}}"  width="350px;" height="150px"  style="border-radius: 30px;border: 1px solid rgb(0, 0, 0);">
+                              </div>  
+                              <div style="background-color: rgb(255, 255, 255);color: black;font-size: 12px;width: 100%;padding: 10px;margin:0px 100px;">
+          
+                                <div class="image">
+                                  <p>IMAGE</p>
+                                  <input type="file" name="banner_3_image">
+                                </div>
+                                <div class="heading">
+                                  <p>HEADING</p>
+                                  <input type="text" name="banner_3_heading" value="{{banner3.heading}}">
+                                </div>
+                                <div class="description">
+                                  <p>DESCRIPTION</p>
+                                  <textarea name="banner_3_description" >{{banner3.description}}</textarea>
+                                </div>
+                                <div>
+                                  <button type="submit" class="submit">update</button>
+                                </div>
+                                
+                              </div> 
+          
+                            </form>
+                            <hr>
           <!-- end -->
 
-                <!-- banner 2 control -->
-            <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              <input type="text" name="banner" value="2" style="display: none;">
-                  <div style="display: flex;justify-content: center;padding: 20px;">
-                  <img src="/media/{{banner2.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
-              </div>  
-              <div style="background-color: rgb(229, 231, 115);padding:20px;border-radius: 10px;color:black;border:1px solid black;">
-                <div class="image">
-                  <label>IMAGE</label>
-                  <input type="file" name="banner_2_image">
-                </div>
-                <div class="heading">
-                  <label>HEADING</label>
-                  <input type="text" name="banner_2_heading" value="{{banner2.heading}}">
-                </div>
-                <div class="description">
-                  <label>DESCRIPTION</label>
-                  <textarea name="banner_2_description">{{banner2.description}}</textarea>
-                </div>
-                <div>
-                  <button  type="submit" class="submit">update</button>
-                </div>
-              </div>              
-           
-            </form>
-          <!-- end -->
-
-                <!-- banner 2 control -->
-            <form action="/admin_edit_banner" method="POST" enctype="multipart/form-data"> 
-              {% csrf_token %}
-              <input type="text" name="banner" value="3" style="display: none;">
-                  <div style="display: flex;justify-content: center;padding: 20px;">
-                  <img src="/media/{{banner3.image}}"  width="600px;" height="300px"  style="border-radius: 30px;border: 1px solid white;">
-              </div>  
-              <div style="background-color: rgb(228, 209, 132);padding:20px;border-radius: 10px;color:rgb(0, 0, 0);border:1px solid black;">
-                <div class="image">
-                  <label>IMAGE</label>
-                  <input type="file" name="banner_3_image">
-                </div>
-                <div class="heading">
-                  <label>HEADING</label>
-                  <input type="text" name="banner_3_heading" value="{{banner3.heading}}">
-                </div>
-                <div class="description">
-                  <label>DESCRIPTION</label>
-                  <textarea name="banner_3_description">{{banner3.description}}</textarea>
-                </div>
-                <div>
-                  <button  type="submit" class="submit">update</button>
-                </div>
-              </div>              
-           
-            </form>
-          <!-- end -->
 
 
           <!-- end -->

@@ -5,7 +5,7 @@ import time
 from tkinter.tix import STATUS
 from unittest import result
 from django.http import JsonResponse
-from .forms import ImageForm
+from .forms import ImageForm, add_product_images_form
 from django.shortcuts import render
 from django.http import HttpResponse
 from asyncio.windows_events import NULL
@@ -30,7 +30,7 @@ from django.shortcuts import redirect, render
 from requests import session
 from twilio.rest import Client
 from widecity_shopping.forms import add_category, add_product_form, edit_banner
-from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Orders, Products, References, Return_request, Users, Address
+from widecity_shopping.models import Banners, Cart, Category, Coupon, Coupon_history, Image, Orders, Products, References, Return_request, Users, Address
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
@@ -434,10 +434,10 @@ def user_checkout(request):
     else:
         return redirect('/user_sign_in')
     
-    if 'checkout_status' in request.session:
-        print('checkout status while loading the checkout page',request.session['checkout_status'])
-        if request.session['checkout_status'] == 'False':
-            return redirect(user_home)
+    # if 'checkout_status' in request.session:
+    #     print('checkout status while loading the checkout page',request.session['checkout_status'])
+    #     if request.session['checkout_status'] == 'False':
+    #         return redirect(user_home)
         
 
     sub_total = request.session['sub_total']
@@ -475,7 +475,19 @@ def user_return_order(request, order_id):
     return render(request, 'user_return_order_form.html', {'product': product})
 # end
 #############################################################################################################################
+def user_update_user(request,user_id):
+    user_full_name = request.POST.get('user_full_name')
+    user_contact_number = request.POST.get('user_contact_number')
+    profile_image = request.FILES.get('profile_image')
 
+    print(user_full_name)
+    print(user_contact_number)
+    user = Users.objects.get(id=user_id)
+    user.full_name = user_full_name
+    user.contact_number = user_contact_number
+    user.profile_image = profile_image
+    user.save()
+    return redirect(user_account)
 # generating the contents of the user razorpay place order
 # start
 @csrf_exempt
@@ -490,6 +502,7 @@ def user_razorpay_place_order(request):
         payment_method = request.POST.get('payment_method')
         this_user = Users.objects.get(email=user)
         cart_products = Cart.objects.filter(user=this_user.id)
+        
         for product in cart_products:
             this_product = Products.objects.get(id=product.product_id)
             new_order = Orders.objects.create(product=this_product, user=this_user, quantity=product.quantity,
@@ -660,6 +673,7 @@ def user_sign_in(request):
         # collecting the data from the ajax request in user_sign_in.html
         user_email = request.POST.get('user_email')
         user_password = request.POST.get('user_password')
+        print('got the user input data')
         # getting all the available users
         users = Users.objects.all()
         if len(users) > 0:
@@ -703,19 +717,21 @@ def user_sign_up(request):
         user_email = request.POST.get('user_email')
         user_password = request.POST.get('user_password')
         user_contact_number = request.POST.get('user_contact_number')
+        profile_image = request.FILES.get('profile_image')
         # getting all the available users
         try:
             new_user = Users.objects.create(
                 full_name=user_full_name,
                 email=user_email,
                 password=user_password,
-                contact_number=user_contact_number
+                contact_number=user_contact_number,
+                profile_image = profile_image
             )
             new_user.save()
             user_sign_up_status = 'user_created'
         except:
             user_sign_up_status = 'failed'
-        return JsonResponse({'user_sign_up_status': user_sign_up_status})
+        return redirect(user_home)
     return render(request, 'user_sign_up.html')
 # end
 ###############################################################################################
@@ -848,9 +864,11 @@ def forget_password(request):
 
     # admin side
 
-
+@never_cache
 def admin_sign_in(request):
 
+    if request.session['admin'] != False:
+        return redirect(admin_panel)
     if request.method == 'POST':
         # collecting the data from the ajax request in user_sign_in.html
         user_email = request.POST.get('user_email')
@@ -897,16 +915,18 @@ def admin_category_delete(request):
 
 
 def admin_sign_out(request):
-    return render(request, 'admin_sign_out.html')
+    request.session['admin'] = False
+    return render(request, 'admin_sign_in.html')
 
-
+@never_cache
 def admin_panel(request):
     admin = ''
-    if 'admin' in request.session:
-        admin = request.session['admin']
-    else:
+    if  request.session['admin'] == False:
         return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email=admin)
+    else:
+        admin_email = request.session['admin']
+
+    this_admin = Users.objects.get(email=admin_email)
 
     user_count = Users.objects.all().count()
     sales = Orders.objects.filter(status='Delivered')
@@ -950,6 +970,20 @@ def admin_change_order_status(request):
     change_order_status.save()
     return JsonResponse({'status': 'success'})
 
+def admin_add_product_images(request):
+    admin = ''
+    if 'admin' in request.session:
+        admin = request.session['admin']
+    else:
+        return redirect('/admin_sign_in')
+    this_admin = Users.objects.get(email=admin)
+
+    if request.method == 'POST':
+        # checking whether all the input fields are filled,not empty and are filled with proper inputs
+        return redirect(admin_panel)
+    return render(request, 'admin_image_upload.html')
+
+
 def admin_add_product(request):
 
     admin = ''
@@ -973,7 +1007,8 @@ def admin_add_product(request):
             obj.category = category
             obj.specification = specification
             obj.save()
-            return redirect('/admin_thankyou_for_adding_product')
+            return redirect(admin_add_product_images)
+            
             #
         return HttpResponse('failed')
         # handling get request
@@ -1743,12 +1778,36 @@ def razorpay_success(request):
 
 
 def main_view(request):
-    form = ImageForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        form.save()
-        return JsonResponse({'message': 'works'})
-    context = {'form': form}
-    return render(request, 'admin_image_upload.html', context)
+ 
+    if request.method=='POST':
+
+        category = request.POST.get('category')
+        # getting datas from the specific fields from the frontend
+        form = add_product_form(request.POST, request.FILES)
+        category = request.POST.get('category')
+        specification = request.POST.get('specification')
+        
+        # image_1 = ''
+        # image_2 = ''
+        # image_3 = ''
+        # image_4 = ''
+        # checking whether all the input fields are filled,not empty and are filled with proper inputs
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.category = category
+            obj.specification = specification
+            obj.image_1 = image_1
+            obj.image_2 = image_2
+            obj.image_3 = image_3
+            obj.image_4 = image_4
+            obj.save()
+            return redirect('/admin_thankyou_for_adding_product')
+            
+        image = request.FILES.get('file')
+        new_image = Image.objects.create(file=image).save()
+
+    return render(request, 'admin_image_upload.html')
 
 
 # 33   test #################################3

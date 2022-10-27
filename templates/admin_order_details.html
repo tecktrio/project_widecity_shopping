@@ -1,4 +1,4 @@
-{% extends 'user_base.html' %}
+{% extends 'admin_base.html' %}
 {% block content %}
 
 <head>
@@ -24,42 +24,46 @@
         }
 
         .links {
-            color: rgb(180, 174, 174);
+            color: rgb(0, 0, 0);
         }
 
         .links:hover {
 
             font-weight: bold;
-            color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
         }
         .column{
-            color:white;
+            color:rgb(0, 0, 0);
             margin:0px 10px;
+        }
+        label{
+            color:rgb(15, 97, 15);
+            font-weight: bold;
         }
         .lightfont{
             font-weight: bold;
-            color: rgb(166, 163, 163);
+            color: rgb(0, 0, 0);
         }
         #next_status{
             background-color:rgba(0, 0, 0,0);
             border-radius: 10px;
-            color:white;
-            border:1px solid white;
+            color:rgb(0, 0, 0);
+            border:1px solid rgb(0, 0, 0);
             font-size: 12px;padding:10px;
         }
         #next_status:hover{
-            background-color: white;
-            color: black;
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
         }
     </style>
 </head>
 
-<body style="background-color: rgb(255, 204, 38);background-size: cover;">
+
     <div style="display: flex;justify-content: center;">
         <div
-            style="border:2px solid rgb(255, 255, 255);margin-top: 10px;;padding:50px 50px;background-color: rgba(0, 0, 0, 0.7);border-radius: 10px;color: rgb(10, 9, 9);width: 50%;">
-            <h3 style="color: white;margin: 0px;">Order Details</h3>
-            <p>see the details of this order</p>
+            style="border:2px solid rgb(0, 0, 0);margin:20vh;padding:50px;border-radius: 10px;color: rgb(10, 9, 9);width: 60%;height: 100%;box-shadow: 0px 20px 10px;">
+            <h3 style="color: rgb(0, 0, 0);margin: 0px;font-weight: bold;">Order Details</h3>
+            <p style="font-size: 12px;margin: 0px 2px;">see the details of this order</p>
             <div id="message" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
 
             <div style="margin-top: 10px;">
@@ -91,20 +95,48 @@
                         <option>Un Delivered</option>
                     </select> -->
                 </div> 
-                <div style="display: flex;justify-content: space-between;margin: 10px;">
-                    <p class="column">Ordered Address</p>
-                    <div style="border: 1px solid rgb(244, 244, 244);border-radius:10px;padding:15px;">
-                        <div style="color:rgb(190, 181, 181);">
+                <div >
+                    <div class="column">Ordered Address</div>
+                    <div style="border: 1px solid rgb(0, 0, 0);border-radius:10px;padding:25px;width: 100%;margin: 10px;">
+
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>Email Address</label>                 
                             <div>{{address.email}}</div>
+                        </div>   
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>Full Name</label>                 
                             <div>{{address.first_name}}{{address.last_name}}</div>
+                        </div>                          
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>Building Name</label>                 
                             <div>{{address.building_name}}</div>
+                        </div>                            
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>Street</label>                 
                             <div>{{address.street}}</div>
+                        </div>                            
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>City</label>                 
                             <div>{{address.city}}</div>
+                        </div>                             
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>State</label>                 
                             <div>{{address.state}}</div>
+                        </div>                             
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>Pincode</label>                 
                             <div>{{address.pincode}}</div>
+                        </div>                             
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>Contact Number</label>                 
                             <div>{{address.contact}}</div>
+                        </div>                              
+                        <div style="display: flex;justify-content: space-between;">      
+                            <label>Alternative Contact Number</label>                 
                             <div>{{address.alt_contact}}</div>
-                        </div>
+                        </div>  
+
+                
                     </div>
                 </div>  
                 <!-- <div style="display: flex;justify-content: space-between;margin: 10px;">

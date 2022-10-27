@@ -1,12 +1,17 @@
-{% extends 'user_base.html' %}
-{% block content %}
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <style>
         .input_box {
             border-radius: 5px;
             border: .5px solid rgb(4, 4, 4);
-            padding: 5px 10px;
+            padding: 10px 10px;
+            width: 100%;
         }
 
         .sign_button {
@@ -25,36 +30,39 @@
 
         .links {
             color: rgb(180, 174, 174);
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            margin: 2px;
+            font-size: 12px;
         }
 
-        .links:hover {
 
-            font-weight: bold;
-            color: rgb(255, 255, 255);
-        }
     </style>
 </head>
+<body>
+    
 
-<body style="background-image:url('/media/gifs/anim1.gif');background-size: cover;">
-    <div style="display: flex;justify-content: center;background-image:url('/media/gifs/anim1.gif')">
+
+
+<body style="background-color: white;">
+    <div style="display: flex;justify-content: center;">
         <div
-            style="border:2px solid rgb(255, 255, 255);margin:20vh;padding:50px;background-color: rgba(24, 13, 35,.7);border-radius: 10px;color: rgb(10, 9, 9);">
+            style="border:2px solid rgb(224, 212, 212);margin:20vh;padding:50px;background-color: rgb(24, 13, 35);border-radius: 10px;color: rgb(0, 0, 0);box-shadow: 0px 20px 20px;">
             <h3 style="color: white;margin: 0px;">sign in</h3>
-            <p>sign in with your widecity account</p>
+            <p class="links" style="font-size: 14px;margin: 0px;color:gray;font-size: 12px;">sign in with your widecity account</p>
             <div id="message" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
             <div style="margin-top: 10px;">
-                <p style="color: white;">Email Id</p>
+                <p style="color: white;margin: 10px 0px;" class="links">Email Id</p>
                 <input type="text" id="user_email" placeholder="eg.widecity@gmail.com" class="input_box">
                 <div id="user_email_err" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
-                <p style="color: rgb(255, 255, 255);">Password</p>
+                <p style="color: rgb(255, 255, 255);margin: 10px 0px ;" class="links">Password</p>
                 <input type="password" id="user_password" placeholder="eg.Password@123" class="input_box">
                 <div id="user_password_err" style="color: rgb(255, 0, 0);font-size: 12px;"></div>
                 <p style="display: flex; justify-content: center;margin:10px;border-radius: 10px;">
                     <input type="button" value="sign in" onclick="validate()" class="sign_button">
                 <div style="display: flex;flex-direction: column;font-size: 14px;">
                     <a href="/admin_forget_password" class="links">Forget the password</a>
-                    <p><a href="/user_otp_sign_in" class="links">sign in</a> | with OTP</p>
-                    <p>New to widecity |<a href="/user_sign_up" class="links"> sign up</a></p>
+                    <p class="links"><a href="/user_otp_sign_in" class="links">sign in</a> | with OTP</p>
+                    <p class="links">New to widecity |<a href="/user_sign_up" class="links"> sign up</a></p>
                 </div>
                 </p>
             </div>
@@ -117,4 +125,5 @@
         }
     </script>
 
-    {% endblock %}
+</body>
+</html>

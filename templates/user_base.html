@@ -40,6 +40,148 @@
 
 </head>
 <body>
+    <header class="header header-2 header-intro-clearance">
+        <div class="header-top">
+            <div class="container" >
+
+
+                <div class="header-right">
+
+                    <ul class="top-menu">
+                        <li>
+                            <a href="#">Links</a>
+                            <ul>
+                                <li>
+                                    <div class="header-dropdown">
+                                        <a href="#">About Us</a>
+                                        <div class="header-menu">
+                                            <ul>
+                                                <li><a href="#">widecity</a></li>
+                                                <li><a href="#">Developers</a></li>
+                                                <li><a href="#">other service</a></li>
+                                            </ul>
+                                        </div><!-- End .header-menu -->
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="header-dropdown">
+                                        <a href="#">help</a>
+                                        <div class="header-menu">
+                                            <ul>
+                                                <li><a href="#">call us</a></li>
+                                                <li><a href="#">Report</a></li>
+                                                <li><a href="#">Bug fix</a></li>
+                                            </ul>
+                                        </div><!-- End .header-menu -->
+                                    </div>
+                                </li>
+                                {% if user == 'guest' %}
+                                <li><a href="/user_sign_in">Sign in</a></li>
+                                <li><a href="/user_sign_up">Sign up</a></li>
+                                <li>guest</li>
+                                <div style="height: 30px ;border-radius:50%;width: 30px;padding:5px;justify-content: center;display: flex;background-color: rgb(243, 255, 243);align-items: center;border:1px solid rgb(120, 114, 114);margin:0px 10px;">
+                                    <img src="/media/profile/user.jpeg" alt="Profile"  style="height: 100%;width: 100%;">
+                      </div>
+                                {% else %}
+                                <li><a href="/user_sign_out">sign out</a></li>
+                                <li>{{user.full_name}}</li>
+                                <div style="height: 30px ;border-radius:50%;width: 30px;padding:5px;justify-content: center;display: flex;background-color: rgb(243, 255, 243);align-items: center;border:1px solid rgb(120, 114, 114);margin:0px 10px;">
+                                    <img src="/media/{{user.profile_image}}" alt="img"  style="height: 100%;width: 100%;">
+                      </div>
+                            
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul><!-- End .top-menu -->
+                </div><!-- End .header-right -->
+
+            </div><!-- End .container -->
+        </div><!-- End .header-top -->
+
+        <div class="header-middle" style="background-color: rgb(255, 255, 255);">
+            <div class="container">
+                <div class="header-left">
+                    <button class="mobile-menu-toggler">
+                        <span class="sr-only" style="color: rgb(0, 0, 0);">Toggle mobile menu</span>
+                        <i class="icon-bars"></i>
+                    </button>
+                    <span style="margin: 0px;padding: 0px;color: rgb(0, 0, 0);font-weight: bold;font-size: 30px;"><a style="text-decoration: none;" href="/">Widecity</a> <p style="margin: 0px;padding: 0px;">Shopping</p></span>
+                    <a href="/" class="logo">
+                        <img src="https://www.aldenschools.org/cms/lib/NY01813497/Centricity/Domain/201/UnripeAdoredGrayreefshark-max-1mb.gif" alt="/media/{{banner.image}}" width="100" style="margin: 0px;" >
+                    </a>
+                </div><!-- End .header-left -->
+
+                <!-- search  -->
+                <div class="header-center">
+                    <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
+                        <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                        <form action="/search_engine" method="get">
+                            <div class="header-search-wrapper search-wrapper-wide">
+                                <label for="q" class="sr-only">Search</label>
+                                <input type="search" class="form-control" name="keyword" id="q" placeholder="Search product ..." required>
+                                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                            </div><!-- End .header-search-wrapper -->
+                        </form>
+                    </div><!-- End .header-search -->
+                </div>
+                <!-- end search -->
+
+                <div class="header-right">
+
+                    <div class="account">
+                        <a href="/user_account" title="My account" style="text-align: center;">
+                            <div class="icon" style="font-size: 30px;color: rgb(0, 0, 0);">
+                                <i class="icon-user"></i>
+                                <p>My Account</p>
+                            </div>
+                        </a>
+                    </div><!-- End .account-dropdown -->
+              
+                    <div class="header-right">
+
+                
+
+                        <div class="dropdown cart-dropdown">
+                            <a href="/user_view_cart" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-display="static">
+                                <i class="icon-shopping-cart" style="color: rgb(0, 0, 0);"></i>
+                                <p>cart</p>
+                                <!-- <span class="cart-count" >2</span> -->
+                            </a>
+                        </div>
+                    </div><!-- End .header-right -->
+            </div><!-- End .container -->
+        </div><!-- End .header-middle -->
+
+        <div class="header-bottom sticky-header">
+            <div class="container">
+                <div class="header-left">
+                    <div class="dropdown category-dropdown">
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false" data-display="static" title="Browse Categories">
+                            Browse Categories
+                        </a>
+
+                        <div class="dropdown-menu">
+                            <nav class="side-nav">
+                                <ul class="menu-vertical sf-arrows">
+                                    {% for category in categories %}
+                               
+                                    <li class="item-lead" ><a
+                                            href="/user_category_view/{{category.name}}">{{category.name}}</a></li>
+                                 
+                                    {% endfor %}
+                                </ul><!-- End .menu-vertical -->
+                            </nav><!-- End .side-nav -->
+                        </div><!-- End .dropdown-menu -->
+                    </div><!-- End .category-dropdown -->
+                </div><!-- End .header-left -->
+                <div class="header-right">
+                    <i class="la la-lightbulb-o"></i>
+                    <p>Clearance<span class="highlight">&nbsp;Up to 30% Off</span></p>
+                </div>
+            </div><!-- End .container -->
+        </div><!-- End .header-bottom -->
+    </header><!-- End .header -->
 {% block content %}
 
 
