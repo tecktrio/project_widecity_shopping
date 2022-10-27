@@ -71,7 +71,7 @@
                 <section style="width: 50%;overflow: hidden;display: flex;">
                   
                     <div class="container">
-                        <div class="checkout-discount" >
+                        <div class="checkout-discount" id="discount" >
 
                             <div action="#" style="margin: 10px;">
                                 <div id="message" style="color: red;margin: 5px;"></div>
@@ -157,7 +157,7 @@
                                         <div class="customtext">Subtotal:</div>
                                     </td>
                                     <td>
-                                        <div class="customtext">Rs. {{sub_total}} </div>
+                                        <div class="customtext" >Rs. <span id="update_discount">{{sub_total}}</span> </div>
                                     </td>
                                 </tr>
             
@@ -166,7 +166,7 @@
                                         <div class="customtext">Total:</div>
                                     </td>
                                     <td>
-                                        <div class="customtext">Rs. {{sub_total}}</div>
+                                        <div class="customtext">Rs.<span id="update_discount_total"> {{sub_total}}</span></div>
                                     </td>
                                 </tr>
                                 
@@ -721,7 +721,8 @@
        
     }
 
-    function apply_coupon(){
+    function apply_coupon(){               
+        document.getElementById('discount').style.display = 'none'
 
         coupon = document.getElementById('coupon').value
         $.ajaxSetup({
@@ -734,8 +735,10 @@
             success: function (response) {
                 if (response['status'] == 'success'){
                 document.getElementById('message').innerText =''
+                document.getElementById('update_discount').innerText =response['discount']
+                document.getElementById('update_discount_total').innerText =response['discount']
                 console.log('you have applied the coupon (from ajax)')
-                window.location.reload()
+                document.getElementById('discount').style.display = 'none'
                 }
                 else if(response['status'] == 'failed'){
                     console.log('wrong coupon')

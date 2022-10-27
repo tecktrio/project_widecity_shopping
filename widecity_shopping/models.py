@@ -87,6 +87,7 @@ class Products(models.Model):
     arrival_date = models.CharField(max_length  = 100)
     end_date = models.CharField(max_length  = 100 )
     price = models.IntegerField(default = 0)
+    # mrp = models.IntegerField(default = 0)
     # category = models.ForeignKey(Category,on_delete = models.CASCADE)
     category = models.CharField(max_length=100)
     specification = models.CharField(max_length = 300)

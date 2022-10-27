@@ -210,6 +210,7 @@ def user_add_to_cart(request):
 
 # genereating content of user view cart
 # start
+@never_cache
 def user_view_cart(request):
     sub_total = 0
     # trying to add the order to the cart
@@ -541,15 +542,16 @@ def user_validate_coupon(request):
                 used_coupon = Coupon_history.objects.create(
                     user_id=this_user.id, coupon_code=entered_coupon)
                 used_coupon.save()
+                print('Coupon Applied')
                 discount_percentage = coupon.discount_percentage
                 status = 'success'
         prize = int(request.session['sub_total'])
         print(prize)
         discount = int(prize)*(discount_percentage / 100)
-        request.session['sub_total'] = int(
+        discount_price = int(
             request.session['sub_total'] - discount)
-        print(coupon)
-    return JsonResponse({'discount': discount, 'status': status})
+        request.session['sub_total'] = discount_price
+    return JsonResponse({'discount': discount_price, 'status': status})
 # end
 #############################################################################################################################
 

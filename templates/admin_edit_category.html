@@ -1,4 +1,4 @@
-{% extends 'user_base.html' %}
+{% extends 'admin_base.html' %}
 {% block content %}
 
 <head>
@@ -33,18 +33,18 @@
             color: rgb(255, 255, 255);
         }
         .column{
-            color:white;
+            color:rgb(0, 0, 0);
             margin:0px 10px;
         }
         .lightfont{
             font-weight: bold;
-            color: rgb(166, 163, 163);
+            color: rgb(0, 0, 0);
         }
         #next_status{
             background-color:rgba(0, 0, 0,0);
             border-radius: 10px;
-            color:white;
-            border:1px solid white;
+            color:rgb(0, 0, 0);
+            border:1px solid rgb(0, 0, 0);
             font-size: 12px;padding:10px;
         }
         #next_status:hover{
@@ -54,11 +54,11 @@
     </style>
 </head>
 
-<body style="background-image:url('/media/gifs/anim1.gif');background-size: cover;">
-    <div style="display: flex;justify-content: center;background-image:url('/media/gifs/anim1.gif')">
+<body style="background-size: cover;">
+    <div style="display: flex;justify-content: center;align-items: center;height: 100vh;">
         <div
-            style="border:2px solid rgb(255, 255, 255);margin:20vh;padding:50px;background-color: rgba(24, 13, 35,.7);border-radius: 10px;color: rgb(10, 9, 9);width: 50%;">
-            <h3 style="color: white;margin: 0px;">Admin Edit Category Details</h3>
+            style="border:2px solid rgb(71, 68, 68);padding:50px;background-color: rgb(255, 255, 255);border-radius: 10px;color: rgb(10, 9, 9);width: 30%;">
+            <h3 style="color: rgb(0, 0, 0);margin: 0px;">Edit Category Details</h3>
             <p>see the details of this order</p>
             <div id="message" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
 
@@ -66,18 +66,18 @@
                 {% csrf_token %}
                 <div style="display: flex;justify-content: space-between;margin: 10px;">
                     <p class="column">Name</p>
-                    <input type="text" id="name" class="column lightfont" value ={{category.name}} name="name" style="background-color: rgba(0,0,0,0);border:1px solid white;padding:10px;">
+                    <input type="text" id="name" class="column lightfont" value ={{category.name}} name="name" style="background-color: rgba(0,0,0,0);border:1px solid white;">
                 </div>
                 <div style="display: flex;justify-content: space-between;margin: 10px;">
                     <p class="column">Image</p>
-                    <div style="padding: 5px;border: 1px solid rgb(235, 235, 235);">
-                        <img src="/media/{{category.image}}"  style="width: 40%;margin:10px;border-radius:10px;">
+                    <div>
+                        <img src="/media/{{category.image}}"  style="width: 30%;margin:10px;border-radius:10px;">
                         <input style="margin: 15px 15px;" type="file" id="image" name="image"   class="column lightfont" >
                     </div>
 
                     
                 </div>
-                <div style="color:white;display: flex;">
+                <div style="color:rgb(0, 0, 0);display: flex;">
                     <p class="column" style="margin: 10px;">Offer Percentage</p>
                     <input type="number" name="offer_percentage" value="{{category.offer_percentage}}" min="0" max="100">
                 </div>
