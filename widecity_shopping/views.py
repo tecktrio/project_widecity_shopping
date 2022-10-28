@@ -971,10 +971,14 @@ def forget_password(request):
 
 
 @never_cache
-def admin_sign_in(request):
 
-    if request.session['admin'] != False:
-        return redirect(admin_panel)
+def admin_sign_in(request):
+    if 'admin' in request.session:
+        if request.session['admin'] == False:
+            return redirect('/admin_sign_in')
+        else:
+            admin_email = request.session['admin']  
+
     if request.method == 'POST':
         # collecting the data from the ajax request in user_sign_in.html
         user_email = request.POST.get('user_email')
@@ -1028,10 +1032,13 @@ def admin_sign_out(request):
 @never_cache
 def admin_panel(request):
     admin = ''
-    if request.session['admin'] == False:
-        return redirect('/admin_sign_in')
+    if 'admin' in request.session:
+        if request.session['admin'] == False:
+            return redirect('/admin_sign_in')
+        else:
+            admin_email = request.session['admin']
     else:
-        admin_email = request.session['admin']
+        return  redirect('/admin_sign_in')        
 
     this_admin = Users.objects.get(email=admin_email)
 
