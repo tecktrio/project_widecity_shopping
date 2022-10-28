@@ -8,6 +8,12 @@
 			color: rgb(0, 0, 0);
 		}
 
+		.address_data{
+			margin: 0px;
+			font-weight: normal;
+			color: white;
+			padding: 0px;
+		}
 		.color:hover {
 			color: brown;
 		}
@@ -154,11 +160,7 @@
 										<a id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab"
 											aria-controls="tab-address" aria-selected="false" class="color">Adresses</a>
 									</li>
-									<li class="nav-item">
-										<a id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab"
-											aria-controls="tab-account" aria-selected="false" class="color">Account
-											Details</a>
-									</li>
+						
 									<li class="nav-item">
 										<a id="tab-account-link" data-toggle="tab" href="#tab-referal" role="tab"
 											aria-controls="tab-account" aria-selected="false" class="color">
@@ -198,10 +200,9 @@
 													action="/user_update_user/{{user.id}}"
 													enctype="multipart/form-data">
 													{% csrf_token %}
-													<div style="text-align: center;" class="user" id="button_update">
 														<input type="submit"
-															style="background-color: rgb(3, 184, 255); border: none;"
-															value="Change"></div>
+															style="background-color: rgb(3, 184, 255); border: none;border-radius: 10px;color: white;"
+															value="Change">
 													<input type="file" id="profile_image_edit" style="margin: 10px;"
 														name="profile_image">
 													<div
@@ -249,7 +250,7 @@
 									<!--   user details  and dashboard     -->
 									<div class="tab-pane fade show " id="tab-referal" role="tabpanel"
 										aria-labelledby="tab-dashboard-link">
-										<div style="display:flex;align-items:center;">
+										<div style="display:flex;align-items:center;justify-content: space-between;">
 											<div>
 												<div class="user">REFERAL LINK</div>
 											</div>
@@ -332,9 +333,9 @@
 												<p style="width: 20px;" class="at">invoice</p>
 
 											</div>
-											<hr style="color: black;">
+											<hr style="color: rgb(46, 44, 44);">
 											{% for order in orders %}
-											<div class="space" style="display: flex;justify-content:space-between">
+											<div class="space" style="display: flex;justify-content:space-between;align-items: center;">
 
 
 												<p class="ap"><a href="/user_product_detail/{{order.product.id}}"><img
@@ -403,7 +404,7 @@
 															src="/media/icons/download_icon.png" width="20px"></div>
 												</a>
 											</div>
-											<hr style="color: black;margin: 2px;">
+											<hr style="background-color: rgb(183, 179, 179);margin: 1px;height: 1px;">
 											{% endfor %}
 										</table>
 										<a href="/" class="btn delivered" data-bs-toggle="tooltip"
@@ -431,33 +432,35 @@
 										<p>The following addresses will be used on the checkout page by default.</p>
 
 										<div class="row">
+											<h3 class="card-title" style="color:rgb(10, 10, 10) ;">Billing Address</h3>
 											{% for each in address %}
-											<div class="col-lg-6">
-												<div class="card card-dashboard">
-													<div class="card-body">
-														<h3 class="card-title">Billing Address</h3>
+											<div class="col-lg-12" >
+												
+												<div class="card card-dashboard" style="border:1px solid rgb(242, 242, 242) ;margin: 10px;border-radius: 10px;background-color: rgb(15, 6, 33);box-shadow: 0px 20px 20px;">
+													<div class="card-body" style="display: flex;justify-content: space-between;">
+														
 														<!-- End .card-title -->
-														<p>
-															{{each.email}}<br>
-															{{each.first_name}}<br>
-															{{each.last_name }}<br>
-															{{each.building_name }}<br>
-															{{each.street }}<br>
-															{{each.city }}<br>
-															{{each.state }}<br>
-															{{each.pincode }}<br>
-															{{each.contact }}<br>
-															{{each.alt_contact }}<br>
-
+														<div >
+															<div class="address_data">{{each.email}}</div>
+															<div class="address_data">{{each.first_name}}</div>
+															<div class="address_data">{{each.last_name }}</div>
+															<div class="address_data">{{each.building_name }}</div>
+															<div class="address_data">{{each.street }}</div>
+															<div class="address_data">{{each.city }}</div>
+															<div class="address_data">{{each.state }}</div>
+															<div class="address_data">{{each.pincode }}</div>
+															<div class="address_data">{{each.contact }}</div>
+															<div class="address_data">{{each.alt_contact }}</div>
+														</div>
 														<div style="display: flex;color:white">
 															<a href="user_edit_address/{{each.id}}"
-																style="cursor:pointer; background-color:green;padding:5px;border-radius: 3px;margin: 3px;;">Edit
+																style="cursor:pointer; background-color:green;padding:5px;border-radius: 3px;margin: 3px;height: fit-content;">Edit
 																<i class="icon-edit"></i></a>
 															<div onclick="delete_address('{{each.id}}')"
-																style="cursor:pointer;background-color: rgb(168, 77, 12);padding:5px;margin:3px;border-radius: 3px;">
+																style="cursor:pointer;background-color: rgb(168, 77, 12);padding:5px;margin:3px;border-radius: 3px;height: fit-content;">
 																Delete <i class="icon-edit"></i></div>
 														</div>
-														</p>
+														
 													</div><!-- End .card-body -->
 												</div><!-- End .card-dashboard -->
 											</div><!-- End .col-lg-6 -->
