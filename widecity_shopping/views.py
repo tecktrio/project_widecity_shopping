@@ -173,10 +173,15 @@ def user_invoice(request):
 
 
 def user_category_view(request, name):
+    price_filter_min = 0
+    price_filter_max = 10000
     category = Category.objects.get(name=name)
     category_products = Products.objects.filter(category=category.name)
     categories = Category.objects.all()
     product_count = category_products.count()
+
+
+
     p = Paginator(category_products, 2)
     pages = ''
     page_obj = p.get_page(1)
@@ -184,7 +189,19 @@ def user_category_view(request, name):
         page_number = request.session['page']
         page_obj = p.get_page(page_number)
     if request.method == 'POST':
-        print('its post')
+
+        if 'task' in request.POST.keys():
+            task = request.POST.get('task')
+            if task == 'price_filter':
+                minmum_price = request.POST.get('minimum')
+                maximum_price = request.POST.get('maximum')
+                print(maximum_price,minmum_price)
+
+                category_products = Products.objects.filter(category = category.name,price__range=(minmum_price,maximum_price))
+                p = Paginator(category_products, 2)
+                price_filter_min = minmum_price
+                price_filter_max = maximum_price
+       
         page_number = request.POST.get('page')
         try:
             page_obj = p.get_page(page_number)
@@ -203,6 +220,8 @@ def user_category_view(request, name):
                       'category_products': page_obj,
                       'categories': categories,
                       'pages':pages,
+                      'min':price_filter_min,
+                      'max':price_filter_max,
                   })
 # end
 #############################################################################################################################

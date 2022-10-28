@@ -6,6 +6,7 @@
         .buy_now{
             background-color:rgb(255, 179, 0);
             border-radius:20px;
+            margin: 10px 0px;
             color:rgb(254, 254, 254);
             padding: 2px 5px;
             width: 100px;
@@ -43,8 +44,7 @@
             padding:5px
         }
         .update:hover{
-            background-color: rgb(173, 167, 167);
-            color: white;
+            color: rgb(0, 221, 0);
         }
         
         .image{
@@ -54,21 +54,7 @@
         } */
     </style>
 </head>
-    <div class="page-wrapper" style="background-color: black;background-attachment: fixed;">
-        <main class="main" style="background-color:rgba(255, 255, 255);">
-        	<div  style="background-color:rgb(233, 232, 238);display: flex;justify-content: center;align-items: center;">
-        			<span><img src="https://gifimage.net/wp-content/uploads/2018/11/gif-robot-png-5.gif" width="100px" ></span>
-        			<span  style="color:rgb(0, 0, 0);font-size: 20px;">Widecity Shopping Cart<br></span>
-        	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+    
             <div class="page-content">
             	<div class="cart">
 	                <div class="container">
@@ -90,16 +76,16 @@
 											<td class="product-col">
 												<div class="product" style="background-color: rgba(0, 0, 0, 0);display: flex;align-items: center;justify-content: space-between;">
 													<figure>
-														<a href="/user_product_detail/{{product.product.id}}">
+														<a href="/media/{{product.product.image_1}}">
 															<img src="/media/{{product.product.image_1}}" alt="Product image" class="image" >
 														</a>
 													</figure>
 													<h4 >
-														<a href="/media/{{product.product.image_1}}" style="color:rgb(0, 0, 0);">{{product.product.name}}</a>
-                                                        <p>Quality Product and this is going to be your best purchase, because it is from widecity shopping.</p>
-                                                        <p class="price-col" style="color:rgb(231, 41, 41);font-weight: bold;padding: 5px 0px;" >Rs.<span id="{{product.id}}tp">{{product.total_price}}</span></p>
+														<a href="/user_product_detail/{{product.product.id}}" style="color:rgb(0, 0, 0);font-size: 20px;">{{product.product.name}}</a>
+                                                        <p style="font-size: 12px;margin:10px 0px">Quality Product and this is going to be your best purchase, because it is from widecity shopping.</p>
+                                                        <p class="price-col" style="color:rgb(231, 41, 41);font-weight: bold;margin: 10px 0px;" >Rs.<span id="{{product.id}}tp">{{product.total_price}}</span></p>
                                                         <p class="quantity-col">
-                                                            <div class="cart-product-quantity" style="display:flex;flex-direction:row;color: rgb(0, 0, 0);align-items: center;" >
+                                                            <div class="cart-product-quantity" style="display:flex;color: rgb(52, 50, 50);align-items: center;border:1px solid rgb(170, 161, 161);border-radius: 10px;"  >
                                                                 <div onclick="quantity_minus('{{product.id}}')" class="update" >-</div>
                                                                 <p id="{{product.id}}q" class="quantity">{{product.quantity}}</p>
                                                                 <div onclick="quantity_plus('{{product.id}}')" class="update">+</div>
@@ -613,25 +599,10 @@ function remove_product(id)
 }
 
 function user_confirm(id){
-    swal({
-        title: 'Are you sure?',
-        text: 'Once deleted, you will not be able to recover this item!',
-        icon: 'warning',
-        buttons: true,
-        dangerMode: true,
-    })
-    .then((willDelete) => {
-        if (willDelete) {
-        swal('Poof! Your imaginary file has been deleted!', {
-            icon: 'success',
-        });
+    if(confirm('The product will be perminently removed from your cart')){
         remove_product(id)
-        } else {
-        swal('Your imaginary file is safe! return to the cart');
-        return false;
-        }
-    });
-}
+        } 
+    }
 
 </script>
 
