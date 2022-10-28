@@ -74,6 +74,9 @@ def user_home(request):
         banner3 = ''  # assigning null to the banners if there is an issue in getting the banner
     try:
         products = Products.objects.all()
+        trusted_products = Products.objects.filter(is_trusted = 'trusted')
+        best_offer_products = Products.objects.all()
+        rated_products = Products.objects.filter(rating = 5)
     except:
         products = ''
     try:
@@ -90,7 +93,17 @@ def user_home(request):
     except:
         pass
 
-    return render(request, 'user_home.html', {'user': user, 'banner1': banner1, 'banner2': banner2, 'banner3': banner3, 'products': products, 'categories': categories})
+    return render(request, 'user_home.html', {
+        'user': user,
+         'banner1': banner1, 
+         'banner2': banner2, 
+         'banner3': banner3, 
+         'products': products, 
+         'categories': categories,
+         'trusted_products':trusted_products,
+         'best_offer_products':best_offer_products,
+         'rated_products':rated_products,
+         })
 # end
 #############################################################################################################################
 
@@ -164,7 +177,8 @@ def user_category_view(request, name):
     category_products = Products.objects.filter(category=category.name)
     categories = Category.objects.all()
     product_count = category_products.count()
-    p = Paginator(category_products, 4)
+    p = Paginator(category_products, 2)
+    pages = ''
     page_obj = p.get_page(1)
     if 'page' in request.session:
         page_number = request.session['page']
@@ -176,16 +190,19 @@ def user_category_view(request, name):
             page_obj = p.get_page(page_number)
             request.session['page'] = page_number
             print('page changed')  # returns the desired page object
+
         except:
             page_obj = p.get_page(1)
-            for i in page_obj:
-                print(i)
-            JsonResponse({'category_products': page_obj})
+    for i in range(0,p.num_pages):
+        print(i)
+        pages = pages+'.'
+
     return render(request, 'user_category_view.html',
                   {
                       'category': category,
                       'category_products': page_obj,
                       'categories': categories,
+                      'pages':pages,
                   })
 # end
 #############################################################################################################################
