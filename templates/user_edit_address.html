@@ -1,42 +1,29 @@
 {% extends 'user_base.html' %}
 {% block content %}
-
+<head>
+    <style>
+        .address{
+            display: flex;
+            justify-content: center;
+            
+        }
+    </style>
+</head>
 
     <main class="main">
-        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-            <div class="container">
-                <h1 class="page-title">Add Delivery Address<span>WideCity</span></h1>
-            </div><!-- End .container -->
-        </div><!-- End .page-header -->
+       
         <nav aria-label="breadcrumb" class="breadcrumb-nav">
-            <div class="container">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                    <li aria-current="page" class="breadcrumb-item active">Checkout</li>
-                </ol>
-            </div><!-- End .container -->
+    
         </nav><!-- End .breadcrumb-nav -->
 
         <div class="page-content">
-            <div class="/checkout">
+            <div class="address">
 
-
-                <div class="container" style="display:flex;justify-content:space-between;">
-                    <div class="checkout-discount">
-                        <form action="#">
-                            <input class="form-control" id="checkout-discount-input" required type="text">
-                            <label class="text-truncate" for="checkout-discount-input">Have a coupon? <span>Click here to enter your code</span></label>
-                        </form>
-                    </div><!-- End .checkout-discount -->
-
-
-
-                    <form action="/user_edit_address/{{address_prefill.id}}" method="POST">
+                    <form action="/user_edit_address/{{address_prefill.id}}" method="POST" style="border: 1px solid black;padding:20px;background-color: rgb(8, 8, 48); color: white;">
                         {% csrf_token %}
                         <div class="row">
-                            <div class="col-lg-9" id="new_address">
-                                <h2 class="checkout-title">Add New Address</h2><!-- End .checkout-title -->
+                            <div class="col-lg-12" id="new_address">
+                                <h2 class="checkout-title" style="color: white;">update Address</h2><!-- End .checkout-title -->
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label>First Name</label>
@@ -80,8 +67,9 @@
                                         <input class="form-control" name="alt_contact" required type="number" value="{{address_prefill.alt_contact}}">
                                     </div><!-- End .col-sm-6 -->
                                     
-                                    <input type="submit">
+                                   
                                 </div><!-- End .custom-checkbox -->
+                                <input type="submit" style="width: 100%;background-color: rgb(0, 145, 255);color: white;">
                             </div><!-- End .col-lg-9 -->
                         </div>
                     </form>

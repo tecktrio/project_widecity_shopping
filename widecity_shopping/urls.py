@@ -75,8 +75,8 @@ urlpatterns = [
 
     # payment urls
 
-    path('pay_with_razorpay', views.pay_with_razorpay),
-    path('pay_with_paypal', views.pay_with_paypal),
+    # path('pay_with_razorpay', views.pay_with_razorpay),
+    # path('pay_with_paypal', views.pay_with_paypal),
     path('user_razorpay_place_order', views.user_razorpay_place_order, name='razorpay_success'),
     path('user_paypal_place_order', views.user_paypal_place_order, name='user_paypal_place_order'),
 

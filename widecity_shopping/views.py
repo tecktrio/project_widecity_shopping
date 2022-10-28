@@ -515,6 +515,7 @@ def user_checkout(request):
                       'address': address,
                       'user': user,
                       'default_address_id': 1,
+                      'total_razorpay':sub_total*100,
                   })
 # end
 #############################################################################################################################
@@ -1819,39 +1820,39 @@ def admin_add_coupon(request):
     #  payments
 
 
-def pay_with_paypal(request):
-    admin = ''
-    if 'user' in request.session:
-        user = request.session['user']
-    else:
-        return redirect('/user_sign_in')
+# def pay_with_paypal(request):
+#     admin = ''
+#     if 'user' in request.session:
+#         user = request.session['user']
+#     else:
+#         return redirect('/user_sign_in')
 
-    # user = Users.objects.get(email = user)
-    return render(request, 'payment_paypal.html', {'user': 'user'})
+#     # user = Users.objects.get(email = user)
+#     return render(request, 'payment_paypal.html', {'user': 'user'})
 
 
-def pay_with_razorpay(request):
-    import razorpay
-    client = razorpay.Client(
-        auth=("rzp_test_oRDO7oXd5GwL0O", "rrdO67DEimkHGWBihfZvO6iW"))
+# def pay_with_razorpay(request):
+#     import razorpay
+#     client = razorpay.Client(
+#         auth=("rzp_test_oRDO7oXd5GwL0O", "rrdO67DEimkHGWBihfZvO6iW"))
 
-    DATA = {
-        "amount": 100,
-        "currency": "INR",
-        "receipt": "receipt#1",
-        "notes": {
-            "key1": "value3",
-            "key2": "value2"
-        }
-    }
-    client.order.create(data=DATA)
-    admin = ''
-    if 'user' in request.session:
-        user = request.session['user']
-    else:
-        return redirect('/user_sign_in')
-
-    return render(request, 'payment_razorpay.html', {'user': user})
+#     DATA = {
+#         "amount": 100,
+#         "currency": "INR",
+#         "receipt": "receipt#1",
+#         "notes": {
+#             "key1": "value3",
+#             "key2": "value2"
+#         }
+#     }
+#     client.order.create(data=DATA)
+#     admin = ''
+#     if 'user' in request.session:
+#         user = request.session['user']
+#     else:
+#         return redirect('/user_sign_in')
+#     user = Users.objects.get(email = user)
+#     return render(request, 'payment_razorpay.html', {'user': user})
 
 
 @csrf_exempt

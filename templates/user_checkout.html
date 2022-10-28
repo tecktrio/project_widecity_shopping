@@ -32,7 +32,7 @@
         .adata{
             margin:3px;
             font-size: 14px;
-            color: rgb(64, 63, 63);
+            color: rgb(113, 112, 112);
             font-weight: bold;
         }
         .pt{
@@ -81,20 +81,23 @@
 
                         </div>
 
-                        <section style="padding: 10px;width: 80%;">
+                        <section style="padding: 10px;width: 100%;">
                             {% for each in address %}
                         
                             <div id="{{each.id}}selected" class="address" style="display: none;width: 100%;" onload="select_one('{{each.id}}')">
                   
                                     <div style="border:2px solid rgb(0, 0, 0);padding:20px;border-radius:10px;color: rgb(4, 138, 66);text-transform: uppercase;">
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">email id  : </span>{{each.email}}</div>
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">first name     :</span> {{each.first_name}}</div>
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">last name      :</span> {{each.last_name}}</div>
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">building name  :</span> {{each.building_name}}</div>
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">street name    : </span>{{each.street}}</div>
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">pincode        :</span> {{each.pincode}}</div>
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">contact        : </span>{{each.contact}}</div>
-                                        <div class="adata"><span style="color:rgb(0, 175, 15) ;">alternative contact :</span> {{each.alt_contact}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">email id  : </span>{{each.email}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">first name     :</span> {{each.first_name}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">last name      :</span> {{each.last_name}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">building name  :</span> {{each.building_name}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">street name    : </span>{{each.street}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">pincode        :</span> {{each.pincode}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">contact        : </span>{{each.contact}}</div>
+                                        <div class="adata"><span style="color:rgb(0, 0, 0) ;">alternative contact :</span> {{each.alt_contact}}</div>
+                                        <div style="display: flex;justify-content: end;">
+                                            <a href="/user_edit_address/{{each.id}}"><button style="padding:5px 10px;background-color: rgb(0, 200, 255);color: white;border:1px solid grey">Edit</button></a>
+                                        </div>
                                     </div>
                             </div>
                             <div style="width: 100%;">
@@ -126,6 +129,7 @@
                             }
                             
                             function choose_address(address_id){
+                                selected_address = address_id
                                 id = address_id+'selected'
                                 $('.address').hide('slow')
                                 $('#'+id).show('slow')
@@ -211,14 +215,14 @@
                                             <script
                                                 src="https://checkout.razorpay.com/v1/checkout.js"
                                                 data-key="rzp_test_oRDO7oXd5GwL0O"
-                                                data-amount="{{sub_total}}" 
+                                                data-amount="{{total_razorpay}}" 
                                                 data-currency="INR"
                                                 data-buttontext="Pay with Razorpay"
-                                                data-name="Acme Corp"
-                                                data-description="A Wild Sheep Chase is the third novel by Japanese author Haruki Murakami"
-                                                data-image="https://example.com/your_logo.jpg"
-                                                data-prefill.name="Amal Benny"
-                                                data-prefill.email="gaurav.kumar@example.com"
+                                                data-name="{{user.full_name}}"
+                                                data-description="wide city handles your payment in a secure way"
+                                                data-image="{{user.profile_image}}"
+                                                data-prefill.name="{{user.full_name}}"
+                                                data-prefill.email="{{user.email}}"
                                                 data-theme.color="#F37254"
                                             ></script>
                                             <input type="hidden" custom="Hidden Element" name="hidden" >
