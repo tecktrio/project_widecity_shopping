@@ -4,6 +4,7 @@
 {% load static %}
 
 <!-- molla/index-1.html  22 Nov 2019 09:55:06 GMT -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,7 +25,8 @@
     <meta name="msapplication-TileColor" content="#cc9966">
     <meta name="msapplication-config" content="{% static 'assets/images/icons/browserconfig.xml' %}">
     <meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="{% static 'assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}">
+    <link rel="stylesheet"
+        href="{% static 'assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}">
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/plugins/owl-carousel/owl.carousel.css' %}">
@@ -35,18 +37,16 @@
     <link rel="stylesheet" href="{% static 'assets/css/skins/skin-demo-2.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/demos/demo-2.css' %}">
 
-    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 
 </head>
+
 <body>
     <header class="header header-2 header-intro-clearance">
         <div class="header-top">
-            <div class="container" >
-
-
+            <div class="container">
                 <div class="header-right">
-
                     <ul class="top-menu">
                         <li>
                             <a href="#">Links</a>
@@ -79,25 +79,25 @@
                                 <li><a href="/user_sign_in">Sign in</a></li>
                                 <li><a href="/user_sign_up">Sign up</a></li>
                                 <li>guest</li>
-                                <div style="height: 30px ;border-radius:50%;width: 30px;padding:5px;justify-content: center;display: flex;background-color: rgb(243, 255, 243);align-items: center;border:1px solid rgb(120, 114, 114);margin:0px 10px;">
-                                    <img src="/media/profile/user.jpeg" alt="Profile"  style="height: 100%;width: 100%;">
-                      </div>
+                                <div
+                                    style="height: 30px ;border-radius:50%;width: 30px;padding:5px;justify-content: center;display: flex;background-color: rgb(243, 255, 243);align-items: center;border:1px solid rgb(120, 114, 114);margin:0px 10px;">
+                                    <img src="/media/profile/user.jpeg" alt="Profile" style="height: 100%;width: 100%;">
+                                </div>
                                 {% else %}
                                 <li><a href="/user_sign_out">sign out</a></li>
                                 <li>{{user.full_name}}</li>
-                                <div style="height: 30px ;border-radius:50%;width: 30px;padding:5px;justify-content: center;display: flex;background-color: rgb(243, 255, 243);align-items: center;border:1px solid rgb(120, 114, 114);margin:0px 10px;">
-                                    <img src="/media/{{user.profile_image}}" alt="img"  style="height: 100%;width: 100%;">
-                      </div>
-                            
+                                <div
+                                    style="height: 30px ;border-radius:50%;width: 30px;padding:5px;justify-content: center;display: flex;background-color: rgb(243, 255, 243);align-items: center;border:1px solid rgb(120, 114, 114);margin:0px 10px;">
+                                    <img src="/media/{{user.profile_image}}" alt="img"
+                                        style="height: 100%;width: 100%;">
+                                </div>
                                 {% endif %}
                             </ul>
                         </li>
                     </ul><!-- End .top-menu -->
                 </div><!-- End .header-right -->
-
             </div><!-- End .container -->
         </div><!-- End .header-top -->
-
         <div class="header-middle" style="background-color: rgb(255, 255, 255);">
             <div class="container">
                 <div class="header-left">
@@ -105,12 +105,15 @@
                         <span class="sr-only" style="color: rgb(0, 0, 0);">Toggle mobile menu</span>
                         <i class="icon-bars"></i>
                     </button>
-                    <span style="margin: 0px;padding: 0px;color: rgb(0, 0, 0);font-weight: bold;font-size: 30px;"><a style="text-decoration: none;" href="/">Widecity</a> <p style="margin: 0px;padding: 0px;">Shopping</p></span>
+                    <span style="margin: 0px;padding: 0px;color: rgb(0, 0, 0);font-weight: bold;font-size: 30px;"><a
+                            style="text-decoration: none;" href="/">Widecity</a>
+                        <p style="margin: 0px;padding: 0px;">Shopping</p>
+                    </span>
                     <a href="/" class="logo">
-                        <img src="https://www.aldenschools.org/cms/lib/NY01813497/Centricity/Domain/201/UnripeAdoredGrayreefshark-max-1mb.gif" alt="/media/{{banner.image}}" width="100" style="margin: 0px;" >
+                        <img src="https://www.aldenschools.org/cms/lib/NY01813497/Centricity/Domain/201/UnripeAdoredGrayreefshark-max-1mb.gif"
+                            alt="/media/{{banner.image}}" width="100" style="margin: 0px;">
                     </a>
                 </div><!-- End .header-left -->
-
                 <!-- search  -->
                 <div class="header-center">
                     <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
@@ -118,16 +121,15 @@
                         <form action="/search_engine" method="get">
                             <div class="header-search-wrapper search-wrapper-wide">
                                 <label for="q" class="sr-only">Search</label>
-                                <input type="search" class="form-control" name="keyword" id="q" placeholder="Search product ..." required>
+                                <input type="search" class="form-control" name="keyword" id="q"
+                                    placeholder="Search product ..." required>
                                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
                             </div><!-- End .header-search-wrapper -->
                         </form>
                     </div><!-- End .header-search -->
                 </div>
                 <!-- end search -->
-
                 <div class="header-right">
-
                     <div class="account">
                         <a href="/user_account" title="My account" style="text-align: center;">
                             <div class="icon" style="font-size: 30px;color: rgb(0, 0, 0);">
@@ -136,59 +138,55 @@
                             </div>
                         </a>
                     </div><!-- End .account-dropdown -->
-              
                     <div class="header-right">
-
-                
-
                         <div class="dropdown cart-dropdown">
-                            <a href="/user_view_cart" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <a href="/user_view_cart" class="dropdown-toggle" role="button" aria-haspopup="true"
+                                aria-expanded="false" data-display="static">
                                 <i class="icon-shopping-cart" style="color: rgb(0, 0, 0);"></i>
                                 <p>cart</p>
                                 <!-- <span class="cart-count" >2</span> -->
                             </a>
                         </div>
                     </div><!-- End .header-right -->
-            </div><!-- End .container -->
-        </div><!-- End .header-middle -->
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+            <div class="header-bottom sticky-header">
+                <div class="container">
+                    <div class="header-left">
+                        <div class="dropdown category-dropdown">
+                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" data-display="static"
+                                title="Browse Categories">
+                                Browse Categories
+                            </a>
+                            <div class="dropdown-menu">
+                                <nav class="side-nav">
+                                    <ul class="menu-vertical sf-arrows">
+                                        {% for category in categories %}
 
-        <div class="header-bottom sticky-header">
-            <div class="container">
-                <div class="header-left">
-                    <div class="dropdown category-dropdown">
-                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false" data-display="static" title="Browse Categories">
-                            Browse Categories
-                        </a>
+                                        <li class="item-lead"><a
+                                                href="/user_category_view/{{category.name}}">{{category.name}}</a></li>
 
-                        <div class="dropdown-menu">
-                            <nav class="side-nav">
-                                <ul class="menu-vertical sf-arrows">
-                                    {% for category in categories %}
-                               
-                                    <li class="item-lead" ><a
-                                            href="/user_category_view/{{category.name}}">{{category.name}}</a></li>
-                                 
-                                    {% endfor %}
-                                </ul><!-- End .menu-vertical -->
-                            </nav><!-- End .side-nav -->
-                        </div><!-- End .dropdown-menu -->
-                    </div><!-- End .category-dropdown -->
-                </div><!-- End .header-left -->
-                <div class="header-right">
-                    <i class="la la-lightbulb-o"></i>
-                    <p>Clearance<span class="highlight">&nbsp;Up to 30% Off</span></p>
-                </div>
-            </div><!-- End .container -->
-        </div><!-- End .header-bottom -->
+                                        {% endfor %}
+                                    </ul><!-- End .menu-vertical -->
+                                </nav><!-- End .side-nav -->
+                            </div><!-- End .dropdown-menu -->
+                        </div><!-- End .category-dropdown -->
+                    </div><!-- End .header-left -->
+                    <div class="header-right">
+                        <i class="la la-lightbulb-o"></i>
+                        <p>Clearance<span class="highlight">&nbsp;Up to 30% Off</span></p>
+                    </div>
+                </div><!-- End .container -->
+            </div><!-- End .header-bottom -->
     </header><!-- End .header -->
-{% block content %}
+    {% block content %}
 
 
-<!-- this is where the inheritence begin -->
+    <!-- this is where the inheritence begin -->
 
 
-{% endblock %}
+    {% endblock %}
     <!-- Plugins JS File -->
     <script src="{% static 'assets/js/jquery.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
@@ -207,4 +205,5 @@
 
 
 <!-- molla/index-1.html  22 Nov 2019 09:55:32 GMT -->
+
 </html>

@@ -47,12 +47,18 @@ delivery_charge = 10
 # end of global variables
 
 # handling user side
+
+
 def root(request):
-    if 'user' in request.session:return redirect('/user_home')
-    else: return redirect('/user_sign_in')
+    if 'user' in request.session:
+        return redirect('/user_home')
+    else:
+        return redirect('/user_sign_in')
 
 # controls the content in user home
 # start
+
+
 @never_cache
 def user_home(request):
     user = ''
@@ -68,7 +74,8 @@ def user_home(request):
         banner3 = ''  # assigning null to the banners if there is an issue in getting the banner
     try:
         products = Products.objects.all()
-    except:products = ''
+    except:
+        products = ''
     try:
         categories = Category.objects.all()
     except:
@@ -82,13 +89,15 @@ def user_home(request):
             user = 'guest'
     except:
         pass
-    
+
     return render(request, 'user_home.html', {'user': user, 'banner1': banner1, 'banner2': banner2, 'banner3': banner3, 'products': products, 'categories': categories})
 # end
 #############################################################################################################################
 
 # generating content of user_product_detials
 # start
+
+
 def user_product_detail(request, product_id):
     product = Products.objects.get(id=product_id)
     category = Products.objects.filter(category=product.category)
@@ -98,6 +107,8 @@ def user_product_detail(request, product_id):
 
 # generating content of user invoice downloads
 # start
+
+
 def user_invoice(request):
     if 'user' in request.session:
         user = request.session['user']
@@ -146,6 +157,8 @@ def user_invoice(request):
 
 # generation contents of user category view
 # start
+
+
 def user_category_view(request, name):
     category = Category.objects.get(name=name)
     category_products = Products.objects.filter(category=category.name)
@@ -179,6 +192,8 @@ def user_category_view(request, name):
 
 # generating content in the user add to cart
 # start
+
+
 def user_add_to_cart(request):
     response = 'failed'
     if 'user' in request.session:
@@ -210,6 +225,8 @@ def user_add_to_cart(request):
 
 # genereating content of user view cart
 # start
+
+
 @never_cache
 def user_view_cart(request):
     sub_total = 0
@@ -251,6 +268,8 @@ def user_view_cart(request):
 
 # generating content of user invoice per item
 # start
+
+
 def user_invoice_per_item(request, id):
     if 'user' in request.session:
         user = request.session['user']
@@ -301,26 +320,29 @@ def user_invoice_per_item(request, id):
     return FileResponse(buf, as_attachment=True, filename='widecity_invoice.pdf ')
 # end
 #############################################################################################################################
+
+
 def search_engine(request):
     keyword = request.GET.get('keyword')
 
     available_product = Products.objects.all()
     result = []
     for product in available_product:
-        keyword=str(str(keyword).upper())
+        keyword = str(str(keyword).upper())
         all_products = str(str(product.name).upper())
         if keyword in all_products:
             print('found in product')
             search_result = Products.objects.get(id=product.id)
             result.append(search_result)
-        
 
     return render(request, 'user_search_results.html',
-                {  
-                    'category_products': result
-                })
+                  {
+                      'category_products': result
+                  })
 # generation content of user export my orders in csv
 # start
+
+
 def user_export_myorders_in_csv(request):
     # Create the HttpResponse object with the appropriate CSV header.
     if 'user' in request.session:
@@ -349,6 +371,8 @@ def user_export_myorders_in_csv(request):
 
 # generation the contents of the user update cart
 # start
+
+
 def user_update_cart(request):
     if 'user' in request.session:
         user = request.session['user']
@@ -411,6 +435,8 @@ def user_update_cart(request):
 
 # ganerating the contents of the user delete cart item
 # start
+
+
 def user_delete_cart_item(request):
     if request.method == 'POST':
         cart_id = request.POST.get('id')
@@ -422,24 +448,27 @@ def user_delete_cart_item(request):
 
 # generating the contents of the user check cart or shop
 # start
+
+
 def user_check_cart_or_shop(request):
     return render(request, 'user_check_cart_or_shop.html')
 # end
 #############################################################################################################################
 
-# generating the contents of the user checkout 
+# generating the contents of the user checkout
 # start
+
+
 def user_checkout(request):
     if 'user' in request.session:
         user = request.session['user']
     else:
         return redirect('/user_sign_in')
-    
+
     # if 'checkout_status' in request.session:
     #     print('checkout status while loading the checkout page',request.session['checkout_status'])
     #     if request.session['checkout_status'] == 'False':
     #         return redirect(user_home)
-        
 
     sub_total = request.session['sub_total']
     address = Address.objects.filter(email=user)
@@ -456,6 +485,8 @@ def user_checkout(request):
 
 # generating the contents of the user return order
 # start
+
+
 def user_return_order(request, order_id):
     if 'user' in request.session:
         user = request.session['user']
@@ -476,7 +507,9 @@ def user_return_order(request, order_id):
     return render(request, 'user_return_order_form.html', {'product': product})
 # end
 #############################################################################################################################
-def user_update_user(request,user_id):
+
+
+def user_update_user(request, user_id):
     user_full_name = request.POST.get('user_full_name')
     user_contact_number = request.POST.get('user_contact_number')
     profile_image = request.FILES.get('profile_image')
@@ -491,6 +524,8 @@ def user_update_user(request,user_id):
     return redirect(user_account)
 # generating the contents of the user razorpay place order
 # start
+
+
 @csrf_exempt
 def user_razorpay_place_order(request):
     request.session['checkout_status'] = 'False'
@@ -503,7 +538,7 @@ def user_razorpay_place_order(request):
         payment_method = request.POST.get('payment_method')
         this_user = Users.objects.get(email=user)
         cart_products = Cart.objects.filter(user=this_user.id)
-        
+
         for product in cart_products:
             this_product = Products.objects.get(id=product.product_id)
             new_order = Orders.objects.create(product=this_product, user=this_user, quantity=product.quantity,
@@ -518,6 +553,8 @@ def user_razorpay_place_order(request):
 
 # generating the contents of the uesr validate coupon
 # start
+
+
 def user_validate_coupon(request):
     request.session['checkout_status'] = 'False'
     discount = 0
@@ -557,6 +594,8 @@ def user_validate_coupon(request):
 
 # generating the contents of the user paypal place order
 # start
+
+
 @csrf_exempt
 def user_paypal_place_order(request):
     request.session['checkout_status'] = 'False'
@@ -584,24 +623,25 @@ def user_paypal_place_order(request):
 
 # generaing the contents of the user thankyou for order
 # start
+
+
 @never_cache
 def user_thankyou_for_order(request):
     # thankyou(request)
     request.session['checkout_status'] = 'False'
     print(request.session['checkout_status'])
-    return render(request, 'user_thankyou_for_order.html')    
+    return render(request, 'user_thankyou_for_order.html')
 
-
-    
-   
     # time.sleep(1000)
     # home(request)
-   
+
 # end
 #############################################################################################################################
 
 # generatinng the content for the user add address
 # start
+
+
 def user_add_address(request):
     if 'user' in request.session:
         user = request.session['user']
@@ -638,6 +678,8 @@ def user_add_address(request):
 ###############################################################################################
 
 # generating the contents for the user delete address
+
+
 def user_delete_address(request):
     address_id = request.POST.get('address_id')
     print(address_id)
@@ -647,6 +689,8 @@ def user_delete_address(request):
 ###############################################################################################
 
 # generating the contents for the user edit address
+
+
 def user_edit_address(request, address_id):
     address_prefill = Address.objects.get(id=address_id)
     if request.method == 'POST':
@@ -666,7 +710,9 @@ def user_edit_address(request, address_id):
 # end
 ###############################################################################################
 
-# generating the content for the user sign in 
+# generating the content for the user sign in
+
+
 @never_cache
 def user_sign_in(request):
     if 'user' in request.session:
@@ -699,6 +745,8 @@ def user_sign_in(request):
 ###############################################################################################
 
 # generating the content for the user update oder status
+
+
 def user_update_order_status(request):
     if request.method == 'POST':
         order_id = request.POST.get('order_id')
@@ -712,6 +760,8 @@ def user_update_order_status(request):
 ###############################################################################################
 
 # generating the user sign up
+
+
 def user_sign_up(request):
     if request.method == 'POST':
         # collecting the data from the ajax request in user_sign_in.html
@@ -727,10 +777,11 @@ def user_sign_up(request):
                 email=user_email,
                 password=user_password,
                 contact_number=user_contact_number,
-                profile_image = profile_image
+                profile_image=profile_image
             )
             new_user.save()
             user_sign_up_status = 'user_created'
+            return redirect(welcome_new_user)
         except:
             user_sign_up_status = 'failed'
         return redirect(user_home)
@@ -739,12 +790,16 @@ def user_sign_up(request):
 ###############################################################################################
 
 # generating the contents in the welcome new user
+
+
 def welcome_new_user(request):
     return render(request, 'welcome_new_user.html')
 # end
 ###############################################################################################
 
 # generating the user sign out
+
+
 def user_sign_out(request):
     del request.session['user']
     return redirect('/user_home')
@@ -752,6 +807,8 @@ def user_sign_out(request):
 ###############################################################################################
 
 # generating the contents of user reset password
+
+
 def user_reset_password(request):
     if 'user' in request.session:
         user = request.session['user']
@@ -766,13 +823,17 @@ def user_reset_password(request):
 # end
 ###############################################################################################
 
-# generating the contents of the user reset pass success 
+# generating the contents of the user reset pass success
+
+
 def user_reset_pass_successs(request):
-    return render(request,'user_reset_pass_successs.html')
+    return render(request, 'user_reset_pass_successs.html')
 # end
 ###############################################################################################
 
 # generating the contents of the user account
+
+
 def user_account(request):
     refered_people = ''
     if 'user' in request.session:
@@ -782,8 +843,9 @@ def user_account(request):
     this_user = Users.objects.get(email=user)
     orders = Orders.objects.filter(user_id=this_user.id).order_by('-id')
     address = Address.objects.filter(email=this_user.email)
-    refered_people_details = References.objects.filter(user_id = this_user.id)
-    delivered_orders = Orders.objects.filter(user_id=this_user.id,status='delivered')
+    refered_people_details = References.objects.filter(user_id=this_user.id)
+    delivered_orders = Orders.objects.filter(
+        user_id=this_user.id, status='delivered')
     for order in delivered_orders:
         if int(current_date.day) >= int(order.Order_day)+7:
             order.status = 'delivered_no_return'
@@ -795,10 +857,12 @@ def user_account(request):
         user = Users.objects.get(id=(people.refered_user_id))
         peoples.append(user.full_name)
     return render(
-        request, 'user_account.html', {'user': this_user, 'orders': orders, 'address': address,'refered_people_details':peoples})
+        request, 'user_account.html', {'user': this_user, 'orders': orders, 'address': address, 'refered_people_details': peoples})
 # end
 
 # generating the contents of the user otp sign in
+
+
 def user_otp_sign_in(request):
     if request.method == 'POST':
         user_contact_number = request.POST.get('user_contact_number')
@@ -843,7 +907,9 @@ def user_otp_sign_in(request):
 # end
 ###############################################################################################
 
-# 
+#
+
+
 def user_otp_sign_in_validation(request):
     if request.method == 'POST':
         otp_1 = request.POST.get('otp_1')
@@ -865,6 +931,7 @@ def forget_password(request):
     return render(request, 'forget_password.html')
 
     # admin side
+
 
 @never_cache
 def admin_sign_in(request):
@@ -920,10 +987,11 @@ def admin_sign_out(request):
     request.session['admin'] = False
     return render(request, 'admin_sign_in.html')
 
+
 @never_cache
 def admin_panel(request):
     admin = ''
-    if  request.session['admin'] == False:
+    if request.session['admin'] == False:
         return redirect('/admin_sign_in')
     else:
         admin_email = request.session['admin']
@@ -962,6 +1030,8 @@ def admin_thankyou_for_adding_product(request):
 
 # generating the contents for the admin change order status
 # start
+
+
 def admin_change_order_status(request):
 
     order_status = request.POST.get('status')
@@ -972,22 +1042,8 @@ def admin_change_order_status(request):
     change_order_status.save()
     return JsonResponse({'status': 'success'})
 
-def admin_add_product_images(request):
-    admin = ''
-    if 'admin' in request.session:
-        admin = request.session['admin']
-    else:
-        return redirect('/admin_sign_in')
-    this_admin = Users.objects.get(email=admin)
-
-    if request.method == 'POST':
-        # checking whether all the input fields are filled,not empty and are filled with proper inputs
-        return redirect(admin_panel)
-    return render(request, 'admin_image_upload.html')
-
 
 def admin_add_product(request):
-
     admin = ''
     if 'admin' in request.session:
         admin = request.session['admin']
@@ -1009,8 +1065,8 @@ def admin_add_product(request):
             obj.category = category
             obj.specification = specification
             obj.save()
-            return redirect(admin_add_product_images)
-            
+            return redirect(admin_thankyou_for_adding_product)
+
             #
         return HttpResponse('failed')
         # handling get request
@@ -1018,15 +1074,7 @@ def admin_add_product(request):
         # trying to creating new product
     form = add_product_form()
     form_categories = Category.objects.all()
-
     return render(request, 'admin_add_product.html', {'form': form, 'form_categories': form_categories, 'admin': this_admin})
-
-    # admin = ''
-    # if 'admin' in request.session:
-    #     admin = request.session['admin']
-    # else:
-    #     return redirect('/admin_sign_in')
-    # return render(request,'admin_add_product.html',{'admin':admin})
 
 
 def admin_update_user_status(request):
@@ -1454,7 +1502,7 @@ def admin_edit_banner(request):
 
         if request.POST.get('banner') == '2':
 
-        # banner_1_image = request.FILES('banner_1_image')
+            # banner_1_image = request.FILES('banner_1_image')
             banner_2_image = request.FILES.get('banner_2_image')
         # banner_3_image = request.FILES('banner_3_image')
 
@@ -1466,11 +1514,10 @@ def admin_edit_banner(request):
             banner_2.image = banner_2_image
             banner_2.save()
 
-       
         if request.POST.get('banner') == '3':
 
-        # banner_1_image = request.FILES('banner_1_image')
-        # banner_2_image = request.FILES('banner_2_image')
+            # banner_1_image = request.FILES('banner_1_image')
+            # banner_2_image = request.FILES('banner_2_image')
             banner_3_image = request.FILES.get('banner_3_image')
 
             banner_3_heading = request.POST.get('banner_3_heading')
@@ -1481,9 +1528,8 @@ def admin_edit_banner(request):
             banner_3.image = banner_3_image
             banner_3.save()
 
-       
-
     return render(request, 'admin_edit_banner.html', {'banner1': banner1, 'banner2': banner2, 'banner3': banner3})
+
 
 def admin_category_offers(request):
     admin = ''
@@ -1495,16 +1541,16 @@ def admin_category_offers(request):
 
         new_offer_percentage = request.POST.get('new_offer_percentage')
         category_id = request.POST.get('category_id')
-        print(new_offer_percentage,category_id)
+        print(new_offer_percentage, category_id)
         category = Category.objects.get(id=category_id)
         category.offer_percentage = new_offer_percentage
         category.save()
 
-
     this_admin = Users.objects.get(email=admin)
     categories = Category.objects.all()
-    return render(request,'admin_category_offers.html',{'categories':categories})
-    
+    return render(request, 'admin_category_offers.html', {'categories': categories})
+
+
 def admin_product_offers(request):
     admin = ''
     if 'admin' in request.session:
@@ -1515,7 +1561,7 @@ def admin_product_offers(request):
 
         new_offer_percentage = request.POST.get('new_offer_percentage')
         product_id = request.POST.get('product_id')
-        print(new_offer_percentage,product_id)
+        print(new_offer_percentage, product_id)
         product = Products.objects.get(id=product_id)
         product.offer_percentage = new_offer_percentage
         product.save()
@@ -1523,7 +1569,8 @@ def admin_product_offers(request):
     this_admin = Users.objects.get(email=admin)
     products = Products.objects.all()
 
-    return render(request,'admin_product_offers.html',{'products':products})
+    return render(request, 'admin_product_offers.html', {'products': products})
+
 
 def admin_edit_company_info(request):
     admin = ''
@@ -1537,7 +1584,7 @@ def admin_edit_company_info(request):
 
 
 def admin_sales_report(request):
-    ppp = 4 # product per page in sales report
+    ppp = 4  # product per page in sales report
     admin = ''
     global duration
     if 'admin' in request.session:
@@ -1549,8 +1596,6 @@ def admin_sales_report(request):
     #     page = request.GET['page']
 
     if request.method == 'POST':
-
-        
 
         if 'export' in request.POST.keys():
             filetype = request.POST.get('filetype')
@@ -1648,7 +1693,7 @@ def admin_sales_report(request):
             current_page = 1
             if 'page_number' in request.POST.keys():
                 current_page = request.POST.get('page_number')
-                print('got page_number',current_page)
+                print('got page_number', current_page)
 
             duration = request.POST.get('duration')
             print(duration)
@@ -1666,11 +1711,11 @@ def admin_sales_report(request):
                 to_month = to_date[1]
                 to_year = to_date[0]
                 for order in orders:
-                    orders  = Orders.objects.filter(
-                        Order_day__gte = from_day,Order_day__lte= to_day,
-                        Order_month__gte = from_month,Order_month__lte = to_month,
-                        Order_year__gte = from_year,Order_year__lte = to_year
-                        )
+                    orders = Orders.objects.filter(
+                        Order_day__gte=from_day, Order_day__lte=to_day,
+                        Order_month__gte=from_month, Order_month__lte=to_month,
+                        Order_year__gte=from_year, Order_year__lte=to_year
+                    )
 
                 p = Paginator(orders, ppp)
                 page_obj = p.get_page(current_page)
@@ -1678,7 +1723,7 @@ def admin_sales_report(request):
                 pages = int(orders.count()/ppp)
                 for i in range(pages):
                     available_pages.append(i)
-                return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'duration': duration,'available_pages':available_pages})
+                return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'duration': duration, 'available_pages': available_pages})
 
             else:
                 if duration == 'Today':
@@ -1686,27 +1731,29 @@ def admin_sales_report(request):
                     orders = Orders.objects.filter(Order_day=current_date.day)
                 elif duration == 'Month':
                     print(duration)
-                    orders = Orders.objects.filter(Order_month=current_date.month)
+                    orders = Orders.objects.filter(
+                        Order_month=current_date.month)
                 elif duration == 'Year':
                     print(duration)
-                    orders = Orders.objects.filter(Order_year=current_date.year)
-                
+                    orders = Orders.objects.filter(
+                        Order_year=current_date.year)
+
                 p = Paginator(orders, ppp)
-                page_obj = p.get_page(current_page)  
+                page_obj = p.get_page(current_page)
                 available_pages = []
                 pages = int(orders.count()/ppp)
                 for i in range(pages):
                     available_pages.append(i)
-                return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'duration': duration,'available_pages':available_pages})
+                return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'duration': duration, 'available_pages': available_pages})
 
     orders = Orders.objects.all()
     p = Paginator(orders, ppp)
-    page_obj = p.get_page(1)  
+    page_obj = p.get_page(1)
     available_pages = []
     pages = int(orders.count()/ppp)
     for i in range(pages):
         available_pages.append(i)
-    return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'current_date': current_date, 'duration': duration,'available_pages':available_pages})
+    return render(request, 'admin_sales_report.html', {'admin': admin, 'orders': page_obj, 'current_date': current_date, 'duration': duration, 'available_pages': available_pages})
 
 
 def admin_remove_coupon(request):
@@ -1777,39 +1824,6 @@ def razorpay_success(request):
 
 
 # hhjhb
-
-
-def main_view(request):
- 
-    if request.method=='POST':
-
-        category = request.POST.get('category')
-        # getting datas from the specific fields from the frontend
-        form = add_product_form(request.POST, request.FILES)
-        category = request.POST.get('category')
-        specification = request.POST.get('specification')
-        
-        # image_1 = ''
-        # image_2 = ''
-        # image_3 = ''
-        # image_4 = ''
-        # checking whether all the input fields are filled,not empty and are filled with proper inputs
-
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.category = category
-            obj.specification = specification
-            obj.image_1 = image_1
-            obj.image_2 = image_2
-            obj.image_3 = image_3
-            obj.image_4 = image_4
-            obj.save()
-            return redirect('/admin_thankyou_for_adding_product')
-            
-        image = request.FILES.get('file')
-        new_image = Image.objects.create(file=image).save()
-
-    return render(request, 'admin_image_upload.html')
 
 
 # 33   test #################################3

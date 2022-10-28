@@ -3,7 +3,6 @@
 <head>
 <style>
   .td{
-   
     font-weight: bold;
     display: flex;
     color:black;
@@ -36,18 +35,11 @@
   }
 </style>
 </head>
-
   <!-- ======= Sidebar ======= -->
-
-
   <main id="main" class="main">
-
-
-
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
-
           <div class="card">
             <div class="card-body">
               <h5 class="card-title" style="margin-bottom: 20px;">Manage Category</h5>
@@ -60,34 +52,34 @@
     <th>IMAGE</th>
   </th>
 </tr>
-
   {% for category in categories %}
-
         <div class="td" style="display: flex;justify-content:space-between">
           <div style="margin:0px 30px;width: 20%;font-weight: normal;">{{category.name}}</div>
           <img src="media/{{category.image}}" width="30px">
           <button class="delete_category" onclick="delete_category('{{category.id}}')">Delete </button>
           <a href="admin_edit_category/{{category.id}}" style="color: white;" onmouseover=this.sty><button class="edit_category">Edit </button></a>
-
         </div>
         <hr style="color: black;">
-
   {% endfor %}
 </table>
-
-
-    <a href="/admin_add_category"><button style="border:none;border-radius:20px;background-color:rgb(103, 103, 226);color:white;font-size:15px;padding:5px 25px;">+ &nbspadd</button>
-
+    <a href="/admin_add_category"><button 
+      style="border:none;
+      border-radius:20px;
+      background-color:rgb(103, 103, 226);
+      color:white;
+      font-size:15px;
+      padding:5px 25px;
+      ">+ &nbspadd</button>
             </div>
           </div>
         </div>
       </div>
     </section>
-
   </main><!-- End #main -->
+
+  
   <script>
     function delete_category(cat_id){
-
       if(confirm('Are you sure to delete this category?'))
       {
         console.log(cat_id)
@@ -105,8 +97,6 @@
         })
     }
   }
-
-
   </script>
 
 {%endblock%}

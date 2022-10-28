@@ -1,105 +1,91 @@
 {% extends 'admin_base.html' %}
 {% block content %}
 
-  <!-- ======= Sidebar ======= -->
+<!-- ======= Sidebar ======= -->
+
 <head>
-    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <style>
-    #table_title{
-      color:rgb(5, 5, 6);
+    #table_title {
+      color: rgb(5, 5, 6);
       text-transform: uppercase;
     }
   </style>
 </head>
-
-  <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>Control Users</h1>
-    </div><!-- End Page Title -->
-
-    <section class="section">
-      <div class="row">
-        <div class="col-lg-12">
-
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title"></h5>
-<!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-              <!-- Default Table -->
-              <table class="table" id="table_title">
-                <thead>
-                  <tr>
-                    <th scope="col">Mail Id</th>
-                    <th scope="col">Contact</th>
-                    <th scope="col">Block</th>
-                  </tr>
-                </thead>
-<!--                /////////////////////////////////////////////////////////////////////////////-->
-                <tbody>
-              {% for user in users %}
-                  <tr>
-                    <td>{{user.full_name}}</td>
-                    <td>{{user.contact_number}}</td>
-                    <td>
-                      <div class="form-check form-switch">
-                        {% if user.active_status == 'active' %}
-                        <input class="form-check-input" type="checkbox" id="active{{user.email}}"  onchange="update_status('{{user.email}}')"  >
-                        {% else %}
-                        <input class="form-check-input" type="checkbox" id="active{{user.email}}"  onchange="update_status('{{user.email}}')" checked>
-                        {% endif %}
-                      </div>
-                    </td>
-<!--                    <td><select onchange="update_status('{{customer.customer_email}}')" style="width:150px;border-radius:10px;padding:2px;" id="customer_status">-->
-<!--                      <option  selected>{{customer.customer_status}}</option>-->
-<!--                      <option>active</option>-->
-<!--                      <option>block</option>-->
-<!--                    </select></td>-->
-                  </tr>
-               {% endfor %}
-                </tbody>
-              </table>
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Control Users</h1>
+  </div><!-- End Page Title -->
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+            <!-- Default Table -->
+            <table class="table" id="table_title">
+              <thead>
+                <tr>
+                  <th scope="col">Mail Id</th>
+                  <th scope="col">Contact</th>
+                  <th scope="col">Block</th>
+                </tr>
+              </thead>
+              <!--                /////////////////////////////////////////////////////////////////////////////-->
+              <tbody>
+                {% for user in users %}
+                <tr>
+                  <td>{{user.full_name}}</td>
+                  <td>{{user.contact_number}}</td>
+                  <td>
+                    <div class="form-check form-switch">
+                      {% if user.active_status == 'active' %}
+                      <input class="form-check-input" type="checkbox" id="active{{user.email}}"
+                        onchange="update_status('{{user.email}}')">
+                      {% else %}
+                      <input class="form-check-input" type="checkbox" id="active{{user.email}}"
+                        onchange="update_status('{{user.email}}')" checked>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-        </div>
-      </div>
-    </section>
+    </div>
+  </section>
+</main><!-- End #main -->
 
-  </main><!-- End #main -->
-<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
 <script>
-
-  $(document).ready(function(){
+  $(document).ready(function () {
     console.log('your document is ready');
   })
-
-  function update_status(email)
-  {
-    status = document.getElementById('active'+email).checked
+  function update_status(email) {
+    status = document.getElementById('active' + email).checked
     $.ajaxSetup({
-      data:{csrfmiddlewaretoken:'{{csrf_token}}'},
+      data: { csrfmiddlewaretoken: '{{csrf_token}}' },
     });
-
     $.ajax({
-      url:'/admin_update_user_status',
-      data:{'status':status,'email':email},
-      method:'POST',
-      success:function(response){
-          if(response['status'] == 'block'){
-            console.log('user blocked successfully')
-          }
-          else if(response['status'] == 'active' ){
-            console.log('user is now active')
-          }
+      url: '/admin_update_user_status',
+      data: { 'status': status, 'email': email },
+      method: 'POST',
+      success: function (response) {
+        if (response['status'] == 'block') {
+          console.log('user blocked successfully')
+        }
+        else if (response['status'] == 'active') {
+          console.log('user is now active')
+        }
       },
-      error:function(){
+      error: function () {
         console.log('ajax is not working')
       }
     });
-
   };
-
 </script>
 
 {%endblock%}

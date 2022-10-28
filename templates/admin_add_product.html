@@ -5,128 +5,30 @@
 
 <head>
   <style>
-    .not-visible {
-      display: none;
-    }
-    #id_name{
-      color:rgb(14, 12, 12);
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_description{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-
-    }
-    #id_specification{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_stock_available{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_rating{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_total_sold{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_is_trusted{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_available_status{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_arrival_date{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-      
-    }
-    #id_end_date{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_price{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_image_1{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_image_2{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_image_3{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_image_4{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
-    }
-    #id_category{
-      color:black;
-      border-radius:3px;
-      padding:3px;
-      text-align: center;
-      width: 60%;
+    .not-visible,
+    #id_description,
+    #id_specification,
+    #id_stock_available,
+    #id_rating,
+    #id_total_sold,
+    #id_is_trusted,
+    #id_available_status,
+    #id_arrival_date,
+    #id_end_date,
+    #id_price,
+    #id_image_1,
+    #id_image_2,
+    #id_name,
+    #id_image_3,
+    #id_image_4,
+    #id_category {
+      display: block;
     }
 
-.label{
-  color:rgb(93, 89, 89);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+    .label {
+      color: rgb(93, 89, 89);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
   </style>
 </head>
 <!-- ======= Sidebar ======= -->
@@ -147,14 +49,15 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="card" style="background-color: rgb(255, 255, 255);">
           <div class="card-body">
             <h5 class="card-title" style="margin-bottom: 0px;color:rgb(0, 0, 0);">Make sure the details are correct</h5>
-            <p style="color: rgb(129, 131, 139);font-weight:normal ;margin-top: 0px;margin-bottom: 50px;color:rgb(0, 0, 0);">Enter the information of the product exactly as it is</p>
+            <p
+              style="color: rgb(129, 131, 139);font-weight:normal ;margin-top: 0px;margin-bottom: 50px;color:rgb(0, 0, 0);">
+              Enter the information of the product exactly as it is</p>
             <!-- user data  -->
-
-            <form method = "POST" enctype="multipart/form-data" style="color: rgb(83, 83, 83);font-weight:bold ;background-color: rgb(255, 255, 255);padding: 30px;border-radius: 10px;">
+            <form method="POST" enctype="multipart/form-data"
+              style="color: rgb(83, 83, 83);font-weight:bold ;background-color: rgb(255, 255, 255);padding: 30px;border-radius: 10px;">
               {% csrf_token %}
               <div id="message" style="color:red ;font-size: 15px;"></div>
               <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
@@ -167,8 +70,8 @@
                 {{form.description}}
               </div>
               <hr>
-              <!--start images -->
-              <!-- <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
+              <!-- start images -->
+              <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
                 <label class="form-label label">Image 1</label>
                 {{form.image_1}}  
               </div>
@@ -187,15 +90,15 @@
                 <label class="form-label label">Image 4</label>
                 {{form.image_4}}
               </div>
-              <hr> -->
+              <hr>
               <!-- end images -->
               <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
                 <label class="form-label label">Category</label>
-              <select name="category" style="padding: 10px;border-radius: 10px;">
-                {% for category in form_categories %}
+                <select name="category" style="padding: 10px;border-radius: 10px;">
+                  {% for category in form_categories %}
                   <option selected>{{ category.name }}</option>
-                {% endfor %}
-              </select>
+                  {% endfor %}
+                </select>
               </div>
               <hr>
               <div class="col-12" style="display:flex;justify-content:space-between;margin-top:10px;">
@@ -221,22 +124,22 @@
               <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
                 <label class="form-label label">Available Status</label>
                 {{form.available_status}}
-              </div>              
+              </div>
               <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
                 <label class="form-label label">Arrival Date</label>
                 {{form.arrival_date}}
-              </div>              
+              </div>
               <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
                 <label class="form-label label">End Date</label>
                 {{form.end_date}}
-              </div>              
+              </div>
               <div class="col-md-12" style="display:flex;justify-content:space-between;margin-top:10px;">
                 <label class="form-label label">price</label>
                 {{form.price}}
-              </div>              
+              </div>
 
               <button type="submit" style="margin-top: 50px;" class="btn btn-primary">Submit</button>
-            </div>
+          </div>
           </form>
         </div>
       </div>
@@ -246,9 +149,9 @@
 
 </main><!-- End #main -->
 <script>
-console.log('{{form.name}}')
-  function validate(){
-    
+  console.log('{{form.name}}')
+  function validate() {
+
     console.log('validating input fields...')
     console.log('gathering data from fields...')
 
@@ -271,15 +174,15 @@ console.log('{{form.name}}')
     console.log('gathering data successful.');
     console.log('starting validation.');
 
-    if(name == ''){document.getElementById('message').innerHTML = 'name cannot be empty'}
-    else if(description == ''){document.getElementById('message').innerHTML = 'description cannot be empty'}
-    else if(description.length < 5 || description.length > 10){document.getElementById('message').innerHTML = 'description must be between 5 to 10 charecters'}
-    else if(category == ''){document.getElementById('message').innerHTML = 'category cannot be empty'}
-    else if(specification == ''){document.getElementById('message').innerHTML = 'specification cannot be empty'}
-    else if(stock_available == ''){document.getElementById('message').innerHTML = 'stock_available cannot be empty'}
-    else if(rating == ''){document.getElementById('message').innerHTML = 'rating cannot be empty'}
-    else if(total_sold == ''){document.getElementById('message').innerHTML = 'total_sold cannot be empty'}
-    else{
+    if (name == '') { document.getElementById('message').innerHTML = 'name cannot be empty' }
+    else if (description == '') { document.getElementById('message').innerHTML = 'description cannot be empty' }
+    else if (description.length < 5 || description.length > 10) { document.getElementById('message').innerHTML = 'description must be between 5 to 10 charecters' }
+    else if (category == '') { document.getElementById('message').innerHTML = 'category cannot be empty' }
+    else if (specification == '') { document.getElementById('message').innerHTML = 'specification cannot be empty' }
+    else if (stock_available == '') { document.getElementById('message').innerHTML = 'stock_available cannot be empty' }
+    else if (rating == '') { document.getElementById('message').innerHTML = 'rating cannot be empty' }
+    else if (total_sold == '') { document.getElementById('message').innerHTML = 'total_sold cannot be empty' }
+    else {
       document.getElementById('message').innerHTML = ''
       console.log('everything looks perfect successful.')
       console.log('Calling upload function...')
@@ -287,34 +190,34 @@ console.log('{{form.name}}')
     }
   }
 
-  function upload_new_product(){
+  function upload_new_product() {
     console.log('Trying to upload the new product to the database...')
     $.ajaxSetup({
-      data:{csrfmiddlewaretoken:'{{csrf_token}}'}
+      data: { csrfmiddlewaretoken: '{{csrf_token}}' }
     })
     console.log('ajax setup complete...')
     console.log('ajax trying to send data to admin_add_product in views.py...')
     $.ajax({
-      url:'/admin_add_product',
-      method:'post',
-      data:{
-        'name':name,
-        'description':description,
-        'category':category,
-        'specification':specification,
-        'stock_available':stock_available,
-        'rating':rating,
-        'total_sold':total_sold,
-        'is_trusted':is_trusted,
-        'available_status':available_status,
-        'end_date':end_date,
-        'image_1':image_1,
-        'image_2':image_2,
-        'image_3':image_3,
-        'image_4':image_4,
+      url: '/admin_add_product',
+      method: 'post',
+      data: {
+        'name': name,
+        'description': description,
+        'category': category,
+        'specification': specification,
+        'stock_available': stock_available,
+        'rating': rating,
+        'total_sold': total_sold,
+        'is_trusted': is_trusted,
+        'available_status': available_status,
+        'end_date': end_date,
+        'image_1': image_1,
+        'image_2': image_2,
+        'image_3': image_3,
+        'image_4': image_4,
       },
-      success:function(response){
-        if(response['status']){
+      success: function (response) {
+        if (response['status']) {
           console.log('product_added_successfuly')
         }
       }
@@ -324,8 +227,8 @@ console.log('{{form.name}}')
 <script src="{% static 'cropper.js' %}"></script>
 
 <script>
-document.getElementById("id_arrival_date").type="date"; 
-document.getElementById("id_end_date").type="date"; 
+  document.getElementById("id_arrival_date").type = "date";
+  document.getElementById("id_end_date").type = "date";
 
 </script>
 {%endblock%}

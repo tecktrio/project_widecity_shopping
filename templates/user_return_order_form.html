@@ -1,61 +1,12 @@
+{% extends 'user_base.html' %}
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-
-<!-- molla"/checkout".html  22 Nov 2019 09:55:06 GMT -->
-<!-- molla/cart.html  22 Nov 2019 09:55:06 GMT -->
-<head>
-    <meta charset="UTF-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Molla - Bootstrap eCommerce Template</title>
-    <meta content="HTML5 Template" name="keywords">
-    <meta content="Molla - Bootstrap eCommerce Template" name="description">
-    <meta content="p-themes" name="author">
-    <!-- Favicon -->
-    <link href="{% static 'assets/images/icons/apple-touch-icon.png' %}" rel="apple-touch-icon" sizes="180x180">
-    <link href="{% static 'assets/images/icons/favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
-    <link href="{% static 'assets/images/icons/favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
-    <link href="{% static 'assets/images/icons/site.html' %}" rel="manifest">
-    <link color="#666666" href="{% static 'assets/images/icons/safari-pinned-tab.svg' %}" rel="mask-icon">
-    <link href="{% static 'assets/images/icons/favicon.ico' %}" rel="shortcut icon">
-    <meta content="Molla" name="apple-mobile-web-app-title">
-    <meta content="Molla" name="application-name">
-    <meta content="#cc9966" name="msapplication-TileColor">
-    <meta content="{% static 'assets/images/icons/browserconfig.xml' %}" name="msapplication-config">
-    <meta content="#ffffff" name="theme-color">
-    <link href="{% static 'assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}"
-          rel="stylesheet">
-    <!-- Plugins CSS File -->
-    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/plugins/owl-carousel/owl.carousel.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/plugins/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/plugins/jquery.countdown.css' %}" rel="stylesheet">
-    <!-- Main CSS File -->
-    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/skins/skin-demo-2.css' %}" rel="stylesheet">
-    <link href="{% static 'assets/css/demos/demo-2.css' %}" rel="stylesheet">
-
-    <style>
-        .input{
-            color: white;
-            background-color: rgba(26, 23, 23,.5);
-            border-radius: 10px;
-        }
-    </style>
-</head>
 
 <body>
-<div class="page-wrapper" style="background-image: url(/media/gifs/anim1.gif); 
-background-attachment: fixed;">
+<div class="page-wrapper" >
  
     <main class="main" >
-        <div class="page-header text-center" style="background-color: rgba(0,0,0,.7);">
-            <div class="container">
-                <h1 class="page-title">Add Delivery Address<span>WideCity</span></h1>
-            </div><!-- End .container -->
-        </div><!-- End .page-header -->
+     
         <nav aria-label="breadcrumb" class="breadcrumb-nav" >
             <div class="container">
                 <ol class="breadcrumb">
@@ -69,42 +20,42 @@ background-attachment: fixed;">
         <div class="page-content">
             <div class="/checkout" style="display: flex;justify-content: center;">
 
-                    <form action="/user_return_order/{{product.id}}" method="POST" style="padding: 100px;background-color: rgb(0, 0, 0,.5);display: flex;justify-content: center;border:1px solid rgb(255, 255, 255);border-radius: 10px;">
+                    <form action="/user_return_order/{{product.id}}" method="POST" style="padding: 100px;background-color: rgb(255, 255, 255);display: flex;justify-content: center;border:1px solid rgb(0, 0, 0);border-radius: 10px;box-shadow: 0px 20px 20px;">
                         {% csrf_token %}
                         <div class="row">
                             <div  id="new_address">
-                                <h2 class="checkout-title" style="color: white;width: 50%;">Please mention your reason for return</h2><!-- End .checkout-title -->
+                                <h2 class="checkout-title" style="color: rgb(0, 0, 0);width: 50%;">Please mention your reason for return</h2><!-- End .checkout-title -->
                                 
                                 <div >
 
                                     <div style="display: block;">
                                         <input  name="reason"  type="radio" value="Brought by mistake" checked>
-                                        <label style="color: white;margin: 5px;">Brought by mistake</label>          
+                                        <label style="color: rgb(8, 7, 7);margin: 5px;">Brought by mistake</label>          
                                     </div><!-- End .col-sm-6 -->
 
                                     <div style="display: block;">
                                         <input  name="reason"  type="radio" value="Better Price available">
-                                        <label style="color: white;margin: 5px;">Better Price available</label>          
+                                        <label style="color: rgb(0, 0, 0);margin: 5px;">Better Price available</label>          
                                     </div><!-- End .col-sm-6 -->
 
                                     <div style="display: block;">
                                         <input  name="reason"  type="radio" value="Performance or quality not adequate">
-                                        <label style="color: white;margin: 5px;">Performance or quality not adequate</label>          
+                                        <label style="color: rgb(0, 0, 0);margin: 5px;">Performance or quality not adequate</label>          
                                     </div><!-- End .col-sm-6 -->
 
                                     <div style="display: block;">
                                         <input  name="reason"  type="radio" value="Product damaged">
-                                        <label style="color: white;margin: 5px;">Product damaged</label>          
+                                        <label style="color: rgb(0, 0, 0);margin: 5px;">Product damaged</label>          
                                     </div><!-- End .col-sm-6 -->
 
                                     <div style="display: block;">
                                         <input  name="reason"  type="radio" value="Item arrived too late">
-                                        <label style="color: white;margin: 5px;">Item arrived too late</label>          
+                                        <label style="color: rgb(0, 0, 0);margin: 5px;">Item arrived too late</label>          
                                     </div><!-- End .col-sm-6 -->
 
                                     <div style="display: block;">
                                         <input  name="reason"  type="radio">
-                                        <label style="color: white;margin: 5px;">Product damaged</label>          
+                                        <label style="color: rgb(0, 0, 0);margin: 5px;">Product damaged</label>          
                                     </div><!-- End .col-sm-6 -->
 
                                     
@@ -117,16 +68,4 @@ background-attachment: fixed;">
                         </div>
                     </form>
                     </div></div>
-<script src="{% static 'assets/js/jquery.min.js'%}"></script>
-<script src="{% static 'assets/js/bootstrap.bundle.min.js'%}"></script>
-<script src="{% static 'assets/js/jquery.hoverIntent.min.js'%}"></script>
-<script src="{% static 'assets/js/jquery.waypoints.min.js'%}"></script>
-<script src="{% static 'assets/js/superfish.min.js'%}"></script>
-<script src="{% static 'assets/js/owl.carousel.min.js'%}"></script>
-<!-- Main JS File -->
-<script src="{% static 'assets/js/main.js'%}"></script>
-</body>
-
-
-<!-- molla"/checkout".html  22 Nov 2019 09:55:06 GMT -->
-</html>
+{% endblock %}

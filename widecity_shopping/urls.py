@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from widecity_shopping import views
 from django.contrib import admin
 from django.urls import path
-from widecity_shopping.views import main_view
+# from widecity_shopping.views import main_view
 
 urlpatterns = [
     # use side url patterns
@@ -46,7 +46,7 @@ urlpatterns = [
 
     # admin side url patterns
 
-    path('upload', main_view, name="main-view"),
+    # path('upload', main_view, name="main-view"),
 
     path('admin_panel', views.admin_panel),
     path('admin_sign_in', views.admin_sign_in),
@@ -54,7 +54,7 @@ urlpatterns = [
     path('admin_list_customer', views.admin_list_customer),
     path('admin_add_product', views.admin_add_product),
     path('admin_list_product', views.admin_list_product),
-    path('admin_add_product_images', views.admin_add_product_images),
+    # path('admin_add_product_images', views.admin_add_product_images),
     path('admin_list_category', views.admin_list_category),
     path('admin_add_category', views.admin_add_category),
     path('admin_list_orders', views.admin_list_orders),

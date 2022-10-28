@@ -8,7 +8,6 @@
             border: .5px solid rgb(4, 4, 4);
             padding: 5px 10px;
         }
-
         .sign_button {
             border-radius: 5px;
             border: 1px solid rgb(107, 100, 209);
@@ -57,17 +56,13 @@
         }
     </style>
 </head>
-
-
     <div style="display: flex;justify-content: center;">
         <div
             style="border:2px solid rgb(0, 0, 0);margin:20vh;padding:50px;border-radius: 10px;color: rgb(10, 9, 9);width: 60%;height: 100%;box-shadow: 0px 20px 10px;">
             <h3 style="color: rgb(0, 0, 0);margin: 0px;font-weight: bold;">Order Details</h3>
             <p style="font-size: 12px;margin: 0px 2px;">see the details of this order</p>
             <div id="message" style="color: rgb(231, 6, 6);font-size: 12px;"></div>
-
             <div style="margin-top: 10px;">
-
                 <div style="display: flex;justify-content: space-between;margin: 10px;">
                     <p class="column">Name</p>
                     <p type="text" id="user_email" class="column lightfont">{{order.user.full_name}}</p>
@@ -81,19 +76,11 @@
                     <p type="password" id="user_password" class="column lightfont">{{order.product.name}}</p>
                 </div>                
                 <div style="display: flex;justify-content: space-between;margin: 10px;">
-
                     {% if next_status == '' %}
                     {% else %}
                     <p class="column">Change status to</p>
                     <button id="next_status" onclick="user_confirm('{{order.id}}')" value="{{next_status}}">{{next_status}}</button>
                     {% endif %}
-                    <!-- <select onchange="status_change('{{order.id}}')" id="status_change">
-                        <option selected>{{order.status}}</option>
-                        <option>packing</option>
-                        <option>On The Way</option>
-                        <option>Delivered</option>
-                        <option>Un Delivered</option>
-                    </select> -->
                 </div> 
                 <div >
                     <div class="column">Ordered Address</div>
@@ -135,16 +122,8 @@
                             <label>Alternative Contact Number</label>                 
                             <div>{{address.alt_contact}}</div>
                         </div>  
-
-                
                     </div>
                 </div>  
-                <!-- <div style="display: flex;justify-content: space-between;margin: 10px;">
-                    <button style="border-radius: 5px;color:rgb(223, 221, 221);background-color: rgb(44, 95, 44);">save changes</button>
-
-                </div> -->
-                
-                
             </div>
         </div>
     </div>
@@ -156,7 +135,6 @@
             var user_password = document.getElementById('user_password').value
             var user_password_err = document.getElementById('user_password_err')
             var message = document.getElementById('message')
-
             if (user_email == '') {
                 console.log('Email field cannot be empty');
                 user_email_err.innerHTML = 'Email field cannot be empty.'
@@ -207,15 +185,11 @@
         function status_change(order_id){
 
             console.log('did anyone called me')
-
-        
             order_status = document.getElementById('next_status')
             console.log(order_status.value)
-
             $.ajaxSetup({
                 data:{csrfmiddlewaretoken :'{{ csrf_token }}'}
             })
-
             $.ajax({
                 url:'/admin_change_order_status',
                 method:'post',
@@ -232,27 +206,11 @@
             
         }
 
-        function user_confirm(id){
-            swal({
-                title: 'Are you sure to change the status to {{next_status}}?',
-                text: 'Once changed, you will not be able to change the status to previous state!',
-                icon: 'warning',
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-
-                if (willDelete) {
-                swal('Status changed to {{next_status}}', {
-                    icon: 'success',
-                });
-                status_change(id)
-                } else {
-                swal('Status not changed');
-                return false;
-                }
-                
-            });
+function user_confirm(id){
+    if(confirm('Are you sure?')){
+        status_change(id)
+        }
+            
 }
     </script>
 

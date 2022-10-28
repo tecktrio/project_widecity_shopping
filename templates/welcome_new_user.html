@@ -1,59 +1,114 @@
-{% extends 'user_base.html' %}
-{% block content %}
-
 <head>
-    <style>
-        .input_box {
-            border-radius: 5px;
-            border:.5px solid rgb(4, 4, 4);
-            padding:5px 10px;
-        }
-        .sign_button{
-            border-radius: 5px;
-            border:1px solid rgb(107, 100, 209);
-            background-color: rgb(84, 84, 225);
-            color:white;
-            padding:3px 10px;
-        }
-        .sign_button:hover{
-            background-color: white;
-            color: blue;
-            border: 1px solid white;
-        }
-        .agree_button{
-            color:rgb(14, 10, 10) ;
-        }
-        .agree_button:hover{
-            color: rgb(93, 82, 82);
-            background-color: greenyellow;
-        }
-    </style>
-</head>
+    <!DOCTYPE html>
+    <html lang="en">
 
-<body style="background-image:url('http://test.ultralinx.co/wp-content/uploads/2020/03/1_ew96nxw.gif');background-size: cover;">
-    <div style="display: flex;justify-content: center;">
+    {% load static %}
+
+    <!-- molla/index-1.html  22 Nov 2019 09:55:06 GMT -->
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>WideCity Shopping</title>
+        <meta name="keywords" content="HTML5 Template">
+        <meta name="description" content="Molla - Bootstrap eCommerce Template">
+        <meta name="author" content="p-themes">
+        <!-- Favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/images/icons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/images/icons/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/images/icons/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'assets/images/icons/site.html' %}">
+        <link rel="mask-icon" href="{% static 'assets/images/icons/safari-pinned-tab.svg' %}" color="#666666">
+        <link rel="shortcut icon" href="{% static 'assets/images/icons/favicon.ico' %}">
+        <meta name="apple-mobile-web-app-title" content="Molla">
+        <meta name="application-name" content="Molla">
+        <meta name="msapplication-TileColor" content="#cc9966">
+        <meta name="msapplication-config" content="{% static 'assets/images/icons/browserconfig.xml' %}">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet"
+            href="{% static 'assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}">
+        <!-- Plugins CSS File -->
+        <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/plugins/owl-carousel/owl.carousel.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/plugins/magnific-popup/magnific-popup.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/plugins/jquery.countdown.css' %}">
+        <!-- Main CSS File -->
+        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/skins/skin-demo-2.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/demos/demo-2.css' %}">
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+
+
+        <style>
+            .input_box {
+                border-radius: 5px;
+                border: .5px solid rgb(4, 4, 4);
+                padding: 5px 10px;
+            }
+
+            .sign_button {
+                border-radius: 5px;
+                border: 1px solid rgb(107, 100, 209);
+                background-color: rgb(84, 84, 225);
+                color: white;
+                padding: 3px 10px;
+            }
+
+            .sign_button:hover {
+                background-color: white;
+                color: blue;
+                border: 1px solid white;
+            }
+
+            .agree_button {
+                color: rgb(14, 10, 10);
+            }
+
+            .agree_button:hover {
+                color: rgb(93, 82, 82);
+                background-color: greenyellow;
+            }
+        </style>
+    </head>
+
+<body>
+    <div style="display: flex;justify-content: center;align-items: center;height: 100%;">
         <div
-            style="border:2px solid rgb(255, 255, 255);margin:20vh;padding:50px;background-color: rgba(24, 13, 35,.7);border-radius: 10px;color: rgb(10, 9, 9);">
+            style="border:2px solid rgb(255, 255, 255);padding:50px;background-color: rgb(24, 13, 35);border-radius: 10px;color: rgb(10, 9, 9);width: 60%;box-shadow: 0px 20px 20px;">
             <h3 style="color: white;margin: 0px;">welcome to widecity</h3>
             <p>you are now a member of widecity</p>
             <ul>
                 <li style="color: white;font-weight:bold;">About Us</li>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime labore. Vel, voluptatibus?</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab
+                    cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime
+                    labore. Vel, voluptatibus?</p>
                 <li style="color: white;font-weight:bold;">our Other Services</li>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime labore. Vel, voluptatibus?</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab
+                    cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime
+                    labore. Vel, voluptatibus?</p>
                 <li style="color: white;font-weight:bold;">Contact us</li>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime labore. Vel, voluptatibus?</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab
+                    cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime
+                    labore. Vel, voluptatibus?</p>
                 <li style="color: white;font-weight:bold;">Terms and Conditions</li>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime labore. Vel, voluptatibus?</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis odit quibusdam explicabo sunt ab
+                    cupiditate adipisci nesciunt unde modi minima suscipit, doloribus, aperiam incidunt rem quo maxime
+                    labore. Vel, voluptatibus?</p>
                 <form action="/user_home" method="post">
                     {% csrf_token %}
-                <input type="checkbox" id="agree" required><span style="color: #ffffff;" > I agree to all of your terms and conditions of widecity</span>
-                <p><button type="submit" class="agree_button">Continue</button></p>
+                    <input type="checkbox" id="agree" required><span style="color: #ffffff;"> I agree to all of your
+                        terms and conditions of widecity</span>
+                    <p><button type="submit" class="agree_button">Continue</button></p>
                 </form>
             </ul>
-            </div>
         </div>
+    </div>
     </div>
 
 
-    {% endblock %}
+</body>
+
+</html>

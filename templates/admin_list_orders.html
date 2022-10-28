@@ -12,11 +12,9 @@
       padding: 5px 10px;
       align-items: center;
     }
-
     #view:hover {
       background-color: rgb(31, 92, 233);
     }
-
     .data {
       text-align: left;
       color: rgb(99, 96, 96);
@@ -29,8 +27,6 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">All Orders</h5>
-      <!--              <p>Add <code>.table-sm</code> to make any <code>.table</code> more compact by cutting all cell padding in half.</p>-->
-      <!-- Small tables -->
       <table class="table table-sm">
         <thead>
           <tr>
@@ -42,7 +38,6 @@
             <th scope="col" style="text-align:center;">VIEW</th>
           </tr>
         </thead>
-
         <tbody>
           <!--########################################################################################################################-->
           {% for order in orders %}
@@ -51,7 +46,6 @@
             <td class="data">{{order.product.name}}</td>
             <td class="data">{{order.Order_day}}/{{order.Order_month}}/{{order.Order_year}}</td>
             <td class="data">{{order.payment_method}}</td>
-
             {% if order.status == 'ordered' %}
             <td style="background-color: rgb(133, 52, 52);color: white;text-align: center;border-radius: 5px;padding: 3px;width: 150px;">Ordered</td>  
             {% elif order.status == 'shipped' %}
@@ -67,7 +61,6 @@
             {% else %}
             <td class="data" style="background-color: rgb(109, 122, 209);color: white;text-align: center;border-radius: 5px;padding: 3px;">Canceled</td>
             {% endif %}
-
             <td class="data" style="text-align: center;"><a href="/admin_order_details/{{order.id}}"><button id="view">View</button></a></td>
           </tr>
           {% endfor %}
@@ -75,15 +68,12 @@
           <!--########################################################################################################################-->
         </tbody>
       </table>
-
     </div>
   </div>
 </main>
 
 <script>
-
   function change_status(order_status, order_id) {
-
     $.ajaxSetup({
       data: { csrfmiddlewaretoken: '{{csrf_token}}' },
     })
@@ -96,7 +86,6 @@
       }
     })
   }
-
 </script>
 
 {% endblock %}

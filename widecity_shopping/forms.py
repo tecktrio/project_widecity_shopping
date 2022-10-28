@@ -21,6 +21,10 @@ class add_product_form(forms.ModelForm):
                     'end_date',
                     'price',
                     'category', 
+                    'image_1', 
+                    'image_2',
+                    'image_3',
+                    'image_4',
                 ]
 
 class add_product_images_form(forms.ModelForm):

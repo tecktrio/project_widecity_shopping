@@ -33,7 +33,6 @@
 </head>
 
   <main id="main" class="main">
-
     <div class="pagetitle">
       <h1 style="color: rgb(0, 0, 0);">Manage Product</h1>
       <nav>
@@ -76,13 +75,10 @@
                     <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.total_sold}}</td>
                     <td style="font-size:13px;color: rgb(0, 0, 0);">{{product.available_status}}</td>
                     <td style="display:flex;">
-
                       <form action="/admin_edit_Product" >
-                
                       <button name="action" type="submit" onclick="return confirm('Be careful while you edit, Are you sure you want to do this?')" value="edit" class="edit">
                         Edit
                       </button>
-        
                       <button name="action" type="submit"  onclick="return confirm('Are you sure to delete this product?')" value="delete" class="delete">
                         Delete
                       </button>
@@ -90,7 +86,6 @@
                       </form>
                     </td>
                   </tr>
-
                {% endfor %}
 
                 </tbody>
